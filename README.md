@@ -5,7 +5,7 @@ Plateforme Next.js en français canadien, déployée sur Vercel. Base PostgreSQL
 ## Fonctionnalités
 12 parcours, 36 leçons textuelles, 36 prompts personnalisables, 72 questions corrigées côté serveur, tentatives historisées, travaux et correction humaine, notes, favoris, profil, messagerie privée, séances de coaching et réservations, administration des accès et réinitialisation des mots de passe.
 
-Les trois premières leçons sont en découverte. Un accès invité ou un abonnement actif ouvre le reste. Les administrateurs ont les droits complets ; les comptes de test sont créés par le script de provisioning et leurs mots de passe ne sont jamais versionnés.
+La page publique présente le programme. Les contenus pédagogiques et prompts nécessitent un compte connecté avec accès actif. Un accès invité ou un abonnement actif ouvre le reste. Les administrateurs ont les droits complets ; les comptes de test sont créés par le script de provisioning et leurs mots de passe ne sont jamais versionnés.
 
 ## Développement
 Node 24, npm install, variables de .env.example dans .env.local, node scripts/migrate.mjs, npm run dev. npm run build vérifie la compilation. Les migrations SQL sont idempotentes et destinées à cette base dédiée.

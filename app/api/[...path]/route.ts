@@ -17,10 +17,10 @@ async function handle(req:NextRequest,{params}:{params:Promise<{path:string[]}>}
   if(route==='me')return json({user,access:hasAccess(user),paymentsConfigured:!!process.env.STRIPE_SECRET_KEY&&!!process.env.STRIPE_PRICE_ID});
   if(route==='lesson'){
    const lesson=lessons.find(l=>l.id===req.nextUrl.searchParams.get('id'));if(!lesson)throw new ApiError('Leçon introuvable',404);
-   if(!catalog.find(l=>l.id===lesson.id)?.preview&&!hasAccess(user))throw new ApiError('Connectez-vous avec un accès actif pour ouvrir cette leçon.',403);
+   if(!hasAccess(user))throw new ApiError('Connectez-vous avec un accès actif pour ouvrir cette leçon.',403);
    return json(publicLesson(lesson));
   }
-  if(route==='prompts')return json(lessons.filter(l=>catalog.find(c=>c.id===l.id)?.preview||hasAccess(user)).map(l=>({id:l.id,title:l.title,prompt:l.prompt})));
+  if(route==='prompts'){if(!user)throw new ApiError('Connexion requise.',401);if(!hasAccess(user))throw new ApiError('Accès actif requis pour consulter les prompts.',403);return json(lessons.map(l=>({id:l.id,title:l.title,prompt:l.prompt})));}
   if(!user)throw new ApiError('Connectez-vous pour continuer.',401);
   if(route==='progress'){const [attempts,submissions,notes,favorites]=await Promise.all([sql`SELECT * FROM attempts WHERE user_id=${user.id} ORDER BY created_at DESC`,sql`SELECT * FROM submissions WHERE user_id=${user.id}`,sql`SELECT * FROM notes WHERE user_id=${user.id}`,sql`SELECT lesson_id FROM favorites WHERE user_id=${user.id}`]);return json({attempts,submissions,notes,favorites})}
   if(route==='export'){const [attempts,submissions,notes,messages]=await Promise.all([sql`SELECT * FROM attempts WHERE user_id=${user.id}`,sql`SELECT * FROM submissions WHERE user_id=${user.id}`,sql`SELECT * FROM notes WHERE user_id=${user.id}`,sql`SELECT body,created_at FROM messages WHERE thread_user_id=${user.id}`]);return json({profile:user,attempts,submissions,notes,messages})}
@@ -74,7 +74,7 @@ async function handle(req:NextRequest,{params}:{params:Promise<{path:string[]}>}
  }
  const lesson=lessons.find(l=>l.id===b.lessonId);
  if(['quiz','submission','note','favorite'].includes(route)){
-  if(!lesson)throw new ApiError('Leçon introuvable',404);if(!hasAccess(user)&&!catalog.find(l=>l.id===lesson.id)?.preview)throw new ApiError('Accès complet requis.',403);
+  if(!lesson)throw new ApiError('Leçon introuvable',404);if(!hasAccess(user))throw new ApiError('Accès complet requis.',403);
   if(route==='quiz'){
    if(!Array.isArray(b.answers)||b.answers.length!==lesson.questions.length||b.answers.some((a:any,i:number)=>!Number.isInteger(a)||a<0||a>=lesson.questions[i].options.length))throw new ApiError('Répondez à chaque question.');
    const score=Math.round(100*lesson.questions.filter((q,i)=>q.answer===b.answers[i]).length/lesson.questions.length);
