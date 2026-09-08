@@ -133,3 +133,11 @@
 .sphere-glass-shell i:nth-child(2){border-right:2px solid #fff0c48c;border-left:1px solid #b0c8ba66;opacity:.35}
 .sphere-glass-shell i:nth-child(3){background:radial-gradient(ellipse at 50% 0,transparent 30%,#9ab5a329 65%,#eee4bc40 79%,transparent 94%);opacity:.5}
 .glass-spectrum{background:conic-gradient(from 70deg,transparent,#e9dcb626,#adc7b51f,transparent 210deg,#f7ebcd1a,transparent);opacity:.18}.glass-window{opacity:.12}
+/* Restore optical volume without hard rings, window grids or geometric bands. */
+.sphere-glass-shell{background:radial-gradient(ellipse at 38% 26%,#ffffff52,transparent 45%),radial-gradient(ellipse at 17% 58%,#8fa79a26,transparent 55%),radial-gradient(ellipse at 80% 63%,#eee0b633,transparent 52%),radial-gradient(ellipse at 53% 90%,#819b8f30,transparent 48%),radial-gradient(circle at 48% 43%,transparent 55%,#acbdb312 77%,#6e897d24 94%,#f9fff559 99%,transparent);box-shadow:inset 2px 3px 5px #ffffffb3,inset -3px -5px 12px #788f7e21;border:none}
+.sphere-glass-shell:before{inset:0;border:none;background:conic-gradient(from 10deg,#ffffffb3,transparent 55deg,#f6e7bd59 110deg,transparent 155deg,#91aa9c40 210deg,transparent 250deg,#fff9 315deg,transparent);mask-image:radial-gradient(circle,transparent 69.9%,#000 70.6%);opacity:.5}
+.sphere-glass-shell:after{left:15%;top:4%;width:61%;height:22%;background:radial-gradient(ellipse at 50% 0,#ffffffe6 0,#ffffff73 32%,transparent 70%);border:none;border-radius:50%;transform:rotate(-23deg);filter:blur(3px);opacity:.8;animation:none}
+.sphere-glass-shell i:first-child{left:-4%;top:66%;width:108%;height:23%;border:none;background:radial-gradient(ellipse at 50% 65%,#ffffffd9 0,#ffffff80 32%,#fff5db26 52%,transparent 72%);border-radius:50%;transform:rotate(-9deg);filter:blur(5px);opacity:.7}
+.sphere-glass-shell i:nth-child(2){left:69%;top:16%;width:22%;height:59%;border:none;background:radial-gradient(ellipse,#fffce1a6,transparent 66%);border-radius:50%;transform:rotate(24deg);filter:blur(5px);opacity:.48}
+.sphere-glass-shell i:nth-child(3){left:6%;bottom:8%;width:87%;height:29%;border:none;background:radial-gradient(ellipse at 50% 10%,transparent 18%,#78948721 53%,#ffffff66 70%,transparent 86%);border-radius:50%;transform:rotate(-9deg);filter:blur(4px);opacity:.6}
+.glass-window,.glass-spectrum,.glass-caustic{display:none!important}
