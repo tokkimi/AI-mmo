@@ -108,3 +108,6 @@
 .sales-audiences article:before{border-radius:inherit}
 .sales-audiences article:after{content:"";position:absolute;pointer-events:none;left:3%;right:3%;top:calc(100% + 3px);height:76px;border-radius:24px 24px 45% 45%;background:radial-gradient(ellipse at 22% 5%,#72978566,transparent 65%),radial-gradient(ellipse at 82% 10%,#f1daa278,transparent 61%),linear-gradient(180deg,#d9e3d180,#f8f2d92e 48%,transparent 92%);filter:blur(5px);mask-image:linear-gradient(#0009,#0007 20%,transparent 94%);transform:perspective(240px) rotateX(28deg);transform-origin:top;z-index:-1;box-shadow:inset 0 2px 2px #ffffefd9}
 @media(max-width:767px){.sales-audiences{padding-bottom:96px}.sales-audiences article{-webkit-box-reflect:unset}.sales-audiences article:after{height:70px}}
+/* The orb transmits sage and warm cream light onto the white floor. */
+.sphere-glow{display:block!important;inset:auto 22% 1%;height:8%;border-radius:50%;background:radial-gradient(ellipse at 32% 35%,#89aa9870,transparent 64%),radial-gradient(ellipse at 72% 35%,#f2dda780,transparent 62%),radial-gradient(ellipse at 50% 15%,#e4ebd866,transparent 72%);filter:blur(10px);opacity:.7;box-shadow:none;transform:none;pointer-events:none;mask-image:linear-gradient(transparent,#000 28%,#0009 60%,transparent)}
+@media(max-width:767px){.sphere-glow{inset:auto 22% 7%;height:9%;filter:blur(7px);opacity:.65}}
