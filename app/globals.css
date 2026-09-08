@@ -91,3 +91,7 @@
 .sales-audiences article:nth-child(3) .audience-engraving{background:linear-gradient(135deg,#c3d4c38c,#edf0e780,#fff4d9b3)}
 .sales-audiences h3{color:#35483e}.sales-audiences p{color:#5b6d63}.sales-audiences li{color:#576e60}.sales-audiences .eyebrow{color:#6e8274}.sales-audiences .text-button{padding-top:12px}
 @media(max-width:767px){.sales-audiences{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:2px;overscroll-behavior-x:contain;padding:5px 2px 30px}.sales-audiences article{flex:0 0 86%;scroll-snap-align:start;padding:24px;border-radius:25px}.audience-engraving{width:74px;height:74px;border-radius:22px;margin-bottom:24px}.audience-engraving svg{width:36px;height:36px}.sales-audiences h3{font-size:23px}.sales-audiences p{font-size:13px}.sales-audiences li{font-size:12px}}
+/* A fading glass reflection replaces the dark contact shadow. */
+.sales-audiences{padding-bottom:82px}
+.sales-audiences article{box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #adbbb526,0 3px 7px #b8cbc114;-webkit-box-reflect:below 5px linear-gradient(to bottom,transparent 87%,rgba(255,255,255,.035) 94%,rgba(255,255,255,.19) 100%)}
+@media(max-width:767px){.sales-audiences{padding-bottom:82px}.sales-audiences article{-webkit-box-reflect:below 4px linear-gradient(to bottom,transparent 91%,rgba(255,255,255,.025) 96%,rgba(255,255,255,.16) 100%)}}
