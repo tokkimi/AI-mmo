@@ -127,3 +127,9 @@
 }
 @keyframes mobile-menu-enter{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.public-header .mobile-navigation{animation:none}.menu-lines i{transition:none}}
+/* Sage and champagne light held within a fine transparent glass edge. */
+.sphere-glass-shell{background:radial-gradient(ellipse at 20% 43%,#a8beb21c,transparent 54%),radial-gradient(ellipse at 82% 48%,#f4e5bb24,transparent 51%),radial-gradient(circle at 48% 44%,transparent 68%,#a1b6aa14 90%,#96aa9b29 98%,#fffdf280 99.5%,transparent);box-shadow:inset 1px 2px 3px #ffffffd9,inset -2px -2px 5px #9ba98c26}
+.sphere-glass-shell:before{inset:.35%;background:conic-gradient(from 0deg,#fffefa,#9caf9f80 65deg,#fff2c780 120deg,#bec6a94d 180deg,#fffdf0b3 220deg,#8ca89b70 275deg,#fff 330deg);mask-image:radial-gradient(circle,transparent 69.7%,#000 70.6%)}
+.sphere-glass-shell i:nth-child(2){border-right:2px solid #fff0c48c;border-left:1px solid #b0c8ba66;opacity:.35}
+.sphere-glass-shell i:nth-child(3){background:radial-gradient(ellipse at 50% 0,transparent 30%,#9ab5a329 65%,#eee4bc40 79%,transparent 94%);opacity:.5}
+.glass-spectrum{background:conic-gradient(from 70deg,transparent,#e9dcb626,#adc7b51f,transparent 210deg,#f7ebcd1a,transparent);opacity:.18}.glass-window{opacity:.12}
