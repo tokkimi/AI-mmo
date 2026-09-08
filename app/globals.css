@@ -115,3 +115,5 @@
 .sphere-glass-shell i:first-child{opacity:.76}.sphere-glass-shell i:nth-child(2){opacity:.4}.sphere-glass-shell i:nth-child(3){opacity:.63}
 .sphere-glow{inset:auto 26% 3%;height:6%;opacity:.34;filter:blur(12px);background:radial-gradient(ellipse at 35% 35%,#a4baad66,transparent 66%),radial-gradient(ellipse at 69% 35%,#efdfb766,transparent 65%);mask-image:linear-gradient(transparent,#0009 30%,#0007 58%,transparent)}
 @media(max-width:767px){.sphere-glow{inset:auto 26% 9%;height:6%;opacity:.3;filter:blur(8px)}}
+/* Mobile carousels remain swipeable without visible scroll tracks. */
+@media(max-width:767px){.sales-method-grid,.sales-audiences,.sales-tool-line{scrollbar-width:none;-ms-overflow-style:none}.sales-method-grid::-webkit-scrollbar,.sales-audiences::-webkit-scrollbar,.sales-tool-line::-webkit-scrollbar{display:none;width:0;height:0}}
