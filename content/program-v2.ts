@@ -1,0 +1,45 @@
+// Public metadata only. Teaching text, prompts and answers remain server-side.
+export const tracks = [
+ ['fondations','Fondations ChatGPT','Comprendre, rédiger et contrôler vos demandes.','Comprendre ChatGPT','Écrire un excellent prompt','Corriger et améliorer ChatGPT'],
+ ['cerveau','Le cerveau IA de votre agence','Organiser les connaissances et préserver votre voix.','Organiser ChatGPT','Structurer les connaissances de l’agence','Apprendre votre style à ChatGPT'],
+ ['connexions','Connecter ChatGPT à votre travail','Comprendre les permissions et préparer votre boîte de réception.','Outils, connexions et permissions','Gmail et recherche vérifiable','La boîte mail devient un tableau de bord'],
+ ['communication','Communication professionnelle','Analyser, répondre et relancer avec discernement.','Analyser avant de répondre','Objets, signatures et micro-questions','Relances et prospects silencieux'],
+ ['quebec','Communication immobilière Québec','Relier les communications au dossier et aux responsabilités.','Le cycle de communication du courtier','Adapter le message aux acteurs','Quand l’IA doit s’arrêter'],
+ ['negociation','Négociation et situations difficiles','Préparer, simuler et débriefer sans déléguer la décision.','Préparer une négociation','Simuler l’interlocuteur','Objections et clients mécontents'],
+ ['vendeur','Parcours vendeur Québec','Du premier échange au suivi du dossier vendeur.','Formaliser le parcours vendeur','Préparer le rendez-vous vendeur','Organiser le suivi vendeur'],
+ ['acheteur','Parcours acheteur Québec','Qualifier le besoin, préparer les visites et comparer.','Formaliser le parcours acheteur','Qualifier un acheteur','Visites, comparaison et suivi'],
+ ['documents','Documents immobiliers Québec','Extraire les faits, retrouver les sources et poser les bonnes questions.','Lire sans halluciner','Inspection et copropriété','Comparer plusieurs documents'],
+ ['proprietes','Propriété et mise en marché','Transformer les faits validés en campagne cohérente.','Description immobilière fiable','Préparer la stratégie de mise en marché','Une propriété, plusieurs canaux'],
+ ['social','Réseaux sociaux','Construire des sujets utiles et apprendre des résultats.','Trouver les bons sujets','Adapter aux plateformes','Analyser les performances'],
+ ['video','Image, vidéo et direction artistique','Diriger la création tout en préservant la fidélité au bien.','Écrire un prompt image avancé','Storyboard, retouche et déclinaisons','Fidélité visuelle en immobilier'],
+ ['infolettre','Newsletter, database et Mailchimp','Transformer des questions clients en conversations suivies.','Nettoyer et segmenter une database','Newsletter : de l’objection à la conversation','Construire une campagne Mailchimp'],
+ ['acquisition','Acquisition vendeurs et acheteurs','Relier l’offre, le formulaire et le suivi humain.','Acquisition vendeurs','Acquisition acheteurs','Construire un funnel complet'],
+ ['veille','Google Business et veille','Observer, mesurer et décider sans inventer de performances.','Google Business et croissance locale','Veille concurrentielle','Veille périodique et alertes utiles'],
+ ['automatisation','Automatisation, AI Builder et international','Connecter les processus maîtrisés et construire votre plan à 90 jours.','Automatiser avec des contrôles','AI Builder et immersion internationale','Le grand cas final : mon agence IA'],
+] as const;
+export const newModules=tracks.map((t,i)=>({id:t[0],title:t[1],description:t[2],topics:t.slice(3) as string[],level:i<3?'Fondations':i<10?'Métier et pratique':'Développement',color:['mint','sand','lavender'][i%3],symbol:['✳','⌂','↗','@','⌂','↔','⌂','⌂','≡','⌂','#','▷','@','↗','◎','⚡'][i]}));
+export const newCatalog=newModules.flatMap((m,mi)=>m.topics.map((title,i)=>({id:`v2-${String(mi*3+i+1).padStart(2,'0')}`,moduleId:m.id,moduleIndex:mi,title,number:i+1,ordinal:mi*3+i+1,minutes:60,preview:false})));
+export const toolDefinitions=[
+ {id:'prompt-builder',name:'AI Prompt Builder',milestones:[2,3],purpose:'Construire puis auditer une demande réutilisable.'},
+ {id:'agency-brain',name:'AI Agency Brain',milestones:[5,6],purpose:'Structurer les connaissances et le guide de voix.'},
+ {id:'inbox',name:'AI Inbox',milestones:[8,9],purpose:'Rechercher les échanges et préparer le Morning Brief.'},
+ {id:'email',name:'AI Email Pro',milestones:[11,14],purpose:'Préparer des messages adaptés aux interlocuteurs.'},
+ {id:'relance',name:'AI Relance',milestones:[12],purpose:'Construire un arbre de relance avec conditions d’arrêt.'},
+ {id:'negotiator',name:'AI Negotiator',milestones:[18],purpose:'Simuler un échange puis débriefer les choix.'},
+ {id:'seller',name:'AI Seller Prep',milestones:[20,21,27],purpose:'Préparer et améliorer les briefings vendeurs.'},
+ {id:'buyer',name:'AI Buyer Qualifier',milestones:[23],purpose:'Qualifier les besoins sans inventer les priorités.'},
+ {id:'visit',name:'AI Visit Prep',milestones:[24],purpose:'Préparer les visites et comparer les retours.'},
+ {id:'documents',name:'AI Document Analyst',milestones:[25,27],purpose:'Extraire et comparer des passages sourcés.'},
+ {id:'inspection',name:'AI Inspection',milestones:[26],purpose:'Préparer des questions à partir d’un rapport.'},
+ {id:'property',name:'AI Property',milestones:[28,30],purpose:'Décliner des faits immobiliers validés.'},
+ {id:'social',name:'AI Social',milestones:[31,33],purpose:'Construire et évaluer un calendrier éditorial.'},
+ {id:'repurposer',name:'Content Repurposer',milestones:[32],purpose:'Adapter un sujet à plusieurs formats.'},
+ {id:'creative',name:'AI Creative Director',milestones:[34,36],purpose:'Créer un brief visuel et contrôler les modifications.'},
+ {id:'newsletter',name:'AI Newsletter Studio',milestones:[38,39],purpose:'Passer de l’objection à une campagne segmentée.'},
+ {id:'leads',name:'AI Lead Engine',milestones:[42],purpose:'Relier acquisition, qualification et suivi.'},
+ {id:'local',name:'AI Local Growth',milestones:[43],purpose:'Créer un plan de visibilité locale mesurable.'},
+ {id:'watch',name:'AI Competitive Watch',milestones:[44,45],purpose:'Distinguer observations, déductions et alertes.'},
+ {id:'builder',name:'AI Builder',milestones:[47],purpose:'Définir un assistant et ses tests.'},
+ {id:'international',name:'AI International',milestones:[47],purpose:'Localiser une campagne et sourcer les hypothèses.'},
+];
+export function moduleValidated(progress:any,id:string){return !!progress.attempts?.some((a:any)=>a.lesson_id===id&&a.score>=80)&&!!progress.submissions?.some((s:any)=>s.lesson_id===id&&s.status==='approved');}

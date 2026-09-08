@@ -30,3 +30,7 @@ Les références sont liées dans chaque leçon. Formation indépendante, aucune
 
 ## Validation
 node scripts/smoke.mjs exécute le parcours API avec les comptes de test locaux et nettoie ses données de test. Le fichier d’identifiants doit rester hors dépôt. Ne pas utiliser de vrais dossiers clients.
+
+## Programme V2 — état éditorial
+16 parcours et 48 modules, 240 questions (5 par module), un dossier pratique par module et 21 outils avec versions conditionnées par QCM + approbation du formateur. Identifiants v2-01 à v2-48 ; les anciens résultats restent en base.
+Les cours sont actuellement synthétiques. La décomposition complète en 150+ unités et les questionnaires spécialisés approfondis restent à enrichir. Les méthodes personnelles d’Émilie et dates de visio ne sont pas inventées. Le paiement reste désactivé : la configuration Stripe du projet source ne fournit pas de clé utilisable (authentification refusée). Ne pas annoncer la formation intégralement finalisée pour une ouverture commerciale.

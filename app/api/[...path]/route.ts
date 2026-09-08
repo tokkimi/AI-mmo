@@ -18,7 +18,7 @@ async function handle(req:NextRequest,{params}:{params:Promise<{path:string[]}>}
   if(route==='lesson'){
    const lesson=lessons.find(l=>l.id===req.nextUrl.searchParams.get('id'));if(!lesson)throw new ApiError('Leçon introuvable',404);
    if(!hasAccess(user))throw new ApiError('Connectez-vous avec un accès actif pour ouvrir cette leçon.',403);
-   return json(publicLesson(lesson));
+   const submitted=user?await sql`SELECT id FROM submissions WHERE user_id=${user.id} AND lesson_id=${lesson.id}`:[];return json(publicLesson(lesson,!!submitted.length));
   }
   if(route==='prompts'){if(!user)throw new ApiError('Connexion requise.',401);if(!hasAccess(user))throw new ApiError('Accès actif requis pour consulter les prompts.',403);return json(lessons.map(l=>({id:l.id,title:l.title,prompt:l.prompt})));}
   if(!user)throw new ApiError('Connectez-vous pour continuer.',401);
