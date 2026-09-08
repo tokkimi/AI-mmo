@@ -81,3 +81,13 @@
 @media(max-width:767px){.method-art{aspect-ratio:1.12}.sales-method-grid article{padding:0 6px}.sales-method-grid h3{margin-top:12px}}
 @media(prefers-reduced-motion:reduce){.method-art img{animation:none}}
 .method-art{aspect-ratio:1.3}.method-art img{top:-65%}
+/* Profile cards: etched glass, warm studio highlights and soft contact shadows. */
+.sales-audiences{gap:26px;padding-bottom:28px}
+.sales-audiences article{position:relative;isolation:isolate;overflow:hidden;padding:30px;border-radius:28px;border:1px solid #dbe5df;background:linear-gradient(128deg,#ffffffd9 2%,#e4eee78c 36%,#f8f6e9a3 83%,#ffffffd9);box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #adbbb533,0 22px 30px -24px #304e4466,0 8px 20px -15px #3f5d4640}
+.sales-audiences article:before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:0;background:linear-gradient(128deg,transparent 20%,#ffffffb3 21%,#ffffff1a 37%,transparent 38%,transparent 66%,#fff9 94%);opacity:.6}
+.audience-engraving{position:relative;width:88px;height:88px;display:grid;place-items:center;margin-bottom:28px;border-radius:25px;background:linear-gradient(135deg,#bed0c58c,#eaf0e880 52%,#fffbebc9);border:1px solid #ffffffd9;box-shadow:inset 2px 3px 7px #738d8124,inset -2px -2px 4px #fff,0 10px 16px -13px #45635266}
+.audience-engraving svg{stroke:#7a9486;stroke-width:1.25;filter:drop-shadow(0 1.4px 0 #ffffffed) drop-shadow(0 -1px .5px #3f61564d);opacity:.85}
+.sales-audiences article:nth-child(2) .audience-engraving{background:linear-gradient(135deg,#cbd7d58c,#eff5ed99,#fff7e5bd)}
+.sales-audiences article:nth-child(3) .audience-engraving{background:linear-gradient(135deg,#c3d4c38c,#edf0e780,#fff4d9b3)}
+.sales-audiences h3{color:#35483e}.sales-audiences p{color:#5b6d63}.sales-audiences li{color:#576e60}.sales-audiences .eyebrow{color:#6e8274}.sales-audiences .text-button{padding-top:12px}
+@media(max-width:767px){.sales-audiences{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:2px;overscroll-behavior-x:contain;padding:5px 2px 30px}.sales-audiences article{flex:0 0 86%;scroll-snap-align:start;padding:24px;border-radius:25px}.audience-engraving{width:74px;height:74px;border-radius:22px;margin-bottom:24px}.audience-engraving svg{width:36px;height:36px}.sales-audiences h3{font-size:23px}.sales-audiences p{font-size:13px}.sales-audiences li{font-size:12px}}
