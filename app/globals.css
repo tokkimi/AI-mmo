@@ -102,3 +102,9 @@
 .sales-audiences article:nth-child(2) .audience-engraving{background:radial-gradient(ellipse at 100% 65%,#fff0b8c9,transparent 65%),linear-gradient(135deg,#a8bfb8,#c2d0c4b3 50%,#f5efd2)}
 .sales-audiences article:nth-child(3) .audience-engraving{background:radial-gradient(ellipse at 100% 75%,#fff1bec9,transparent 65%),linear-gradient(135deg,#99b6a7,#bccdbac9 48%,#f8f0cf)}
 @media(max-width:767px){.audience-engraving{width:88px;height:82px;margin-bottom:30px}.audience-engraving svg{width:39px;height:39px}}
+/* Studio floor reflection: sage glass on the left, warm transmitted light on the right. */
+.sales-audiences{padding-bottom:100px}
+.sales-audiences article{-webkit-box-reflect:unset;overflow:visible;box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 #adbbb526}
+.sales-audiences article:before{border-radius:inherit}
+.sales-audiences article:after{content:"";position:absolute;pointer-events:none;left:3%;right:3%;top:calc(100% + 3px);height:76px;border-radius:24px 24px 45% 45%;background:radial-gradient(ellipse at 22% 5%,#72978566,transparent 65%),radial-gradient(ellipse at 82% 10%,#f1daa278,transparent 61%),linear-gradient(180deg,#d9e3d180,#f8f2d92e 48%,transparent 92%);filter:blur(5px);mask-image:linear-gradient(#0009,#0007 20%,transparent 94%);transform:perspective(240px) rotateX(28deg);transform-origin:top;z-index:-1;box-shadow:inset 0 2px 2px #ffffefd9}
+@media(max-width:767px){.sales-audiences{padding-bottom:96px}.sales-audiences article{-webkit-box-reflect:unset}.sales-audiences article:after{height:70px}}
