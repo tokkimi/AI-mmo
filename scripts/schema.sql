@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS users(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),email text UNIQUE NOT NULL,name text NOT NULL,password_hash text NOT NULL,role text NOT NULL DEFAULT 'member' CHECK(role IN ('member','admin')),access_until timestamptz,city text DEFAULT '',agency text DEFAULT '',bio text DEFAULT '',goal text DEFAULT '',level text DEFAULT 'Débutant',weekly_goal integer DEFAULT 3,created_at timestamptz NOT NULL DEFAULT now(),stripe_customer text UNIQUE,stripe_subscription text UNIQUE);
+CREATE TABLE IF NOT EXISTS sessions(token_hash text PRIMARY KEY,user_id uuid REFERENCES users(id) ON DELETE CASCADE,expires_at timestamptz NOT NULL);
+CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
+CREATE TABLE IF NOT EXISTS attempts(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid REFERENCES users(id) ON DELETE CASCADE,lesson_id text NOT NULL,answers jsonb NOT NULL,score integer NOT NULL,created_at timestamptz DEFAULT now());
+CREATE INDEX IF NOT EXISTS attempts_user_lesson ON attempts(user_id,lesson_id);
+CREATE TABLE IF NOT EXISTS submissions(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid REFERENCES users(id) ON DELETE CASCADE,lesson_id text NOT NULL,body text NOT NULL,status text DEFAULT 'submitted',feedback text DEFAULT '',grade integer CHECK(grade BETWEEN 0 AND 100),created_at timestamptz DEFAULT now(),updated_at timestamptz DEFAULT now(),UNIQUE(user_id,lesson_id));
+CREATE TABLE IF NOT EXISTS notes(user_id uuid REFERENCES users(id) ON DELETE CASCADE,lesson_id text NOT NULL,body text NOT NULL,PRIMARY KEY(user_id,lesson_id));
+CREATE TABLE IF NOT EXISTS favorites(user_id uuid REFERENCES users(id) ON DELETE CASCADE,lesson_id text NOT NULL,PRIMARY KEY(user_id,lesson_id));
+CREATE TABLE IF NOT EXISTS messages(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),thread_user_id uuid REFERENCES users(id) ON DELETE CASCADE,sender_id uuid REFERENCES users(id) ON DELETE CASCADE,body text NOT NULL,created_at timestamptz DEFAULT now());
+CREATE INDEX IF NOT EXISTS messages_thread_date ON messages(thread_user_id,created_at);
+CREATE TABLE IF NOT EXISTS coaching(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),title text NOT NULL,description text DEFAULT '',starts_at timestamptz NOT NULL,duration integer NOT NULL DEFAULT 60,capacity integer NOT NULL DEFAULT 10,meeting_url text NOT NULL,created_at timestamptz DEFAULT now());
+CREATE TABLE IF NOT EXISTS bookings(session_id uuid REFERENCES coaching(id) ON DELETE CASCADE,user_id uuid REFERENCES users(id) ON DELETE CASCADE,created_at timestamptz DEFAULT now(),PRIMARY KEY(session_id,user_id));
+CREATE TABLE IF NOT EXISTS rate_limits(key text PRIMARY KEY,count integer DEFAULT 1,expires_at timestamptz NOT NULL);
+CREATE TABLE IF NOT EXISTS audit_log(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),actor uuid REFERENCES users(id),action text NOT NULL,target text,created_at timestamptz DEFAULT now());
+CREATE TABLE IF NOT EXISTS password_resets(token_hash text PRIMARY KEY,user_id uuid REFERENCES users(id) ON DELETE CASCADE,expires_at timestamptz NOT NULL);
