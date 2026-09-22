@@ -168,3 +168,5 @@
 .main .tabs-list [data-slot="tabs-trigger"][aria-selected="true"]{background:#eef2e8;color:#294c36;box-shadow:inset 0 -2px #a98b47}
 .main [data-slot="tabs-content"]>.grid-two{grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr);align-items:start}
 @media(max-width:767px){.main [data-slot="tabs-content"]>.grid-two{grid-template-columns:minmax(0,1fr)}.main .tabs-list [data-slot="tabs-trigger"]{font-size:13px!important;padding:10px 13px}}
+
+.brand .iateliers-logo{display:block;width:150px;height:100px;object-fit:contain;border-radius:8px}.public-header{min-height:116px}.public-footer .iateliers-logo{width:195px;height:130px}@media(max-width:767px){.brand .iateliers-logo{width:108px;height:72px}.public-header{min-height:88px}}
