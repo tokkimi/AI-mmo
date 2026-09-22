@@ -1,5 +1,7 @@
 'use client';
 import { Auth } from './member';
+import { useState } from 'react';
+import { api } from './learning';
 const offers: Record<string, { name: string; price: string; detail: string }> =
   {
     signature: {
@@ -35,6 +37,19 @@ const offers: Record<string, { name: string; price: string; detail: string }> =
 export default function Checkout(props: any) {
   const key = offers[props.id] ? props.id : 'signature';
   const offer = offers[key];
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  async function pay() {
+    setBusy(true);
+    setError('');
+    try {
+      const result = await api('billing/checkout', { offer: key });
+      window.location.assign(result.url);
+    } catch (reason: any) {
+      setError(reason.message);
+      setBusy(false);
+    }
+  }
   return (
     <section className="sales-section checkout-page">
       <span className="eyebrow">VOTRE INSCRIPTION</span>
@@ -55,10 +70,6 @@ export default function Checkout(props: any) {
           paiement. Aucun accès payant n’est activé à la seule création du
           compte.
         </p>
-        <div className="notice">
-          Les paiements sont momentanément désactivés. Vous pouvez créer votre
-          profil gratuitement ; aucun prélèvement ne sera effectué.
-        </div>
       </div>
       {!props.user ? (
         <Auth
@@ -70,12 +81,10 @@ export default function Checkout(props: any) {
         <div className="panel" style={{ marginTop: 24 }}>
           <h2>Votre profil est prêt, {props.user.name}.</h2>
           <p>{props.user.email}</p>
-          <p>
-            Votre offre reste sélectionnée sur cette page. Le paiement sera
-            disponible après activation de la facturation.
-          </p>
-          <button className="button" disabled>
-            Paiement bientôt disponible
+          <p>Votre offre est prête. Vous serez redirigé vers le paiement sécurisé Stripe.</p>
+          {error && <p className="error">{error}</p>}
+          <button className="button" disabled={busy} onClick={pay}>
+            {busy ? 'Redirection vers Stripe…' : 'Passer au paiement sécurisé'}
           </button>
           <button className="text-button" onClick={() => props.go('profile')}>
             Accéder à mon profil →
