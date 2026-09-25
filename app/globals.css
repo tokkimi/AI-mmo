@@ -183,3 +183,16 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 .public-site input,.public-site select,.public-site textarea,.main input,.main select,.main textarea{font-size:16px!important;transform:none!important;transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease}
 .public-site input:focus,.public-site select:focus,.public-site textarea:focus,.main input:focus,.main select:focus,.main textarea:focus{transform:none!important}
 }
+
+/* Message composer: stable input geometry and sage/champagne focus lighting. */
+.message-compose{position:relative;margin-top:24px;border:1px solid #d8dfd5;border-radius:20px;background:linear-gradient(125deg,#fff,#faf8f0);padding:18px;transition:box-shadow .2s,border-color .2s}
+.message-compose:focus-within{border-color:#b6a273;box-shadow:0 0 0 3px #c8b07818,0 12px 28px -24px #667e63}
+.message-compose>label{display:block;font-weight:600;font-size:13px;margin-bottom:12px;color:#42604c}
+.message-compose textarea{display:block;width:100%;min-height:144px;font-size:16px!important;line-height:1.65;border:0;border-radius:10px;background:transparent;resize:vertical;outline:none;padding:10px;box-shadow:none;transform:none}
+.compose-footer{display:flex;align-items:center;gap:12px;border-top:1px solid #dfd6c3;padding-top:12px;margin-top:10px}
+.compose-shortcuts{display:flex;gap:6px;align-items:center}.compose-shortcuts button{display:flex;align-items:center;gap:6px;min-height:44px;padding:8px;border-radius:10px;color:#647660;font-size:12px}.compose-shortcuts button:hover{background:#eaf0e5}
+.compose-count{margin-left:auto;font-size:10px;color:#7e8677;font-variant-numeric:tabular-nums}.message-compose>small{display:block;margin-top:12px;font-size:10px;color:#7b8478;line-height:1.6}
+.compose-choices{position:absolute;z-index:15;bottom:108px;left:18px;right:18px;max-height:240px;overflow:auto;padding:6px;border:1px solid #d9d9c9;border-radius:14px;background:#fffffff5;box-shadow:0 14px 32px #344d381a;backdrop-filter:blur(12px)}
+.compose-choices button{display:block;width:100%;padding:12px;text-align:left;border-radius:10px}.compose-choices button.selected,.compose-choices button:hover{background:#eef2e7}.compose-choices strong{display:block;font-size:13px;color:#466048}.compose-choices span{display:block;font-size:11px;color:#7b8274;margin-top:4px}
+@media(max-width:767px){.message-compose{padding:12px}.compose-footer{gap:6px;flex-wrap:wrap}.compose-footer .button{padding:10px 12px}.compose-choices{left:10px;right:10px}.message-compose textarea{min-height:160px}}
+@media(prefers-reduced-motion:reduce){.message-compose{transition:none}}
