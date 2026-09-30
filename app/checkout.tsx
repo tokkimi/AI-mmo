@@ -1,5 +1,4 @@
 'use client';
-import { Auth } from './member';
 import { useState } from 'react';
 import { api } from './learning';
 const offers: Record<string, { name: string; price: string; detail: string }> =
@@ -39,10 +38,18 @@ export default function Checkout(props: any) {
   const offer = offers[key];
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  async function pay() {
+  const [mode, setMode] = useState<'register' | 'login'>('register');
+  const [authenticated, setAuthenticated] = useState(false);
+  async function pay(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
     setBusy(true);
     setError('');
     try {
+      if (!props.user && !authenticated) {
+        await api('auth/' + mode, { name: form.get('name'), email: form.get('email'), password: form.get('password'), accept: form.get('accept') === 'on' });
+        setAuthenticated(true);
+      }
       const result = await api('billing/checkout', { offer: key });
       window.location.assign(result.url);
     } catch (reason: any) {
@@ -71,26 +78,21 @@ export default function Checkout(props: any) {
           compte.
         </p>
       </div>
-      {!props.user ? (
-        <Auth
-          {...props}
-          initialMode="register"
-          onSuccess={() => props.go('checkout', key)}
-        />
-      ) : (
-        <div className="panel" style={{ marginTop: 24 }}>
-          <h2>Votre profil est prêt, {props.user.name}.</h2>
-          <p>{props.user.email}</p>
-          <p>Votre offre est prête. Vous serez redirigé vers le paiement sécurisé Stripe.</p>
-          {error && <p className="error">{error}</p>}
-          <button className="button" disabled={busy} onClick={pay}>
-            {busy ? 'Redirection vers Stripe…' : 'Passer au paiement sécurisé'}
-          </button>
-          <button className="text-button" onClick={() => props.go('profile')}>
-            Accéder à mon profil →
-          </button>
-        </div>
-      )}
+      <form className="panel express-enrollment" onSubmit={pay}>
+        <h2>{props.user || authenticated ? 'Votre profil est prêt' : mode === 'register' ? 'Vos informations' : 'Retrouver mon compte'}</h2>
+        {!props.user && !authenticated ? <>
+          <p>Votre profil et votre commande se préparent au même endroit.</p>
+          {mode === 'register' && <label>Nom complet<input name="name" autoComplete="name" required maxLength={100}/></label>}
+          <label>Adresse courriel<input name="email" type="email" autoComplete="email" required/></label>
+          <label>Mot de passe<input name="password" type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} minLength={mode === 'register' ? 12 : undefined} required/></label>
+          {mode === 'register' && <><small>Au moins 12 caractères.</small><label className="enrollment-consent"><input name="accept" type="checkbox" required/><span>J’accepte les <a href="/?view=privacy" target="_blank" rel="noreferrer">conditions de vente</a> et la <a href="/?view=privacy" target="_blank" rel="noreferrer">politique de confidentialité</a>.</span></label></>}
+          <button type="button" className="text-button" disabled={busy} onClick={()=>setMode(mode === 'register' ? 'login' : 'register')}>{mode === 'register' ? 'Déjà un compte ? Se connecter' : 'Créer un nouveau compte'}</button>
+        </> : <p>{props.user?.email || 'Votre compte est enregistré. Vous pouvez poursuivre le paiement.'}</p>}
+        {key !== 'autonomous' && <label>Votre formule<select value={key} disabled={busy} onChange={event=>props.go('checkout',event.target.value)}><option value={key.startsWith('immo-') ? 'immo-signature' : 'signature'}>Paiement unique · 1 200 CAD + taxes</option><option value={key.startsWith('immo-') ? 'immo-monthly' : 'monthly'}>Abonnement · 100 CAD/mois + taxes</option></select></label>}
+        {error && <p className="error" role="alert">{error}</p>}
+        <button className="button" disabled={busy} type="submit">{busy ? 'Préparation du paiement…' : 'Continuer vers le paiement sécurisé →'}</button>
+        <small>Vous saisirez votre carte sur Stripe. L’accès à la formation sera activé après confirmation du paiement.</small>
+      </form>
     </section>
   );
 }

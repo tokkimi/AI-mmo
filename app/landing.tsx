@@ -1,4 +1,5 @@
 'use client';
+import FormationBubble from '@/components/formation-bubble';
 import {CurrencyPicker, useMoney} from '@/components/currency';
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -183,6 +184,7 @@ export function PublicShell({ children, go, user }: any) {
           Formation indépendante. Sans affiliation à OpenAI ou Anthropic.
         </small>
       </footer>
+      <FormationBubble go={go}/>
     </div>
   );
 }
