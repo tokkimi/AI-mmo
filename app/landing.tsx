@@ -1,4 +1,5 @@
 'use client';
+import {CurrencyPicker, useMoney} from '@/components/currency';
 import { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
@@ -186,6 +187,7 @@ export function PublicShell({ children, go, user }: any) {
   );
 }
 export default function Landing({ go, user }: any) {
+  const money = useMoney();
   const [selected, S] = useState<string | null>(null);
   const chosen = modules.find((m) => m.id === selected);
   function join() {
@@ -461,7 +463,7 @@ export default function Landing({ go, user }: any) {
           <span>Carnet comparatif sauvegardé</span>
         </div>
         <p>
-          Formation autonome : 499 CAD + taxes, à votre rythme. Pratique dans
+          Formation autonome : {money(499)} + taxes, à votre rythme. Pratique dans
           vos comptes Claude et ChatGPT ; abonnements externes distincts. Aucun
           envoi automatique ni connexion imposée.
         </p>
@@ -611,7 +613,7 @@ export default function Landing({ go, user }: any) {
             [
               Video,
               'Être accompagné',
-              'Des cours en groupe inclus et une messagerie privée. Une seule heure individuelle est incluse avec l’offre à 1 200 CAD ; aucune avec l’abonnement mensuel.',
+              `Des cours en groupe inclus et une messagerie privée. Une seule heure individuelle est incluse avec l’offre à ${money(1200)} ; aucune avec l’abonnement mensuel.`,
             ],
           ].map(([Icon, t, d]: any, i: number) => (
             <article key={t}>
@@ -668,6 +670,7 @@ export default function Landing({ go, user }: any) {
             assistants IA : choisissez selon votre objectif.
           </p>
         </div>
+        <CurrencyPicker />
         <div className="offer-grid">
           <article className="panel offer-card">
             <span className="eyebrow">01 · STRUCTURER & AUTOMATISER</span>
@@ -678,14 +681,14 @@ export default function Landing({ go, user }: any) {
               travail, étape par étape.
             </p>
             <div className="price">
-              1 200 <small>CAD + taxes</small>
+              {money(1200)} <small>+ taxes</small>
             </div>
             <p>
               Paiement unique · accès illimité à la formation · une seule heure
               de coaching individuel incluse au total.
             </p>
             <div className="monthly-alternative">
-              <strong>Ou 100 CAD / mois + taxes</strong>
+              <strong>Ou {money(100)} / mois + taxes</strong>
               <p>
                 Le même parcours en autonomie, sans coaching privé inclus.
                 Résiliable à tout moment.
@@ -696,7 +699,7 @@ export default function Landing({ go, user }: any) {
               <li>Organisation de vos connaissances et prompts</li>
               <li>Automatisations CRM, courriels et suivi</li>
               <li>Exercices, QCM et progression enregistrée</li>
-              <li>1 h privée avec l’offre à 1 200 CAD uniquement</li>
+              <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
             </ul>
             <button className="button" onClick={() => go('business-info')}>
               Découvrir la formation →
@@ -713,15 +716,15 @@ export default function Landing({ go, user }: any) {
             <ul className="offer-tiers">
               <li>
                 <span>4 à 8 personnes</span>
-                <b>4 900 CAD</b>
+                <b>{money(4900)}</b>
               </li>
               <li>
                 <span>8 à 12 personnes</span>
-                <b>8 500 CAD</b>
+                <b>{money(8500)}</b>
               </li>
               <li>
                 <span>Plus de 12 personnes</span>
-                <b>14 900 CAD</b>
+                <b>{money(14900)}</b>
               </li>
             </ul>
             <p className="muted">
@@ -750,7 +753,7 @@ export default function Landing({ go, user }: any) {
               travail.
             </p>
             <div className="price">
-              499 <small>CAD + taxes</small>
+              {money(499)} <small>+ taxes</small>
             </div>
             <p>
               Paiement unique · 28 ateliers · 7 chapitres · 84 questions
@@ -776,14 +779,14 @@ export default function Landing({ go, user }: any) {
               CRM et automatisations.
             </p>
             <div className="price">
-              1 200 <small>CAD + taxes</small>
+              {money(1200)} <small>+ taxes</small>
             </div>
             <p>
               Paiement unique · accès illimité · une heure privée incluse au
               total.
             </p>
             <div className="monthly-alternative">
-              <strong>Ou 100 CAD / mois + taxes</strong>
+              <strong>Ou {money(100)} / mois + taxes</strong>
               <p>
                 Le même parcours immobilier en autonomie, résiliable à tout
                 moment, sans coaching privé inclus.
@@ -822,7 +825,7 @@ export default function Landing({ go, user }: any) {
             ],
             [
               'Comment se déroule la formation ?',
-              'Le programme est textuel et interactif : explications, cas fictifs, ateliers, QCM et travaux. Les cours en groupe sont inclus, avec une seule heure privée incluse dans le paiement à 1 200 CAD. L’offre à 100 CAD/mois ne comprend pas de coaching privé. Aucune bibliothèque de vidéos préenregistrées n’est annoncée.',
+              `Le programme est textuel et interactif : explications, cas fictifs, ateliers, QCM et travaux. Les cours en groupe sont inclus, avec une seule heure privée incluse dans le paiement à ${money(1200)}. L’offre à ${money(100)}/mois ne comprend pas de coaching privé. Aucune bibliothèque de vidéos préenregistrées n’est annoncée.`,
             ],
             [
               'Les outils sont-ils connectés automatiquement ?',
@@ -859,11 +862,12 @@ export default function Landing({ go, user }: any) {
 }
 
 export function AutonomousPresentation({ go, user }: any) {
+  const money = useMoney();
   return (
     <div className="autonomy-presentation">
       <section className="sales-section auto-public">
         <span className="eyebrow">
-          VOTRE FORMATION AUTONOME · 499 CAD + TAXES
+          VOTRE FORMATION AUTONOME · {money(499)} + TAXES
         </span>
         <h1>
           Claude + ChatGPT.
@@ -977,15 +981,15 @@ export function AutonomousPresentation({ go, user }: any) {
       <section className="sales-section auto-public">
         <h2>Autonomie et accompagnement se complètent.</h2>
         <p>
-          Ce parcours autonome est proposé à 499 CAD + taxes et se réalise à
+          Ce parcours autonome est proposé à {money(499)} + taxes et se réalise à
           votre rythme, sans coaching privé inclus. La formation d’origine
           ajoute les cours en groupe et{' '}
           <strong>une heure individuelle incluse au total</strong>, pour
           travailler vos propres questions avec le formateur.
         </p>
         <p>
-          Formation principale : 1 200 CAD en paiement unique avec une heure
-          privée incluse, ou 100 CAD/mois résiliable à tout moment sans coaching
+          Formation principale : {money(1200)} en paiement unique avec une heure
+          privée incluse, ou {money(100)}/mois résiliable à tout moment sans coaching
           privé. Taxes en sus. Les essais se font dans vos comptes Claude et
           ChatGPT ; leurs abonnements sont distincts. Le carnet est une
           auto-évaluation et ne constitue pas une certification professionnelle.

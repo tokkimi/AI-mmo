@@ -196,3 +196,5 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 .compose-choices button{display:block;width:100%;padding:12px;text-align:left;border-radius:10px}.compose-choices button.selected,.compose-choices button:hover{background:#eef2e7}.compose-choices strong{display:block;font-size:13px;color:#466048}.compose-choices span{display:block;font-size:11px;color:#7b8274;margin-top:4px}
 @media(max-width:767px){.message-compose{padding:12px}.compose-footer{gap:6px;flex-wrap:wrap}.compose-footer .button{padding:10px 12px}.compose-choices{left:10px;right:10px}.message-compose textarea{min-height:160px}}
 @media(prefers-reduced-motion:reduce){.message-compose{transition:none}}
+
+.currency-picker{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-bottom:28px}.currency-picker label{display:flex;align-items:center;gap:12px;font-size:13px}.currency-picker select{width:auto;font-size:16px;border-color:#d6c59e}.currency-picker small{max-width:550px;line-height:1.6;color:#687560}@media(max-width:767px){.currency-picker label{flex-wrap:wrap}.currency-picker select{max-width:100%}}
