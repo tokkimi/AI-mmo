@@ -33,7 +33,7 @@ const offers: Record<string, { name: string; price: string; detail: string }> =
         'Parcours immobilier complet. Résiliable à tout moment, sans coaching privé inclus.',
     },
   };
-export default function Checkout(props: any) {
+export function EnrollmentForm(props: any) {
   const key = offers[props.id] ? props.id : 'signature';
   const offer = offers[key];
   const [busy, setBusy] = useState(false);
@@ -57,28 +57,14 @@ export default function Checkout(props: any) {
       setBusy(false);
     }
   }
-  return (
-    <section className="sales-section checkout-page">
-      <span className="eyebrow">VOTRE INSCRIPTION</span>
-      <h1>
-        {props.user ? 'Votre commande' : 'Créez votre profil pour continuer'}
-      </h1>
-      <div className="panel">
-        <span className="badge">
-          {props.user
-            ? '1. Compte créé · 2. Paiement'
-            : '1. Votre compte · 2. Paiement'}
-        </span>
+  return <>
+      <div className="purchase-summary">
+        <span className="badge">1. Vos coordonnées · 2. Paiement sécurisé</span>
         <h2>{offer.name}</h2>
         <div className="price">{offer.price}</div>
         <p>{offer.detail}</p>
-        <p>
-          Les taxes et le total seront affichés avant la confirmation du
-          paiement. Aucun accès payant n’est activé à la seule création du
-          compte.
-        </p>
       </div>
-      <form className="panel express-enrollment" onSubmit={pay}>
+      <form className="express-enrollment" onSubmit={pay}>
         <h2>{props.user || authenticated ? 'Votre profil est prêt' : mode === 'register' ? 'Vos informations' : 'Retrouver mon compte'}</h2>
         {!props.user && !authenticated ? <>
           <p>Votre profil et votre commande se préparent au même endroit.</p>
@@ -93,6 +79,14 @@ export default function Checkout(props: any) {
         <button className="button" disabled={busy} type="submit">{busy ? 'Préparation du paiement…' : 'Continuer vers le paiement sécurisé →'}</button>
         <small>Vous saisirez votre carte sur Stripe. L’accès à la formation sera activé après confirmation du paiement.</small>
       </form>
-    </section>
-  );
+  </>;
+}
+
+export default function Checkout(props: any) {
+  const key = offers[props.id] ? props.id : 'signature';
+  return <section className="sales-section checkout-page">
+    <span className="eyebrow">VOTRE INSCRIPTION</span>
+    <h1>{props.user ? 'Votre commande' : 'Votre formation, votre inscription, votre paiement.'}</h1>
+    <div className="panel checkout-complete"><EnrollmentForm {...props} id={key}/></div>
+  </section>;
 }

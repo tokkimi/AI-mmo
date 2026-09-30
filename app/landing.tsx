@@ -1,5 +1,6 @@
 'use client';
 import FormationBubble from '@/components/formation-bubble';
+import PurchaseSheet from '@/components/purchase-sheet';
 import {CurrencyPicker, useMoney} from '@/components/currency';
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -184,7 +185,7 @@ export function PublicShell({ children, go, user }: any) {
           Formation indépendante. Sans affiliation à OpenAI ou Anthropic.
         </small>
       </footer>
-      <FormationBubble go={go}/>
+      <FormationBubble go={go} user={user}/>
     </div>
   );
 }
@@ -703,9 +704,7 @@ export default function Landing({ go, user }: any) {
               <li>Exercices, QCM et progression enregistrée</li>
               <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
             </ul>
-            <button className="button" onClick={() => go('business-info')}>
-              Découvrir la formation →
-            </button>
+            <div className="offer-actions"><button className="text-button" onClick={() => go('business-info')}>Voir le programme complet →</button><PurchaseSheet offer="signature" user={user} go={go}/></div>
           </article>
           <article className="panel offer-card">
             <span className="eyebrow">02 · FORMER VOTRE ÉQUIPE</span>
@@ -768,9 +767,7 @@ export default function Landing({ go, user }: any) {
               <li>Choisir un outil ou combiner leurs réponses</li>
               <li>100 % autonome, sans coaching privé</li>
             </ul>
-            <button className="button" onClick={() => go('autonomous-info')}>
-              Découvrir Claude + ChatGPT →
-            </button>
+            <div className="offer-actions"><button className="text-button" onClick={() => go('autonomous-info')}>Voir le programme complet →</button><PurchaseSheet offer="autonomous" user={user} go={go}/></div>
           </article>
           <article className="panel offer-card immo-offer-card">
             <span className="eyebrow">04 · IMMOBILIER QUÉBEC</span>
@@ -800,9 +797,7 @@ export default function Landing({ go, user }: any) {
               <li>Courtage, marketing, documents et suivi client</li>
               <li>CRM, Make, Zapier et automatisations avec contrôle</li>
             </ul>
-            <a className="button" href="/immobilier-quebec">
-              Découvrir la spécialisation →
-            </a>
+            <div className="offer-actions"><a className="text-button" href="/immobilier-quebec">Voir le programme complet →</a><PurchaseSheet offer="immo-signature" user={user} go={go}/></div>
           </article>
         </div>
       </section>
@@ -910,9 +905,7 @@ export function AutonomousPresentation({ go, user }: any) {
           <span>84 questions corrigées</span>
           <span>À votre rythme</span>
         </div>
-        <button className="button" onClick={() => go('checkout', 'autonomous')}>
-          Accéder à mon parcours →
-        </button>
+        <PurchaseSheet offer="autonomous" user={user} go={go} label="Accéder à mon parcours"/>
       </section>
       <section className="sales-section">
         <div className="sales-section-title">
@@ -996,9 +989,7 @@ export function AutonomousPresentation({ go, user }: any) {
           ChatGPT ; leurs abonnements sont distincts. Le carnet est une
           auto-évaluation et ne constitue pas une certification professionnelle.
         </p>
-        <button className="button" onClick={() => go('checkout', 'autonomous')}>
-          Commencer mon parcours →
-        </button>
+        <PurchaseSheet offer="autonomous" user={user} go={go} label="Commencer mon parcours"/>
         <a className="text-button" href="/#tarif">
           Voir l’offre accompagnée →
         </a>

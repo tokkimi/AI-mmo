@@ -2,7 +2,8 @@
 import {useEffect,useRef,useState} from 'react';
 import {BookOpen,Building2,Users,Sparkles,ArrowUpRight,X} from 'lucide-react';
 import {useMoney} from './currency';
-export default function FormationBubble({go}: {go:(view:string,id?:string)=>void}) {
+import PurchaseSheet from './purchase-sheet';
+export default function FormationBubble({go,user}: {go:(view:string,id?:string)=>void;user?:any}) {
   const [open,setOpen]=useState(false);
   const root=useRef<HTMLDivElement>(null);
   const trigger=useRef<HTMLButtonElement>(null);
@@ -25,7 +26,7 @@ export default function FormationBubble({go}: {go:(view:string,id?:string)=>void
     {open&&<section className="formation-bubble-panel" id="formation-bubble-panel" aria-label="Choisir une formation">
       <header><h2>Votre prochain pas commence ici.</h2><button type="button" onClick={()=>{setOpen(false);trigger.current?.focus()}} aria-label="Fermer les formations"><X size={22}/></button></header>
       <p>Découvrez votre parcours ou inscrivez-vous directement.</p>
-      {items.map(item=><article key={item.name}><item.icon size={25}/><div><h3>{item.name}</h3><p>{item.detail} · taxes en sus</p><div className="row">{item.view==='immo'?<a href="/immobilier-quebec" onClick={()=>setOpen(false)}>Découvrir <ArrowUpRight size={13}/></a>:<button onClick={()=>navigate(item.view)}>Découvrir <ArrowUpRight size={13}/></button>}{item.offer&&<button onClick={()=>navigate('checkout',item.offer)}>M’inscrire →</button>}</div></div></article>)}
+      {items.map(item=><article key={item.name}><item.icon size={25}/><div><h3>{item.name}</h3><p>{item.detail} · taxes en sus</p><div className="row">{item.view==='immo'?<a href="/immobilier-quebec" onClick={()=>setOpen(false)}>Découvrir <ArrowUpRight size={13}/></a>:<button onClick={()=>navigate(item.view)}>Découvrir <ArrowUpRight size={13}/></button>}{item.offer&&<PurchaseSheet offer={item.offer} user={user} go={go} label="M’inscrire" className="text-button"/>}</div></div></article>)}
       <small>Prix convertis à titre indicatif en EUR. Paiement en CAD.</small>
     </section>}
     <button type="button" className="formation-bubble-trigger" ref={trigger} aria-expanded={open} aria-controls="formation-bubble-panel" onClick={()=>setOpen(!open)}><span><BookOpen size={22}/></span><span><b>Les formations</b><small>Choisir · S’inscrire</small></span>{open?<X size={18}/>:<ArrowUpRight size={18}/>}</button>

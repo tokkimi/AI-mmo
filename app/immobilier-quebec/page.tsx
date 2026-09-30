@@ -11,7 +11,7 @@ export default function ImmobilierQuebec() {
   };
   return (
     <PublicShell go={go} user={null}>
-      <ImmoPresentation go={go} />
+      <ImmoPresentation go={go} user={null} />
     </PublicShell>
   );
 }

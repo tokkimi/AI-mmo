@@ -37,6 +37,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       await db()`UPDATE users SET stripe_customer=${customer} WHERE id=${user.id}`;
     }
     const subscription = offer.mode === 'subscription';
+    const cancelUrl = offerId.startsWith('immo-')
+      ? `${base}/immobilier-quebec?payment=cancelled`
+      : offerId === 'autonomous'
+        ? `${base}/?view=autonomous-info&payment=cancelled`
+        : `${base}/?view=business-info&payment=cancelled`;
     const session = await stripe.checkout.sessions.create({
       mode: offer.mode,
       customer,
@@ -44,7 +49,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       metadata: { offer: offerId, user_id: user.id },
       line_items: [{ quantity: 1, price_data: { currency: 'cad', unit_amount: offer.amount, product_data: { name: offer.name }, ...(subscription ? { recurring: { interval: 'month' as const } } : {}) } }],
       success_url: `${base}/?view=subscription&payment=success`,
-      cancel_url: `${base}/?view=checkout&id=${offerId}&payment=cancelled`,
+      cancel_url: cancelUrl,
       billing_address_collection: 'required',
       ...(process.env.STRIPE_AUTOMATIC_TAX === 'true' ? { automatic_tax: { enabled: true } } : {}),
       ...(subscription ? { subscription_data: { metadata: { offer: offerId, user_id: user.id } } } : {}),

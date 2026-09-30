@@ -1,9 +1,10 @@
 'use client';
 
-import { ArrowRight, Building2, Check, ShieldCheck, Zap } from 'lucide-react';
+import { Building2, Check, ShieldCheck, Zap } from 'lucide-react';
 import { modules } from '@/content/catalog';
+import PurchaseSheet from '@/components/purchase-sheet';
 
-export default function ImmoPresentation({ go }: any) {
+export default function ImmoPresentation({ go, user }: any) {
   return (
     <div className="immo-presentation">
       <section className="sales-section immo-hero">
@@ -36,12 +37,7 @@ export default function ImmoPresentation({ go }: any) {
               Paiement unique, accès illimité au parcours immobilier, aux
               prompts, exercices, QCM et une heure privée incluse au total.
             </p>
-            <button
-              className="button"
-              onClick={() => go('checkout', 'immo-signature')}
-            >
-              Choisir l’accès complet <ArrowRight size={16} />
-            </button>
+            <PurchaseSheet offer="immo-signature" user={user} go={go} label="Choisir l’accès complet"/>
           </article>
           <article className="panel">
             <span className="eyebrow">À VOTRE RYTHME</span>
@@ -50,12 +46,7 @@ export default function ImmoPresentation({ go }: any) {
               Le même parcours spécialisé, résiliable à tout moment. Sans
               coaching privé inclus.
             </p>
-            <button
-              className="button outline"
-              onClick={() => go('checkout', 'immo-monthly')}
-            >
-              M’abonner au parcours
-            </button>
+            <PurchaseSheet offer="immo-monthly" user={user} go={go} label="M’abonner au parcours" className="button outline"/>
           </article>
         </div>
       </section>
@@ -142,12 +133,7 @@ export default function ImmoPresentation({ go }: any) {
             promesse ou un envoi non contrôlé.
           </p>
         </div>
-        <button
-          className="button"
-          onClick={() => go('checkout', 'immo-signature')}
-        >
-          Accéder à la formation immobilier Québec <ArrowRight size={16} />
-        </button>
+        <PurchaseSheet offer="immo-signature" user={user} go={go} label="Accéder à la formation immobilier Québec"/>
       </section>
     </div>
   );
