@@ -169,7 +169,7 @@ export function PublicShell({ children, go, user }: any) {
             />
           </a>
           <p>
-            La entreprise, augmentée par l’IA.
+            Votre entreprise, augmentée par l’IA.
             <br />
             De l’intelligence à l’action, dans votre entreprise.
           </p>
