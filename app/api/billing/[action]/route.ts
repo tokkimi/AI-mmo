@@ -4,10 +4,8 @@ import { currentUser, db } from '@/lib/server';
 
 const offers = {
   signature: { name: 'i-ateliers — Structurer et automatiser · Accompagné', amount: 120000, mode: 'payment' },
-  monthly: { name: 'i-ateliers — Structurer et automatiser · Autonomie', amount: 10000, mode: 'subscription' },
   autonomous: { name: 'i-ateliers — Claude + ChatGPT · 100 % autonome', amount: 49900, mode: 'payment' },
-  'immo-signature': { name: 'i-ateliers — Immobilier Québec · Accès complet', amount: 120000, mode: 'payment' },
-  'immo-monthly': { name: 'i-ateliers — Immobilier Québec · À votre rythme', amount: 10000, mode: 'subscription' },
+  'immo-pro': { name: 'i-ateliers — Immobilier Québec · i-Courtier', amount: 25000, mode: 'subscription' },
 } as const;
 type OfferId = keyof typeof offers;
 

@@ -9,32 +9,23 @@ const offers: Record<string, { name: string; price: string; detail: string }> =
       detail:
         'Paiement unique, accès illimité et une heure privée incluse au total.',
     },
-    monthly: {
-      name: 'Structurer et automatiser · Autonomie',
-      price: '100 CAD / mois + taxes',
-      detail: 'Résiliable à tout moment. Sans coaching privé inclus.',
-    },
     autonomous: {
       name: 'Claude + ChatGPT · 100 % autonome',
       price: '499 CAD + taxes',
       detail:
         'Paiement unique. 28 ateliers pour comparer, choisir et combiner les deux assistants.',
     },
-    'immo-signature': {
-      name: 'Immobilier Québec · Accès complet',
-      price: '1 200 CAD + taxes',
+    'immo-pro': {
+      name: 'Immobilier Québec · i-Courtier',
+      price: '250 CAD / mois + taxes',
       detail:
-        'Paiement unique, accès illimité au programme immobilier, aux exercices, QCM et une heure privée incluse au total.',
-    },
-    'immo-monthly': {
-      name: 'Immobilier Québec · À votre rythme',
-      price: '100 CAD / mois + taxes',
-      detail:
-        'Parcours immobilier complet. Résiliable à tout moment, sans coaching privé inclus.',
+        'Aucuns frais fixes, résiliable à tout moment. Extension i-Courtier et parcours immobilier complet inclus.',
     },
   };
+const legacy: Record<string, string> = { monthly: 'signature', 'immo-signature': 'immo-pro', 'immo-monthly': 'immo-pro' };
 export function EnrollmentForm(props: any) {
-  const key = offers[props.id] ? props.id : 'signature';
+  const id = legacy[props.id] || props.id;
+  const key = offers[id] ? id : 'signature';
   const offer = offers[key];
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -74,7 +65,6 @@ export function EnrollmentForm(props: any) {
           {mode === 'register' && <><small>Au moins 12 caractères.</small><label className="enrollment-consent"><input name="accept" type="checkbox" required/><span>J’accepte les <a href="/?view=privacy" target="_blank" rel="noreferrer">conditions de vente</a> et la <a href="/?view=privacy" target="_blank" rel="noreferrer">politique de confidentialité</a>.</span></label></>}
           <button type="button" className="text-button" disabled={busy} onClick={()=>setMode(mode === 'register' ? 'login' : 'register')}>{mode === 'register' ? 'Déjà un compte ? Se connecter' : 'Créer un nouveau compte'}</button>
         </> : <p>{props.user?.email || 'Votre compte est enregistré. Vous pouvez poursuivre le paiement.'}</p>}
-        {key !== 'autonomous' && <label>Votre formule<select value={key} disabled={busy} onChange={event=>props.go('checkout',event.target.value)}><option value={key.startsWith('immo-') ? 'immo-signature' : 'signature'}>Paiement unique · 1 200 CAD + taxes</option><option value={key.startsWith('immo-') ? 'immo-monthly' : 'monthly'}>Abonnement · 100 CAD/mois + taxes</option></select></label>}
         {error && <p className="error" role="alert">{error}</p>}
         <button className="button" disabled={busy} type="submit">{busy ? 'Préparation du paiement…' : 'Continuer vers le paiement sécurisé →'}</button>
         <small>Vous saisirez votre carte sur Stripe. L’accès à la formation sera activé après confirmation du paiement.</small>
@@ -83,7 +73,8 @@ export function EnrollmentForm(props: any) {
 }
 
 export default function Checkout(props: any) {
-  const key = offers[props.id] ? props.id : 'signature';
+  const id = legacy[props.id] || props.id;
+  const key = offers[id] ? id : 'signature';
   return <section className="sales-section checkout-page">
     <span className="eyebrow">VOTRE INSCRIPTION</span>
     <h1>{props.user ? 'Votre commande' : 'Votre formation, votre inscription, votre paiement.'}</h1>

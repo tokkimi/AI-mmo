@@ -17,10 +17,10 @@ export default function FormationBubble({go,user}: {go:(view:string,id?:string)=
   },[open]);
   function navigate(view:string,id?:string){setOpen(false);go(view,id)}
   const items=[
-    {name:'Structurer & automatiser',detail:`${money(1200)} ou ${money(100)}/mois`,icon:BookOpen,view:'business-info',offer:'signature'},
+    {name:'Structurer & automatiser',detail:`${money(1200)} · paiement unique`,icon:BookOpen,view:'business-info',offer:'signature'},
     {name:'Former votre équipe',detail:`20 h en groupe · dès ${money(4900)}`,icon:Users,view:'enterprise'},
     {name:'Claude + ChatGPT',detail:`100 % autonome · ${money(499)}`,icon:Sparkles,view:'autonomous-info',offer:'autonomous'},
-    {name:'Immobilier Québec',detail:`${money(1200)} ou ${money(100)}/mois`,icon:Building2,view:'immo',offer:'immo-signature'},
+    {name:'Immobilier Québec · i-Courtier',detail:`${money(250)}/mois · sans frais fixes`,icon:Building2,view:'immo',offer:'immo-pro'},
   ];
   return <div className="formation-bubble" ref={root}>
     {open&&<section className="formation-bubble-panel" id="formation-bubble-panel" aria-label="Choisir une formation">

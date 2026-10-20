@@ -31,22 +31,24 @@ export default function ImmoPresentation({ go, user }: any) {
         </div>
         <div className="immo-pricing">
           <article className="panel">
-            <span className="eyebrow">ACCÈS COMPLET</span>
-            <h2>1 200 CAD + taxes</h2>
+            <span className="eyebrow">ABONNEMENT i-COURTIER</span>
+            <h2>250 CAD / mois + taxes</h2>
             <p>
-              Paiement unique, accès illimité au parcours immobilier, aux
-              prompts, exercices, QCM et une heure privée incluse au total.
+              Aucuns frais fixes, résiliable à tout moment. L’extension
+              i-Courtier pour la saisie à la source, les ébauches de contrats
+              et l’administration des inscriptions, plus le parcours immobilier
+              complet : prompts, exercices et QCM.
             </p>
-            <PurchaseSheet offer="immo-signature" user={user} go={go} label="Choisir l’accès complet"/>
+            <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/>
           </article>
           <article className="panel">
-            <span className="eyebrow">À VOTRE RYTHME</span>
-            <h2>100 CAD / mois + taxes</h2>
+            <span className="eyebrow">L’IA POUR VOS PRATIQUES IMMO</span>
+            <h2>20 h de travail, 5 minutes.</h2>
             <p>
-              Le même parcours spécialisé, résiliable à tout moment. Sans
-              coaching privé inclus.
+              Des outils pensés pour les courtiers : vos inscriptions, vos
+              formulaires et vos suivis sont préparés pour vous. Le courtier
+              valide chaque document avant usage.
             </p>
-            <PurchaseSheet offer="immo-monthly" user={user} go={go} label="M’abonner au parcours" className="button outline"/>
           </article>
         </div>
       </section>
@@ -133,7 +135,7 @@ export default function ImmoPresentation({ go, user }: any) {
             promesse ou un envoi non contrôlé.
           </p>
         </div>
-        <PurchaseSheet offer="immo-signature" user={user} go={go} label="Accéder à la formation immobilier Québec"/>
+        <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/>
       </section>
     </div>
   );

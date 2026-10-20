@@ -10,7 +10,6 @@ export default function OfferDetail({ go, user }: any) {
       <p>Apprenez à transformer les tâches répétitives en processus clairs, documentés et contrôlés. Vous construisez votre méthode avec des exercices, des prompts personnalisables et des outils que vous gardez en main.</p>
       <div className="offer-grid">
         <article className="panel"><h2>Avec accompagnement</h2><div className="price">1 200 <small>CAD + taxes</small></div><p>Paiement unique. Accès illimité à la formation et une seule heure de coaching individuel incluse au total, à réserver avec le formateur.</p><PurchaseSheet offer="signature" user={user} go={go} label="Acheter cette formation"/></article>
-        <article className="panel"><h2>À votre rythme</h2><div className="price">100 <small>CAD / mois + taxes</small></div><p>Le parcours en autonomie, accessible pendant votre abonnement. Résiliable à tout moment, sans engagement de douze mois et sans coaching privé inclus.</p><PurchaseSheet offer="monthly" user={user} go={go} label="M’abonner"/></article>
         <article className="panel"><h2>Un besoin ponctuel ?</h2><p>Un appel privé d’une heure à 100 CAD + taxes est accessible à tous. Les heures supplémentaires d’accompagnement sont proposées à 95 CAD + taxes. Cours sur mesure : prix sur demande.</p><button className="text-button" onClick={()=>go('enterprise')}>Demander un accompagnement →</button></article>
       </div>
     </section>

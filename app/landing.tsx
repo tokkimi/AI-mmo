@@ -283,6 +283,136 @@ export default function Landing({ go, user }: any) {
           <span>questions avec correction expliquée</span>
         </div>
       </div>
+      <section id="tarif" className="sales-section">
+        <div className="sales-section-title">
+          <span className="eyebrow">
+            TROIS FORMATIONS · TROIS FAÇONS D’AVANCER
+          </span>
+          <h2>
+            Le bon parcours pour
+            <br />
+            votre entreprise.
+          </h2>
+          <p>
+            Organiser votre activité, former votre équipe ou maîtriser vos
+            assistants IA : choisissez selon votre objectif.
+          </p>
+        </div>
+        <CurrencyPicker />
+        <div className="offer-grid">
+          <article className="panel offer-card">
+            <span className="eyebrow">01 · STRUCTURER & AUTOMATISER</span>
+            <h3>Intégrez l’IA dans votre entreprise.</h3>
+            <p>
+              Clarifiez vos processus, organisez vos connaissances et
+              automatisez les tâches répétitives. Construisez votre système de
+              travail, étape par étape.
+            </p>
+            <div className="price">
+              {money(1200)} <small>+ taxes</small>
+            </div>
+            <p>
+              Paiement unique · accès illimité à la formation · une seule heure
+              de coaching individuel incluse au total.
+            </p>
+            <ul className="offer-inclusions">
+              <li>Cartographie de vos tâches et processus</li>
+              <li>Organisation de vos connaissances et prompts</li>
+              <li>Automatisations CRM, courriels et suivi</li>
+              <li>Exercices, QCM et progression enregistrée</li>
+              <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
+            </ul>
+            <div className="offer-actions"><button className="text-button" onClick={() => go('business-info')}>Voir le programme complet →</button><PurchaseSheet offer="signature" user={user} go={go}/></div>
+          </article>
+          <article className="panel offer-card">
+            <span className="eyebrow">02 · FORMER VOTRE ÉQUIPE</span>
+            <h3>Avancez ensemble, en groupe.</h3>
+            <p>
+              20 heures de formation sur environ deux mois. Des sessions
+              collectives pour intégrer l’IA dans les méthodes de votre
+              entreprise.
+            </p>
+            <ul className="offer-tiers">
+              <li>
+                <span>4 à 8 personnes</span>
+                <b>{money(4900)}</b>
+              </li>
+              <li>
+                <span>8 à 12 personnes</span>
+                <b>{money(8500)}</b>
+              </li>
+              <li>
+                <span>Plus de 12 personnes</span>
+                <b>{money(14900)}</b>
+              </li>
+            </ul>
+            <p className="muted">
+              Taxes en sus. À 8 participants, le forfait est précisé dans votre
+              proposition.
+            </p>
+            <ul className="offer-inclusions">
+              <li>20 h de sessions collectives sur environ 2 mois</li>
+              <li>Cas pratiques liés aux méthodes de votre équipe</li>
+              <li>Prompts et procédures communs</li>
+              <li>Organisation des rôles et validations humaines</li>
+            </ul>
+            <button className="button" onClick={() => go('enterprise')}>
+              Découvrir la formation d’équipe →
+            </button>
+          </article>
+          <article className="panel offer-card">
+            <span className="eyebrow">03 · 100 % AUTONOME</span>
+            <h3>
+              Claude ou ChatGPT ?<br />
+              Choisissez. Combinez.
+            </h3>
+            <p>
+              Comparez les deux assistants sur les mêmes cas concrets. Apprenez
+              quand utiliser l’un, l’autre, ou les combiner dans une méthode de
+              travail.
+            </p>
+            <div className="price">
+              {money(499)} <small>+ taxes</small>
+            </div>
+            <p>
+              Paiement unique · 28 ateliers · 7 chapitres · 84 questions
+              corrigées. Sans coaching privé inclus.
+            </p>
+            <ul className="offer-inclusions">
+              <li>28 ateliers répartis en 7 chapitres</li>
+              <li>Les mêmes cas testés dans les deux assistants</li>
+              <li>Prompts, carnet comparatif et 84 questions</li>
+              <li>Choisir un outil ou combiner leurs réponses</li>
+              <li>100 % autonome, sans coaching privé</li>
+            </ul>
+            <div className="offer-actions"><button className="text-button" onClick={() => go('autonomous-info')}>Voir le programme complet →</button><PurchaseSheet offer="autonomous" user={user} go={go}/></div>
+          </article>
+          <article className="panel offer-card immo-offer-card">
+            <span className="eyebrow">04 · IMMOBILIER QUÉBEC</span>
+            <h3>L’IA pour vos pratiques immo.</h3>
+            <p>
+              La formation immobilier Québec et l’extension i-Courtier : saisie
+              à la source, ébauches de contrats et administration des
+              inscriptions pour les courtiers.
+            </p>
+            <div className="price">
+              {money(250)} <small>/ mois + taxes</small>
+            </div>
+            <p>
+              Aucuns frais fixes · résiliable à tout moment. Jusqu’à 20 h de
+              travail administratif ramenées à quelques minutes.
+            </p>
+            <ul className="offer-inclusions">
+              <li>Extension i-Courtier pour votre navigateur</li>
+              <li>Saisie à la source et ébauches de contrats</li>
+              <li>Outils d’administration des inscriptions</li>
+              <li>16 parcours et 48 leçons immobilier Québec</li>
+              <li>Prompts, exercices et 240 questions corrigées</li>
+            </ul>
+            <div className="offer-actions"><a className="text-button" href="/immobilier-quebec">Voir le programme complet →</a><PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/></div>
+          </article>
+        </div>
+      </section>
       <section id="pour-vous" className="sales-section">
         <div className="sales-section-title">
           <span className="eyebrow">
@@ -658,149 +788,6 @@ export default function Landing({ go, user }: any) {
           </p>
         </div>
       </section>
-      <section id="tarif" className="sales-section">
-        <div className="sales-section-title">
-          <span className="eyebrow">
-            TROIS FORMATIONS · TROIS FAÇONS D’AVANCER
-          </span>
-          <h2>
-            Le bon parcours pour
-            <br />
-            votre entreprise.
-          </h2>
-          <p>
-            Organiser votre activité, former votre équipe ou maîtriser vos
-            assistants IA : choisissez selon votre objectif.
-          </p>
-        </div>
-        <CurrencyPicker />
-        <div className="offer-grid">
-          <article className="panel offer-card">
-            <span className="eyebrow">01 · STRUCTURER & AUTOMATISER</span>
-            <h3>Intégrez l’IA dans votre entreprise.</h3>
-            <p>
-              Clarifiez vos processus, organisez vos connaissances et
-              automatisez les tâches répétitives. Construisez votre système de
-              travail, étape par étape.
-            </p>
-            <div className="price">
-              {money(1200)} <small>+ taxes</small>
-            </div>
-            <p>
-              Paiement unique · accès illimité à la formation · une seule heure
-              de coaching individuel incluse au total.
-            </p>
-            <div className="monthly-alternative">
-              <strong>Ou {money(100)} / mois + taxes</strong>
-              <p>
-                Le même parcours en autonomie, sans coaching privé inclus.
-                Résiliable à tout moment.
-              </p>
-            </div>
-            <ul className="offer-inclusions">
-              <li>Cartographie de vos tâches et processus</li>
-              <li>Organisation de vos connaissances et prompts</li>
-              <li>Automatisations CRM, courriels et suivi</li>
-              <li>Exercices, QCM et progression enregistrée</li>
-              <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
-            </ul>
-            <div className="offer-actions"><button className="text-button" onClick={() => go('business-info')}>Voir le programme complet →</button><PurchaseSheet offer="signature" user={user} go={go}/></div>
-          </article>
-          <article className="panel offer-card">
-            <span className="eyebrow">02 · FORMER VOTRE ÉQUIPE</span>
-            <h3>Avancez ensemble, en groupe.</h3>
-            <p>
-              20 heures de formation sur environ deux mois. Des sessions
-              collectives pour intégrer l’IA dans les méthodes de votre
-              entreprise.
-            </p>
-            <ul className="offer-tiers">
-              <li>
-                <span>4 à 8 personnes</span>
-                <b>{money(4900)}</b>
-              </li>
-              <li>
-                <span>8 à 12 personnes</span>
-                <b>{money(8500)}</b>
-              </li>
-              <li>
-                <span>Plus de 12 personnes</span>
-                <b>{money(14900)}</b>
-              </li>
-            </ul>
-            <p className="muted">
-              Taxes en sus. À 8 participants, le forfait est précisé dans votre
-              proposition.
-            </p>
-            <ul className="offer-inclusions">
-              <li>20 h de sessions collectives sur environ 2 mois</li>
-              <li>Cas pratiques liés aux méthodes de votre équipe</li>
-              <li>Prompts et procédures communs</li>
-              <li>Organisation des rôles et validations humaines</li>
-            </ul>
-            <button className="button" onClick={() => go('enterprise')}>
-              Découvrir la formation d’équipe →
-            </button>
-          </article>
-          <article className="panel offer-card">
-            <span className="eyebrow">03 · 100 % AUTONOME</span>
-            <h3>
-              Claude ou ChatGPT ?<br />
-              Choisissez. Combinez.
-            </h3>
-            <p>
-              Comparez les deux assistants sur les mêmes cas concrets. Apprenez
-              quand utiliser l’un, l’autre, ou les combiner dans une méthode de
-              travail.
-            </p>
-            <div className="price">
-              {money(499)} <small>+ taxes</small>
-            </div>
-            <p>
-              Paiement unique · 28 ateliers · 7 chapitres · 84 questions
-              corrigées. Sans coaching privé inclus.
-            </p>
-            <ul className="offer-inclusions">
-              <li>28 ateliers répartis en 7 chapitres</li>
-              <li>Les mêmes cas testés dans les deux assistants</li>
-              <li>Prompts, carnet comparatif et 84 questions</li>
-              <li>Choisir un outil ou combiner leurs réponses</li>
-              <li>100 % autonome, sans coaching privé</li>
-            </ul>
-            <div className="offer-actions"><button className="text-button" onClick={() => go('autonomous-info')}>Voir le programme complet →</button><PurchaseSheet offer="autonomous" user={user} go={go}/></div>
-          </article>
-          <article className="panel offer-card immo-offer-card">
-            <span className="eyebrow">04 · IMMOBILIER QUÉBEC</span>
-            <h3>L’IA pour votre pratique immobilière.</h3>
-            <p>
-              Une spécialisation complète pour les courtiers, agences et
-              équipes : dossiers, marketing immobilier, conformité Québec,
-              CRM et automatisations.
-            </p>
-            <div className="price">
-              {money(1200)} <small>+ taxes</small>
-            </div>
-            <p>
-              Paiement unique · accès illimité · une heure privée incluse au
-              total.
-            </p>
-            <div className="monthly-alternative">
-              <strong>Ou {money(100)} / mois + taxes</strong>
-              <p>
-                Le même parcours immobilier en autonomie, résiliable à tout
-                moment, sans coaching privé inclus.
-              </p>
-            </div>
-            <ul className="offer-inclusions">
-              <li>16 parcours et 48 leçons immobilier Québec</li>
-              <li>Prompts, exercices et 240 questions corrigées</li>
-              <li>Courtage, marketing, documents et suivi client</li>
-              <li>CRM, Make, Zapier et automatisations avec contrôle</li>
-            </ul>
-            <div className="offer-actions"><a className="text-button" href="/immobilier-quebec">Voir le programme complet →</a><PurchaseSheet offer="immo-signature" user={user} go={go}/></div>
-          </article>
-        </div>
-      </section>
       <section className="sales-section sales-faq">
         <div className="sales-section-title">
           <span className="eyebrow">VOS QUESTIONS</span>
@@ -822,7 +809,7 @@ export default function Landing({ go, user }: any) {
             ],
             [
               'Comment se déroule la formation ?',
-              `Le programme est textuel et interactif : explications, cas fictifs, ateliers, QCM et travaux. Les cours en groupe sont inclus, avec une seule heure privée incluse dans le paiement à ${money(1200)}. L’offre à ${money(100)}/mois ne comprend pas de coaching privé. Aucune bibliothèque de vidéos préenregistrées n’est annoncée.`,
+              `Le programme est textuel et interactif : explications, cas fictifs, ateliers, QCM et travaux. Les cours en groupe sont inclus, avec une seule heure privée incluse dans le paiement à ${money(1200)}. Aucune bibliothèque de vidéos préenregistrées n’est annoncée.`,
             ],
             [
               'Les outils sont-ils connectés automatiquement ?',
@@ -984,8 +971,7 @@ export function AutonomousPresentation({ go, user }: any) {
         </p>
         <p>
           Formation principale : {money(1200)} en paiement unique avec une heure
-          privée incluse, ou {money(100)}/mois résiliable à tout moment sans coaching
-          privé. Taxes en sus. Les essais se font dans vos comptes Claude et
+          privée incluse. Taxes en sus. Les essais se font dans vos comptes Claude et
           ChatGPT ; leurs abonnements sont distincts. Le carnet est une
           auto-évaluation et ne constitue pas une certification professionnelle.
         </p>
