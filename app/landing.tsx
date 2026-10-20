@@ -62,6 +62,7 @@ export function PublicShell({ children, go, user }: any) {
           <a href="/#accompagnement">L’accompagnement</a>
           <a href="/?view=autonomous-info">Claude + ChatGPT</a>
           <a href="/immobilier-quebec">Immobilier Québec</a>
+          <a href="/i-courtier">i-Courtier</a>
           <a href="/?view=enterprise">Entreprise</a>
           <a href="/#tarif">Tarif</a>
         </nav>
@@ -106,6 +107,7 @@ export function PublicShell({ children, go, user }: any) {
               ['L’accompagnement', 'accompagnement'],
               ['Claude + ChatGPT', 'autonomie'],
               ['Immobilier Québec', 'immobilier'],
+              ['i-Courtier', 'i-courtier'],
               ['Entreprise', 'enterprise'],
               ['Tarif', 'tarif'],
             ].map(([label, anchor]) => (
@@ -116,6 +118,8 @@ export function PublicShell({ children, go, user }: any) {
                     ? '/?view=autonomous-info'
                     : anchor === 'immobilier'
                       ? '/immobilier-quebec'
+                    : anchor === 'i-courtier'
+                      ? '/i-courtier'
                     : anchor === 'enterprise'
                       ? '/?view=enterprise'
                       : '/#' + anchor
@@ -409,7 +413,7 @@ export default function Landing({ go, user }: any) {
               <li>16 parcours et 48 leçons immobilier Québec</li>
               <li>Prompts, exercices et 240 questions corrigées</li>
             </ul>
-            <div className="offer-actions"><a className="text-button" href="/immobilier-quebec">Voir le programme complet →</a><PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/></div>
+            <div className="offer-actions"><a className="text-button" href="/i-courtier">Découvrir i-Courtier →</a><PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/></div>
           </article>
         </div>
       </section>

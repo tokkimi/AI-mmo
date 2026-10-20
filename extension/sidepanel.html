@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>i-Courtier</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="top">
+    <img src="icons/icon48.png" alt="">
+    <div><strong>i-Courtier</strong><small>L’IA pour vos pratiques immo</small></div>
+    <button id="logout" class="link" hidden>Déconnexion</button>
+  </header>
+
+  <section id="login" class="view" hidden>
+    <h1>Connexion</h1>
+    <p class="muted">Utilisez votre compte i-ateliers associé à l’abonnement i-Courtier.</p>
+    <form id="login-form">
+      <label>Courriel<input name="email" type="email" autocomplete="email" required></label>
+      <label>Mot de passe<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+    <p class="muted small">Pas encore abonné ? <a href="https://i-ateliers.ca/i-courtier" target="_blank" rel="noreferrer">Découvrir i-Courtier</a></p>
+  </section>
+
+  <section id="noaccess" class="view" hidden>
+    <h1>Abonnement requis</h1>
+    <p class="muted">Votre compte est connecté, mais aucun abonnement i-Courtier actif n’est associé.</p>
+    <a class="btn" href="https://i-ateliers.ca/i-courtier" target="_blank" rel="noreferrer">M’abonner — 250 CAD / mois</a>
+    <button id="recheck" class="btn ghost">J’ai souscrit, vérifier à nouveau</button>
+  </section>
+
+  <section id="app" class="view" hidden>
+    <div class="dossier-bar">
+      <select id="dossier" aria-label="Dossier"></select>
+      <button id="new-dossier" class="icon" title="Nouveau dossier">＋</button>
+      <button id="del-dossier" class="icon" title="Supprimer le dossier">🗑</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="saisie" class="active">Saisie</button>
+      <button role="tab" data-tab="fiche">Fiche</button>
+      <button role="tab" data-tab="inscription">Inscription</button>
+      <button role="tab" data-tab="contrats">Contrats</button>
+    </nav>
+
+    <div class="tab" data-panel="saisie">
+      <h2>Saisie à la source</h2>
+      <p class="muted">Capturez la page ouverte (fiche, courriel, rôle d’évaluation…), importez un PDF ou collez vos notes. i-Courtier remplit la fiche pour vous.</p>
+      <div class="row">
+        <button id="capture" class="btn ghost">Capturer la page</button>
+        <label class="btn ghost file">Importer un PDF<input id="pdf" type="file" accept="application/pdf" hidden></label>
+      </div>
+      <p id="pdf-name" class="small muted"></p>
+      <textarea id="source" rows="10" placeholder="Collez ici un courriel du vendeur, vos notes de visite, le texte d’un compte de taxes…"></textarea>
+      <button id="extract" class="btn">Extraire la fiche</button>
+    </div>
+
+    <div class="tab" data-panel="fiche" hidden>
+      <h2>Fiche d’inscription</h2>
+      <div id="verify" class="notice" hidden></div>
+      <form id="fiche"></form>
+      <div class="row sticky">
+        <button id="fill" class="btn">Remplir le formulaire de la page</button>
+        <button id="copy-fiche" class="btn ghost">Copier</button>
+      </div>
+      <p id="fill-report" class="small muted"></p>
+    </div>
+
+    <div class="tab" data-panel="inscription" hidden>
+      <h2>Administration de l’inscription</h2>
+      <label>Documents déjà reçus<textarea id="recus" rows="3" placeholder="Ex. : certificat de localisation 2019, compte de taxes 2026"></textarea></label>
+      <button id="listing" class="btn">Préparer l’inscription</button>
+      <div id="listing-out"></div>
+    </div>
+
+    <div class="tab" data-panel="contrats" hidden>
+      <h2>Ébauches de contrats</h2>
+      <label>Document<select id="contract-type"></select></label>
+      <label>Paramètres<textarea id="contract-details" rows="5" placeholder="Ex. : acheteurs Marie Tremblay et Luc Roy, prix offert 465 000 $, acompte 10 000 $, financement 10 jours, inspection 7 jours, occupation 1er juillet"></textarea></label>
+      <button id="contract" class="btn">Générer l’ébauche</button>
+      <div id="contract-out"></div>
+    </div>
+  </section>
+
+  <div id="busy" class="busy" hidden><span></span><p id="busy-text">i-Courtier travaille…</p></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <footer class="foot">Ébauches à valider par le courtier. Les formulaires obligatoires de l’OACIQ prévalent.</footer>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

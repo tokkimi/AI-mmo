@@ -49,6 +49,7 @@ export default function ImmoPresentation({ go, user }: any) {
               formulaires et vos suivis sont préparés pour vous. Le courtier
               valide chaque document avant usage.
             </p>
+            <a className="button outline" href="/i-courtier">Découvrir l’extension i-Courtier →</a>
           </article>
         </div>
       </section>
