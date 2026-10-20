@@ -313,7 +313,7 @@ export default function Academy() {
             <div className="panel">Ouverture de votre campus…</div>
           ) : (
             <>
-              {view === 'autonomous' && <Autonomous {...props} />}
+              {view === 'autonomous' && <Autonomous {...props} id={id} />}
               {view === 'dashboard' && <Dashboard {...props} />}
               {view === 'courses' && <Courses {...props} />}
               {view === 'course' && <Course {...props} id={id} />}

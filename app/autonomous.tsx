@@ -3,8 +3,8 @@ import {useState,useEffect} from 'react';
 import {autonomousCatalog,autonomousChapters} from '@/content/autonomous-catalog';
 import {api,download} from './learning';
 const criteria=['Exactitude','Respect des consignes','Traçabilité','Utilisabilité','Effort de correction'];
-export default function Autonomous({access,go,progress,refresh,notify}:any){
- const [id,select]=useState(''),[lesson,L]=useState<any>(null),[error,E]=useState(''),[answers,A]=useState<number[]>([]),[result,R]=useState<any>(null),[draft,D]=useState<Record<string,any>>({}),[busy,B]=useState(false),[pace,P]=useState('25'),[goal,G]=useState('Marketing');
+export default function Autonomous({access,go,progress,refresh,notify,id:routeId}:any){
+ const id=routeId||'',select=(next:string)=>go('autonomous',next||undefined),[lesson,L]=useState<any>(null),[error,E]=useState(''),[answers,A]=useState<number[]>([]),[result,R]=useState<any>(null),[draft,D]=useState<Record<string,any>>({}),[busy,B]=useState(false),[pace,P]=useState('25'),[goal,G]=useState('Marketing');
  const done=(key:string)=>progress.attempts?.some((a:any)=>a.lesson_id===key&&a.score>=80);
  const count=autonomousCatalog.filter(l=>done(l.id)).length;
  useEffect(()=>{if(!id)return;let alive=true;L(null);E('');A([]);R(null);const saved=progress.notes?.find((n:any)=>n.lesson_id===id);try{D(saved?JSON.parse(saved.body):{})}catch{D({})}api('autonomous?id='+id).then(l=>{if(alive)L(l)}).catch(e=>{if(alive)E(e.message)});return()=>{alive=false}},[id]);
