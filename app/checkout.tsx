@@ -67,7 +67,7 @@ export function EnrollmentForm(props: any) {
         </> : <p>{props.user?.email || 'Votre compte est enregistré. Vous pouvez poursuivre le paiement.'}</p>}
         {error && <p className="error" role="alert">{error}</p>}
         <button className="button" disabled={busy} type="submit">{busy ? 'Préparation du paiement…' : 'Continuer vers le paiement sécurisé →'}</button>
-        <small>Vous saisirez votre carte sur Stripe. L’accès à la formation sera activé après confirmation du paiement.</small>
+        <small>Paiement sécurisé par carte. Votre accès est activé dès la confirmation du paiement.</small>
       </form>
   </>;
 }
