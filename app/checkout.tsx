@@ -16,10 +16,10 @@ const offers: Record<string, { name: string; price: string; detail: string }> =
         'Paiement unique. 28 ateliers pour comparer, choisir et combiner les deux assistants.',
     },
     'immo-pro': {
-      name: 'Immobilier Québec · i-Courtier',
+      name: 'i-Courtier · Extension pour courtiers',
       price: '250 CAD / mois + taxes',
       detail:
-        'Aucuns frais fixes, résiliable à tout moment. Extension i-Courtier et parcours immobilier complet inclus.',
+        'Aucuns frais fixes, résiliable à tout moment. Accès à l’extension i-Courtier (outil uniquement, sans formation).',
     },
   };
 const legacy: Record<string, string> = { monthly: 'signature', 'immo-signature': 'immo-pro', 'immo-monthly': 'immo-pro' };

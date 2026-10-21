@@ -20,13 +20,13 @@ export default function FormationBubble({go,user}: {go:(view:string,id?:string)=
     {name:'Structurer & automatiser',detail:`${money(1200)} · paiement unique`,icon:BookOpen,view:'business-info',offer:'signature'},
     {name:'Former votre équipe',detail:`20 h en groupe · dès ${money(4900)}`,icon:Users,view:'enterprise'},
     {name:'Claude + ChatGPT',detail:`100 % autonome · ${money(499)}`,icon:Sparkles,view:'autonomous-info',offer:'autonomous'},
-    {name:'Immobilier Québec · i-Courtier',detail:`${money(250)}/mois · sans frais fixes`,icon:Building2,view:'immo',offer:'immo-pro'},
+    {name:'i-Courtier · outil pour courtiers',detail:`${money(250)}/mois · sans frais fixes`,icon:Building2,view:'immo',offer:'immo-pro'},
   ];
   return <div className="formation-bubble" ref={root}>
     {open&&<section className="formation-bubble-panel" id="formation-bubble-panel" aria-label="Choisir une formation">
       <header><h2>Votre prochain pas commence ici.</h2><button type="button" onClick={()=>{setOpen(false);trigger.current?.focus()}} aria-label="Fermer les formations"><X size={22}/></button></header>
       <p>Découvrez votre parcours ou inscrivez-vous directement.</p>
-      {items.map(item=><article key={item.name}><item.icon size={25}/><div><h3>{item.name}</h3><p>{item.detail} · taxes en sus</p><div className="row">{item.view==='immo'?<a href="/immobilier-quebec" onClick={()=>setOpen(false)}>Découvrir <ArrowUpRight size={13}/></a>:<button onClick={()=>navigate(item.view)}>Découvrir <ArrowUpRight size={13}/></button>}{item.offer&&<PurchaseSheet offer={item.offer} user={user} go={go} label="M’inscrire" className="text-button"/>}</div></div></article>)}
+      {items.map(item=><article key={item.name}><item.icon size={25}/><div><h3>{item.name}</h3><p>{item.detail} · taxes en sus</p><div className="row">{item.view==='immo'?<a href="/i-courtier" onClick={()=>setOpen(false)}>Découvrir <ArrowUpRight size={13}/></a>:<button onClick={()=>navigate(item.view)}>Découvrir <ArrowUpRight size={13}/></button>}{item.offer&&<PurchaseSheet offer={item.offer} user={user} go={go} label="M’inscrire" className="text-button"/>}</div></div></article>)}
       <small>Prix convertis à titre indicatif en EUR. Paiement en CAD.</small>
     </section>}
     <button type="button" className="formation-bubble-trigger" ref={trigger} aria-expanded={open} aria-controls="formation-bubble-panel" onClick={()=>setOpen(!open)}><span><BookOpen size={22}/></span><span><b>Les formations</b><small>Choisir · S’inscrire</small></span>{open?<X size={18}/>:<ArrowUpRight size={18}/>}</button>

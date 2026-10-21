@@ -61,7 +61,6 @@ export function PublicShell({ children, go, user }: any) {
           <a href="/#pour-vous">Pour qui ?</a>
           <a href="/#accompagnement">L’accompagnement</a>
           <a href="/?view=autonomous-info">Claude + ChatGPT</a>
-          <a href="/immobilier-quebec">Immobilier Québec</a>
           <a href="/i-courtier">i-Courtier</a>
           <a href="/?view=enterprise">Entreprise</a>
           <a href="/#tarif">Tarif</a>
@@ -106,7 +105,6 @@ export function PublicShell({ children, go, user }: any) {
               ['Pour qui ?', 'pour-vous'],
               ['L’accompagnement', 'accompagnement'],
               ['Claude + ChatGPT', 'autonomie'],
-              ['Immobilier Québec', 'immobilier'],
               ['i-Courtier', 'i-courtier'],
               ['Entreprise', 'enterprise'],
               ['Tarif', 'tarif'],
@@ -116,8 +114,6 @@ export function PublicShell({ children, go, user }: any) {
                 href={
                   anchor === 'autonomie'
                     ? '/?view=autonomous-info'
-                    : anchor === 'immobilier'
-                      ? '/immobilier-quebec'
                     : anchor === 'i-courtier'
                       ? '/i-courtier'
                     : anchor === 'enterprise'
@@ -170,8 +166,6 @@ export function PublicShell({ children, go, user }: any) {
           </a>
           <p>
             Votre entreprise, augmentée par l’IA.
-            <br />
-            De l’intelligence à l’action, dans votre entreprise.
           </p>
         </div>
         <div>
@@ -325,6 +319,7 @@ export default function Landing({ go, user }: any) {
               <li>Automatisations CRM, courriels et suivi</li>
               <li>Exercices, QCM et progression enregistrée</li>
               <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
+              <li>Volet immobilier Québec sur demande</li>
             </ul>
             <div className="offer-actions"><button className="text-button" onClick={() => go('business-info')}>Voir le programme complet →</button><PurchaseSheet offer="signature" user={user} go={go}/></div>
           </article>
@@ -392,12 +387,11 @@ export default function Landing({ go, user }: any) {
             <div className="offer-actions"><button className="text-button" onClick={() => go('autonomous-info')}>Voir le programme complet →</button><PurchaseSheet offer="autonomous" user={user} go={go}/></div>
           </article>
           <article className="panel offer-card immo-offer-card">
-            <span className="eyebrow">04 · IMMOBILIER QUÉBEC</span>
+            <span className="eyebrow">04 · i-COURTIER · POUR LES COURTIERS</span>
             <h3>L’IA pour vos pratiques immo.</h3>
             <p>
-              La formation immobilier Québec et l’extension i-Courtier : saisie
-              à la source, ébauches de contrats et administration des
-              inscriptions pour les courtiers.
+              L’extension i-Courtier : saisie à la source, ébauches de contrats
+              et administration des inscriptions pour les courtiers.
             </p>
             <div className="price">
               {money(250)} <small>/ mois + taxes</small>
@@ -410,8 +404,8 @@ export default function Landing({ go, user }: any) {
               <li>Extension i-Courtier pour votre navigateur</li>
               <li>Saisie à la source et ébauches de contrats</li>
               <li>Outils d’administration des inscriptions</li>
-              <li>16 parcours et 48 leçons immobilier Québec</li>
-              <li>Prompts, exercices et 240 questions corrigées</li>
+              <li>Remplissage automatique de vos formulaires en ligne</li>
+              <li>Descriptions FR / EN et courriels au vendeur</li>
             </ul>
             <div className="offer-actions"><a className="text-button" href="/i-courtier">Découvrir i-Courtier →</a><PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/></div>
           </article>

@@ -5,7 +5,7 @@ import { currentUser, db } from '@/lib/server';
 const offers = {
   signature: { name: 'i-ateliers — Structurer et automatiser · Accompagné', amount: 120000, mode: 'payment' },
   autonomous: { name: 'i-ateliers — Claude + ChatGPT · 100 % autonome', amount: 49900, mode: 'payment' },
-  'immo-pro': { name: 'i-ateliers — Immobilier Québec · i-Courtier', amount: 25000, mode: 'subscription' },
+  'immo-pro': { name: 'i-ateliers — i-Courtier · Extension pour courtiers', amount: 25000, mode: 'subscription' },
 } as const;
 type OfferId = keyof typeof offers;
 
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
     }
     const subscription = offer.mode === 'subscription';
     const cancelUrl = offerId.startsWith('immo-')
-      ? `${base}/immobilier-quebec?payment=cancelled`
+      ? `${base}/i-courtier?payment=cancelled`
       : offerId === 'autonomous'
         ? `${base}/?view=autonomous-info&payment=cancelled`
         : `${base}/?view=business-info&payment=cancelled`;

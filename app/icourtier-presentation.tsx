@@ -22,7 +22,7 @@ const faq = [
   ['Où sont conservés mes dossiers ?', 'Les dossiers sont enregistrés localement dans votre navigateur. Les textes et PDF ne sont transmis au moteur IA qu’au moment où vous lancez une action, pour produire la réponse.'],
   ['Sur quels sites fonctionne la saisie ?', 'Sur toute page web lisible : fiches, courriels dans le navigateur, rôles d’évaluation, portails et formulaires en ligne. Les champs reconnus sont remplis; les autres sont listés.'],
   ['Y a-t-il des frais d’installation ?', 'Aucuns frais fixes. 250 CAD par mois + taxes, résiliable à tout moment depuis votre espace de facturation.'],
-  ['La formation est-elle incluse ?', 'Oui. L’abonnement donne aussi accès au parcours Immobilier Québec : 16 parcours, 48 leçons, prompts et QCM.'],
+  ['Une formation est-elle incluse ?', 'Non. i-Courtier est uniquement l’outil. Le volet immobilier Québec est offert sur demande aux participants de la formation Structurer et automatiser à 1 200 CAD.'],
 ];
 
 export default function IcourtierPresentation({ go, user }: any) {
@@ -121,7 +121,7 @@ export default function IcourtierPresentation({ go, user }: any) {
               <li>Extension i-Courtier pour Chrome et Edge</li>
               <li>Saisie à la source, PDF et remplissage de formulaires</li>
               <li>Ébauches de contrats et administration des inscriptions</li>
-              <li>Parcours Immobilier Québec complet : 48 leçons, prompts et QCM</li>
+              <li>Descriptions FR / EN, alertes et courriels au vendeur</li>
               <li>Aucuns frais fixes · résiliable à tout moment</li>
             </ul>
             <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier" />

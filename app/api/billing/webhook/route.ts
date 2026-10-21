@@ -15,12 +15,16 @@ export async function POST(req: NextRequest) {
       const userId = session.metadata?.user_id || session.client_reference_id;
       const customer = typeof session.customer === 'string' ? session.customer : session.customer?.id;
       if (userId && customer) {
-        const until = session.mode === 'payment' && session.payment_status === 'paid' ? permanent : new Date().toISOString();
-        await db()`UPDATE users SET stripe_customer=${customer},access_until=${until} WHERE id=${userId} AND role='member'`;
+        if (session.metadata?.offer === 'immo-pro') await db()`UPDATE users SET stripe_customer=${customer} WHERE id=${userId} AND role='member'`;
+        else {
+          const until = session.mode === 'payment' && session.payment_status === 'paid' ? permanent : new Date().toISOString();
+          await db()`UPDATE users SET stripe_customer=${customer},access_until=${until} WHERE id=${userId} AND role='member'`;
+        }
       }
     }
     if (event.type.startsWith('customer.subscription.')) {
       const subscription = event.data.object as Stripe.Subscription;
+      if (subscription.metadata?.offer === 'immo-pro') return NextResponse.json({ received: true });
       const customer = typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id;
       const active = ['active', 'trialing'].includes(subscription.status);
       const until = active ? new Date(Math.max(...subscription.items.data.map(item => item.current_period_end)) * 1000).toISOString() : new Date().toISOString();
