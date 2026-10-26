@@ -46,7 +46,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       client_reference_id: user.id,
       metadata: { offer: offerId, user_id: user.id },
       line_items: [{ quantity: 1, price_data: { currency: 'cad', unit_amount: offer.amount, product_data: { name: offer.name }, ...(subscription ? { recurring: { interval: 'month' as const } } : {}) } }],
-      success_url: `${base}/?view=subscription&payment=success`,
+      success_url: offerId === 'immo-pro' ? `${base}/i-courtier/installer?payment=success` : `${base}/?view=subscription&payment=success`,
       cancel_url: cancelUrl,
       billing_address_collection: 'required',
       ...(process.env.STRIPE_AUTOMATIC_TAX === 'true' ? { automatic_tax: { enabled: true } } : {}),

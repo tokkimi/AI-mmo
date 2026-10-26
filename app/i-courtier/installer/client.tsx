@@ -6,6 +6,9 @@ import { PublicShell } from '../../landing';
 
 type Access = { user: boolean; access: boolean } | null;
 
+// Adresse de la fiche Chrome Web Store : dès qu'elle est renseignée, l'installation se fait en un clic.
+const STORE_URL = process.env.NEXT_PUBLIC_ICOURTIER_STORE_URL || '';
+
 const go = (view: string) => window.location.assign('/?view=' + view);
 
 export default function InstallerPage() {
@@ -14,10 +17,12 @@ export default function InstallerPage() {
   const [mac, setMac] = useState(false);
   const [edge, setEdge] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [paid, setPaid] = useState(false);
 
   useEffect(() => {
     setMac(/Mac/i.test(navigator.userAgent));
     setEdge(/Edg\//.test(navigator.userAgent));
+    setPaid(new URLSearchParams(location.search).get('payment') === 'success');
     fetch('/api/icourtier/download?check=1', { cache: 'no-store' }).then(r => r.json()).then(setAccess).catch(() => setAccess({ user: false, access: false }));
     // L'extension signale sa présence sur i-ateliers.ca (voir extension/site.js).
     const detect = () => setInstalled(document.documentElement.dataset.icourtier || '');
@@ -37,7 +42,8 @@ export default function InstallerPage() {
         <section className="sales-section installer-hero">
           <span className="eyebrow">INSTALLATION · CHROME ET EDGE</span>
           <h1>Installez i-Courtier.</h1>
-          <p>Cinq étapes, environ trois minutes. Gardez cette page ouverte : elle vous confirmera quand l’installation est réussie.</p>
+          {paid && <div className="installer-welcome"><Check size={18} /> Merci ! Votre abonnement i-Courtier est confirmé. Il ne reste qu’à installer l’outil.</div>}
+          <p>{STORE_URL ? 'Deux étapes, moins d’une minute.' : 'Cinq étapes, environ trois minutes.'} Gardez cette page ouverte : elle vous confirmera quand l’installation est réussie.</p>
           <div className={'installer-status' + (installed ? ' ok' : '')} role="status">
             {installed
               ? <><Check size={20} /> i-Courtier {installed} est installé. Ouvrez-le avec l’icône « iC » ou le raccourci {mac ? '⌥ Option + ⇧ Maj + C' : 'Alt + Maj + C'}.</>
@@ -45,13 +51,31 @@ export default function InstallerPage() {
           </div>
         </section>
 
-        <ol className="installer-steps">
+        {STORE_URL ? <ol className="installer-steps">
           <li>
             <div className="installer-num">1</div>
             <div>
-              <h2><Download size={20} /> Téléchargez l’extension</h2>
+              <h2><Download size={20} /> Ajoutez i-Courtier à {edge ? 'Edge' : 'Chrome'}</h2>
+              <p>Sur la page qui s’ouvre, cliquez sur « Ajouter à {edge ? 'Edge' : 'Chrome'} », puis confirmez. Les mises à jour se font ensuite automatiquement.</p>
+              <a className="button" href={STORE_URL} target="_blank" rel="noreferrer"><Download size={16} /> Ajouter à {edge ? 'Edge' : 'Chrome'}</a>
+            </div>
+          </li>
+          <li>
+            <div className="installer-num">2</div>
+            <div>
+              <h2><Pin size={20} /> Épinglez i-Courtier et connectez-vous</h2>
+              <p>Cliquez sur la pièce de puzzle en haut à droite, puis sur la punaise à côté d’i-Courtier. Ouvrez-le et connectez-vous avec votre compte i-ateliers{access?.access ? '' : ' associé à votre abonnement'}.</p>
+              {access && !access.access && <a className="text-button" href="/i-courtier#abonnement">Pas encore abonné ? Voir l’abonnement →</a>}
+              <p className="installer-tip"><Keyboard size={15} /> Raccourci : {mac ? '⌥ Option + ⇧ Maj + C' : 'Alt + Maj + C'} ouvre i-Courtier à tout moment.</p>
+            </div>
+          </li>
+        </ol> : <ol className="installer-steps">
+          <li>
+            <div className="installer-num">1</div>
+            <div>
+              <h2><Download size={20} /> Téléchargez i-Courtier</h2>
               {access === null ? <p className="muted">Vérification de votre accès…</p>
-                : access.access ? <><p>Le fichier <b>i-courtier.zip</b> arrive dans votre dossier Téléchargements.</p><a className="button" href="/api/icourtier/download"><Download size={16} /> Télécharger i-Courtier</a></>
+                : access.access ? <><p>i-Courtier arrive dans votre dossier Téléchargements.</p><a className="button" href="/api/icourtier/download"><Download size={16} /> Télécharger i-Courtier</a></>
                 : access.user ? <><p>Votre compte n’a pas encore d’abonnement i-Courtier actif.</p><a className="button" href="/i-courtier#abonnement">M’abonner — 250 CAD / mois</a></>
                 : <><p>Connectez-vous avec le compte associé à votre abonnement, puis revenez sur cette page.</p><button className="button" onClick={() => go('login')}><LogIn size={16} /> Me connecter</button></>}
             </div>
@@ -60,7 +84,7 @@ export default function InstallerPage() {
             <div className="installer-num">2</div>
             <div>
               <h2><FolderOpen size={20} /> Ouvrez le fichier</h2>
-              <p>{mac ? 'Double-cliquez sur i-courtier.zip : un dossier « i-courtier » apparaît à côté.' : 'Clic droit sur i-courtier.zip → « Extraire tout » → « Extraire » : un dossier « i-courtier » apparaît.'}</p>
+              <p>{mac ? 'Dans vos Téléchargements, double-cliquez sur i-courtier : un dossier « i-courtier » apparaît à côté.' : 'Dans vos Téléchargements, clic droit sur i-courtier → « Extraire tout » → « Extraire » : un dossier « i-courtier » apparaît.'}</p>
               <p className="installer-tip">Rangez ce dossier dans « Documents » et ne le supprimez pas : {edge ? 'Edge' : 'Chrome'} l’utilise à chaque ouverture.</p>
             </div>
           </li>
@@ -92,11 +116,11 @@ export default function InstallerPage() {
               <p className="installer-tip"><Keyboard size={15} /> Raccourci : {mac ? '⌥ Option + ⇧ Maj + C' : 'Alt + Maj + C'} ouvre i-Courtier à tout moment.</p>
             </div>
           </li>
-        </ol>
+        </ol>}
 
         <section className="sales-section installer-help">
           <h2>Besoin d’aide ?</h2>
-          <p>« Mode développeur » est l’option standard de {edge ? 'Edge' : 'Chrome'} pour les extensions professionnelles distribuées hors boutique. Si un message le rappelle au démarrage, vous pouvez le fermer. Pour une mise à jour, remplacez le contenu du dossier i-courtier par la nouvelle version, puis cliquez sur ↻ dans la page des extensions : vos dossiers sont conservés.</p>
+          <p>{STORE_URL ? 'i-Courtier se met à jour automatiquement. Vos dossiers restent dans votre navigateur ; exportez-les depuis l’onglet Outils pour les transférer sur un autre ordinateur.' : `« Mode développeur » est l’option standard de ${edge ? 'Edge' : 'Chrome'} pour les extensions professionnelles distribuées hors boutique. Si un message le rappelle au démarrage, vous pouvez le fermer. Pour une mise à jour, remplacez le contenu du dossier i-courtier par la nouvelle version, puis cliquez sur ↻ dans la page des extensions : vos dossiers sont conservés.`}</p>
           <a className="text-button" href="/?view=messages">Écrire à l’équipe i-ateliers →</a>
         </section>
       </div>

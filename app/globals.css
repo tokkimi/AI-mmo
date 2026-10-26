@@ -221,3 +221,4 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 .installer-mock-card{display:flex;gap:10px;margin:12px 14px;padding:12px;border:1px solid #eee;border-radius:10px}.installer-mock-card em{font-style:italic;font-weight:700;background:#1e4a3a;color:#e1be6e;border-radius:8px;padding:6px 8px;height:fit-content}.installer-mock-card small{display:block;color:#5f6368}
 .installer-help{border-top:1px solid #eadfca;padding-top:30px!important}.installer-help h2{font-size:26px;margin-bottom:10px}.installer-help p{line-height:1.8;margin-bottom:14px}
 @media(max-width:767px){.installer-hero h1{font-size:34px}.installer-steps>li{grid-template-columns:1fr;padding:20px}.installer-mock-actions span{display:none}}
+.installer-welcome{display:flex;gap:8px;align-items:center;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:#1e4a3a;color:#f6e7c1;font-weight:600}
