@@ -4,6 +4,7 @@ import {randomBytes} from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import {db,currentUser,hasAccess,createSession,rateLimit,digest,ApiError,textField,uuid} from '@/lib/server';
 import {catalog} from '@/content/catalog';
+import {isConsoleAdmin} from '@/lib/hub/projects';
 import {lessons,publicLesson} from '@/content/lessons';
 import {autonomousLessons,safeAutonomous} from '@/content/autonomous-lessons';
 export const dynamic='force-dynamic';
@@ -15,7 +16,7 @@ async function handle(req:NextRequest,{params}:{params:Promise<{path:string[]}>}
   if(Number(req.headers.get('content-length')||0)>100000)throw new ApiError('Requête trop volumineuse',413);
  }
  if(req.method==='GET'){
-  if(route==='me')return json({user,access:hasAccess(user),paymentsConfigured:!!process.env.STRIPE_SECRET_KEY});
+  if(route==='me')return json({user,access:hasAccess(user),paymentsConfigured:!!process.env.STRIPE_SECRET_KEY,console:isConsoleAdmin(user)});
   if(route==='autonomous'){if(!hasAccess(user))throw new ApiError('Accès actif requis pour les ateliers autonomes.',403);const lesson=autonomousLessons.find(l=>l.id===req.nextUrl.searchParams.get('id'));if(!lesson)throw new ApiError('Atelier introuvable',404);return json(safeAutonomous(lesson));}
   if(route==='lesson'){
    const lesson=lessons.find(l=>l.id===req.nextUrl.searchParams.get('id'));if(!lesson)throw new ApiError('Leçon introuvable',404);

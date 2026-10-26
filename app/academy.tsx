@@ -73,7 +73,8 @@ export default function Academy() {
     [progress, P] = useState<any>(empty),
     [notice, N] = useState(''),
     [ready, R] = useState(false),
-    [token, T] = useState('');
+    [token, T] = useState(''),
+    [consoleAdmin, setConsoleAdmin] = useState(false);
   function sync() {
     const p = new URLSearchParams(location.search);
     V(p.get('view') || 'home');
@@ -98,6 +99,7 @@ export default function Academy() {
     try {
       const me = await api('me');
       U(me.user);
+      setConsoleAdmin(!!me.console);
       A(me.access);
       C(me.paymentsConfigured);
       P(me.user ? await api('progress') : empty);
@@ -158,6 +160,11 @@ export default function Academy() {
                 {...props}
                 initialMode={view === 'register' ? 'register' : 'login'}
                 resetToken={token}
+                onSuccess={
+                  typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('next') === 'console'
+                    ? () => window.location.assign('/console')
+                    : undefined
+                }
               />
             ) : view === 'privacy' ? (
               <Privacy />
@@ -251,6 +258,12 @@ export default function Academy() {
               Les offres i-ateliers <ArrowUpRight size={16} />
             </button>
           </div>
+          {consoleAdmin && (
+            <a className="button console-entry" href="/console">
+              <ShieldCheck size={16} />
+              Console d’administration
+            </a>
+          )}
           <button
             className="profile-nav"
             onClick={() => go(user ? 'profile' : 'login')}
