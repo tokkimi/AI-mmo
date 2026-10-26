@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "i-Courtier — L’IA pour vos pratiques immo",
   "short_name": "i-Courtier",
-  "version": "2.1.0",
-  "description": "Saisie à la source, ébauches de contrats et administration des inscriptions pour les courtiers immobiliers du Québec. Par i-ateliers.",
+  "version": "2.1.1",
+  "description": "Agent IA pour courtiers immobiliers du Québec : saisie à la source, documents, contrats, inscriptions et rédaction.",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -53,5 +53,6 @@
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "homepage_url": "https://i-ateliers.ca/i-courtier"
 }

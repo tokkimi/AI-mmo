@@ -223,3 +223,5 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 .installer-help{border-top:1px solid #eadfca;padding-top:30px!important}.installer-help h2{font-size:26px;margin-bottom:10px}.installer-help p{line-height:1.8;margin-bottom:14px}
 @media(max-width:767px){.installer-hero h1{font-size:34px}.installer-steps>li{grid-template-columns:1fr;padding:20px}.installer-mock-actions span{display:none}}
 .installer-welcome{display:flex;gap:8px;align-items:center;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:#1e4a3a;color:#f6e7c1;font-weight:600}
+.icourtier-privacy{max-width:820px;margin:0 auto}.icourtier-privacy h1{font-size:42px;margin:10px 0}.icourtier-privacy h2{font-size:24px;margin:30px 0 10px}.icourtier-privacy p,.icourtier-privacy li{line-height:1.85}.icourtier-privacy ul{padding-left:20px;display:grid;gap:8px;margin-bottom:12px}.icourtier-privacy a{text-decoration:underline}
+.icourtier-mock-top img{width:30px;height:30px;border-radius:8px}.installer-mock-card img{width:30px;height:30px;border-radius:8px;flex:none}

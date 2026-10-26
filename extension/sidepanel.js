@@ -108,9 +108,11 @@ function collectFields() {
     if (skip.includes(n.type) || n.disabled || n.readOnly) return;
     const r = n.getBoundingClientRect(); if (!r.width && !r.height) return;
     const key = 'f' + i; n.dataset.icourtierKey = key;
+    // Texte du libellé sans celui des champs qu'il contient (sinon une liste ajoute toutes ses options au nom du champ).
+    const text = (l) => { const c = l.cloneNode(true); c.querySelectorAll('input, select, textarea, option').forEach((x) => x.remove()); return c.textContent.replace(/\s+/g, ' ').trim(); };
     let label = '';
-    if (n.id) { const l = document.querySelector(`label[for="${CSS.escape(n.id)}"]`); if (l) label = l.innerText; }
-    if (!label && n.closest('label')) label = n.closest('label').innerText;
+    if (n.id) { const l = document.querySelector(`label[for="${CSS.escape(n.id)}"]`); if (l) label = text(l); }
+    if (!label && n.closest('label')) label = text(n.closest('label'));
     if (!label) label = n.getAttribute('aria-label') || n.placeholder || n.title || '';
     if (!label) { const prev = n.closest('td, div, li')?.previousElementSibling; if (prev) label = prev.innerText; }
     const field = { k: key, label: label.trim().slice(0, 120), name: n.name || n.id || '', type: n.tagName === 'SELECT' ? 'select' : n.type || 'text' };

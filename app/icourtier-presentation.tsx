@@ -49,7 +49,7 @@ export default function IcourtierPresentation({ go, user }: any) {
           </div>
         </div>
         <div className="icourtier-mock" aria-hidden="true">
-          <div className="icourtier-mock-top"><b>iC</b><span>i-Courtier<small>L’IA pour vos pratiques immo</small></span></div>
+          <div className="icourtier-mock-top"><img src="/brand/i-courtier-icon.png" alt="" /><span>i-Courtier<small>L’IA pour vos pratiques immo</small></span></div>
           <div className="icourtier-mock-tabs"><i>Saisie</i><i className="on">Fiche</i><i>Inscription</i><i>Contrats</i></div>
           {[['Adresse', '214, rue des Érables, Lévis'], ['Prix demandé', '465 000 $'], ['Année de construction', '1998'], ['Taxes municipales', '3 412 $'], ['Inclusions', 'Électroménagers, stores']].map(([l, v]) => (
             <div className="icourtier-mock-field" key={l}><small>{l}</small><span>{v}</span></div>

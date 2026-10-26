@@ -46,7 +46,7 @@ export default function InstallerPage() {
           <p>{STORE_URL ? 'Deux étapes, moins d’une minute.' : 'Cinq étapes, environ trois minutes.'} Gardez cette page ouverte : elle vous confirmera quand l’installation est réussie.</p>
           <div className={'installer-status' + (installed ? ' ok' : '')} role="status">
             {installed
-              ? <><Check size={20} /> i-Courtier {installed} est installé. Ouvrez-le avec l’icône « iC » ou le raccourci {mac ? '⌥ Option + ⇧ Maj + C' : 'Alt + Maj + C'}.</>
+              ? <><Check size={20} /> i-Courtier {installed} est installé. Ouvrez-le avec l’icône i-ateliers ou le raccourci {mac ? '⌥ Option + ⇧ Maj + C' : 'Alt + Maj + C'}.</>
               : <><span className="installer-dot" /> En attente de l’installation…</>}
           </div>
         </section>
@@ -104,7 +104,7 @@ export default function InstallerPage() {
               <div className="installer-mock" aria-hidden="true">
                 <div className="installer-mock-bar"><span>Extensions</span><span className="installer-toggle">Mode développeur <i /></span></div>
                 <div className="installer-mock-actions"><b>Charger l’extension non empaquetée</b><span>Empaqueter l’extension</span><span>Mettre à jour</span></div>
-                <div className="installer-mock-card"><em>iC</em><div><strong>i-Courtier — L’IA pour vos pratiques immo</strong><small>Saisie à la source, ébauches de contrats et administration des inscriptions.</small></div></div>
+                <div className="installer-mock-card"><img src="/brand/i-courtier-icon.png" alt="" /><div><strong>i-Courtier — L’IA pour vos pratiques immo</strong><small>Saisie à la source, ébauches de contrats et administration des inscriptions.</small></div></div>
               </div>
             </div>
           </li>
