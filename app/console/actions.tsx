@@ -42,7 +42,7 @@ export function RowActions({project,actions}:{project:string;actions:HubAction[]
   start(async()=>{const r=await send(project,a,values);setResult(r);if(r.ok){setOpen(null);router.refresh()}});
  }
  return <div className="c-actions">
-  {actions.map(a=><button key={a.label} type="button" disabled={pending} className={a.tone==='danger'?'c-btn danger':'c-btn'} onClick={()=>{setResult(null);a.fields?.length?setOpen(open?.label===a.label?null:a):run(a)}}>{a.label}</button>)}
+  {actions.map(a=><button key={a.label} type="button" disabled={pending} className={a.tone==='danger'?'c-btn danger':'c-btn'} onClick={()=>{setResult(null);if(a.fields?.length)setOpen(open?.label===a.label?null:a);else run(a)}}>{a.label}</button>)}
   {open&&<form className="c-inline-form" onSubmit={e=>{e.preventDefault();run(open,readForm(e.currentTarget,open.fields||[]))}}>
    <Fields fields={open.fields||[]}/>
    <div className="c-row"><button className="c-btn primary" disabled={pending}>{pending?'Envoi…':'Valider'}</button><button type="button" className="c-btn" onClick={()=>setOpen(null)}>Fermer</button></div>

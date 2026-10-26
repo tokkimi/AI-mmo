@@ -3,9 +3,9 @@ import type {HubSnapshot,HubActionResult} from './types';
 // Les trois sites administrés depuis la console. Chaque site garde sa propre base :
 // la console ne mélange jamais leurs données, elle interroge le site sélectionné uniquement.
 export const projects=[
- {id:'ateliers',name:'i-ateliers',logo:'/brand/i-ateliers-logo.png',site:'https://www.i-ateliers.com',admin:'https://www.i-ateliers.com/?view=admin',hub:null,secretEnv:null},
- {id:'guides',name:'Guides Immo Québec',logo:'/console/guides.png',site:'https://www.guidesimmoquebec.com',admin:'https://www.guidesimmoquebec.com/admin',hub:process.env.GUIDES_HUB_URL||'https://www.guidesimmoquebec.com/api/hub',secretEnv:'GUIDES_HUB_SECRET'},
- {id:'memoire',name:'Mémoire Maison',logo:'/console/memoire.png',site:'https://memoiremaison.com',admin:'https://memoiremaison.com/admin',hub:process.env.MEMOIRE_HUB_URL||'https://memoiremaison.com/api/hub',secretEnv:'MEMOIRE_HUB_SECRET'},
+ {id:'ateliers',name:'i-ateliers',logo:'/console/ateliers.png',domain:'i-ateliers.com',site:'https://www.i-ateliers.com',admin:'https://www.i-ateliers.com/?view=admin',hub:null,secretEnv:null},
+ {id:'guides',name:'Guides Immo Québec',logo:'/console/guides.png',domain:'guidesimmoquebec.com',site:'https://www.guidesimmoquebec.com',admin:'https://www.guidesimmoquebec.com/admin',hub:process.env.GUIDES_HUB_URL||'https://www.guidesimmoquebec.com/api/hub',secretEnv:'GUIDES_HUB_SECRET'},
+ {id:'memoire',name:'Mémoire Maison',logo:'/console/memoire.png',domain:'memoiremaison.com',site:'https://memoiremaison.com',admin:'https://memoiremaison.com/admin',hub:process.env.MEMOIRE_HUB_URL||'https://memoiremaison.com/api/hub',secretEnv:'MEMOIRE_HUB_SECRET'},
 ] as const;
 
 export type ProjectId=(typeof projects)[number]['id'];
