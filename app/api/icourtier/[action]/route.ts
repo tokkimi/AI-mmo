@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import { db, digest, rateLimit, ApiError, textField } from '@/lib/server';
-import { hasExtensionAccess, runTask, CONTRACTS, FICHE_FIELDS } from '@/lib/icourtier';
+import { hasExtensionAccess, runTask, CONTRACTS, FICHE_FIELDS, WRITINGS, DOC_KINDS } from '@/lib/icourtier';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ acti
     if (action !== 'me') throw new ApiError('Action inconnue.', 404);
     const user = await tokenUser(req);
     if (!user) throw new ApiError('Session expirée. Reconnectez-vous.', 401);
-    return json(req, { user: { name: user.name, email: user.email }, access: await hasExtensionAccess(user), contracts: CONTRACTS, fields: FICHE_FIELDS });
+    return json(req, { user: { name: user.name, email: user.email }, access: await hasExtensionAccess(user), contracts: CONTRACTS, fields: FICHE_FIELDS, writings: WRITINGS, docKinds: DOC_KINDS });
   } catch (e) { return fail(req, e); }
 }
 

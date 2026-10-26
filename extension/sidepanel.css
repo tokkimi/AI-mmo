@@ -52,3 +52,19 @@ input:focus,select:focus,textarea:focus{outline:2px solid #b8914a55;border-color
 .doc .row .btn{margin-top:8px;padding:7px 10px;font-size:12px}
 .doc .file{font-size:11px;color:#26704f;margin-top:6px}
 .foot{position:fixed;bottom:0;left:0;right:0;background:#f2eee3;color:var(--muted);font-size:10px;padding:8px 12px;border-top:1px solid var(--line)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr)}
+.dossier-meta{display:flex;gap:8px;align-items:center;margin-top:6px}.dossier-meta select{flex:1;margin:0}.dossier-meta span{white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 10px;font:12px system-ui;color:var(--green);cursor:pointer;text-align:left}
+#chat{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto;margin:8px 0}
+.msg{border-radius:12px;padding:8px 10px;max-width:95%}.msg pre{white-space:pre-wrap;font:inherit;margin:0}
+.msg.user{align-self:flex-end;background:var(--green);color:#fff}.msg.assistant{align-self:flex-start;background:#fff;border:1px solid var(--line)}
+.msg .done{margin:6px 0 0;padding-left:0;list-style:none;font-size:11px;color:#26704f}.msg .copy{font-size:11px;color:var(--green);margin-top:4px}
+.check-line{display:flex;gap:6px;align-items:center;font-weight:500}.check-line input{width:auto;margin:0}
+.chat-form textarea{margin-top:4px}
+.task{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--line)}.task input{width:auto;margin-top:3px}.task div{flex:1}.task small{display:block;color:var(--muted)}
+.task.done span{text-decoration:line-through;color:var(--muted)}.task.late small{color:#a33}
+#task-form input{margin-top:6px}#task-form input[type=date]{width:130px;flex:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}.grid2 label{margin:6px 0 0}
+details{margin-top:8px}summary{cursor:pointer;font-weight:600}.result{background:#f2eee3;border-radius:8px;padding:8px;margin-top:8px;font-size:12px}.result:empty{display:none}
+.analysis{margin-top:10px;font-size:12px}.analysis ul{margin:4px 0 8px;padding-left:18px}
+.card .btn.file,.card select{margin-top:8px}

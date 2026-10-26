@@ -37,15 +37,34 @@
       <button id="new-dossier" class="icon" title="Nouveau dossier">＋</button>
       <button id="del-dossier" class="icon" title="Supprimer le dossier">🗑</button>
     </div>
+    <div class="dossier-meta">
+      <select id="dossier-statut" aria-label="Statut du dossier"></select>
+      <span id="dossier-taches" class="small muted"></span>
+    </div>
     <nav class="tabs" role="tablist">
-      <button role="tab" data-tab="saisie" class="active">Saisie</button>
+      <button role="tab" data-tab="agent" class="active">Agent</button>
+      <button role="tab" data-tab="saisie">Saisie</button>
       <button role="tab" data-tab="documents">Documents</button>
       <button role="tab" data-tab="fiche">Fiche</button>
       <button role="tab" data-tab="inscription">Inscription</button>
       <button role="tab" data-tab="contrats">Contrats</button>
+      <button role="tab" data-tab="redaction">Rédaction</button>
+      <button role="tab" data-tab="outils">Outils</button>
     </nav>
 
-    <div class="tab" data-panel="saisie">
+    <div class="tab" data-panel="agent">
+      <h2>Votre agent</h2>
+      <p class="muted small">Demandez en langage courant : il répond et agit sur le dossier (fiche, documents, tâches, sites, formulaires, contrats).</p>
+      <div class="chips" id="agent-ideas"></div>
+      <div id="chat"></div>
+      <label class="check-line"><input id="agent-page" type="checkbox"> Inclure la page ouverte</label>
+      <form id="agent-form" class="chat-form">
+        <textarea id="agent-input" rows="3" placeholder="Ex. : la promesse a été acceptée le 3 novembre avec financement 10 jours et inspection 7 jours : ajoute les échéances."></textarea>
+        <div class="row"><button class="btn" type="submit">Envoyer</button><button id="agent-clear" class="btn ghost" type="button">Effacer</button></div>
+      </form>
+    </div>
+
+    <div class="tab" data-panel="saisie" hidden>
       <h2>Saisie à la source</h2>
       <p class="muted">Capturez la page ouverte (fiche, courriel, rôle d’évaluation…), importez un PDF ou collez vos notes. i-Courtier remplit la fiche pour vous.</p>
       <div class="row">
@@ -103,11 +122,68 @@
       <button id="contract" class="btn">Générer l’ébauche</button>
       <div id="contract-out"></div>
     </div>
+
+    <div class="tab" data-panel="redaction" hidden>
+      <h2>Rédaction</h2>
+      <label>Texte<select id="writing-type"></select></label>
+      <div class="row">
+        <label>Ton<select id="writing-tone"><option>professionnel et chaleureux</option><option>formel</option><option>concis et direct</option><option>enthousiaste</option></select></label>
+        <label>Langue<select id="writing-lang"><option value="fr">Français</option><option value="en">Anglais</option></select></label>
+      </div>
+      <label>Consignes<textarea id="writing-notes" rows="4" placeholder="Ex. : visite samedi 14 h avec la famille Gagnon, ils ont aimé la cour mais trouvent le prix élevé"></textarea></label>
+      <button id="writing" class="btn">Rédiger</button>
+      <div id="writing-out"></div>
+    </div>
+
+    <div class="tab" data-panel="outils" hidden>
+      <div class="card">
+        <h3>Tâches et échéances</h3>
+        <div id="tasks"></div>
+        <form id="task-form" class="row"><input id="task-text" placeholder="Nouvelle tâche" required><input id="task-date" type="date" aria-label="Échéance"><button class="icon" type="submit" title="Ajouter">＋</button></form>
+      </div>
+      <div class="card">
+        <h3>Analyser un document</h3>
+        <p class="small muted">Inspection, déclarations du vendeur, certificat, procès-verbaux… : résumé, points d’alerte et questions à poser.</p>
+        <select id="analyse-kind" aria-label="Type de document"></select>
+        <label class="btn ghost file">Choisir le PDF et analyser<input id="analyse-file" type="file" accept="application/pdf" hidden></label>
+        <div id="analyse-out"></div>
+      </div>
+      <div class="card">
+        <h3>Calculatrices</h3>
+        <details open><summary>Mensualité hypothécaire</summary>
+          <div class="grid2"><label>Prix<input id="c-prix" type="number" min="0" placeholder="465000"></label><label>Mise de fonds<input id="c-mise" type="number" min="0" placeholder="46500"></label>
+          <label>Taux annuel %<input id="c-taux" type="number" step="0.01" min="0" placeholder="4.79"></label><label>Amortissement (ans)<input id="c-ans" type="number" min="1" max="40" value="25"></label></div>
+          <p id="c-hypo" class="result"></p></details>
+        <details><summary>Commission et taxes</summary>
+          <div class="grid2"><label>Prix de vente<input id="m-prix" type="number" min="0"></label><label>Commission %<input id="m-taux" type="number" step="0.1" min="0" value="5"></label></div>
+          <p id="c-comm" class="result"></p></details>
+        <details><summary>Répartition des taxes municipales (année civile)</summary>
+          <div class="grid2"><label>Taxes annuelles<input id="a-taxe" type="number" min="0"></label><label>Date d’ajustement<input id="a-date" type="date"></label></div>
+          <label class="check-line"><input id="a-payee" type="checkbox" checked> Le vendeur a déjà payé l’année complète</label>
+          <p id="c-ajust" class="result"></p></details>
+      </div>
+      <div class="card">
+        <h3>Mon profil de courtier</h3>
+        <p class="small muted">Utilisé pour vos signatures et vos ébauches.</p>
+        <form id="profile-form" class="grid2">
+          <label>Nom<input name="nom"></label><label>Agence<input name="agence"></label>
+          <label>N° de permis OACIQ<input name="permis"></label><label>Téléphone<input name="telephone"></label>
+          <label>Courriel<input name="courriel" type="email"></label>
+        </form>
+      </div>
+      <div class="card">
+        <h3>Sauvegarde des dossiers</h3>
+        <p class="small muted">Vos dossiers sont dans ce navigateur. Exportez-les pour changer d’ordinateur ou les transmettre à votre équipe.</p>
+        <div class="row"><button id="export-all" class="btn ghost">Exporter tous les dossiers</button><label class="btn ghost file">Importer<input id="import-file" type="file" accept="application/json" hidden></label></div>
+        <button id="export-fiche" class="btn ghost">Exporter la fiche (CSV)</button>
+      </div>
+    </div>
   </section>
 
   <div id="busy" class="busy" hidden><span></span><p id="busy-text">i-Courtier travaille…</p></div>
   <div id="toast" class="toast" role="status" hidden></div>
   <footer class="foot">Ébauches à valider par le courtier. Les formulaires obligatoires de l’OACIQ prévalent.</footer>
   <script src="sidepanel.js"></script>
+  <script src="tools.js"></script>
 </body>
 </html>

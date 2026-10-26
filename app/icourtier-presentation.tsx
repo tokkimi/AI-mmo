@@ -1,14 +1,18 @@
 'use client';
 
-import { Check, ClipboardCheck, Download, FileSignature, FileText, MousePointerClick, ScanText, ShieldCheck, Timer } from 'lucide-react';
+import { Bot, Calculator, Check, ClipboardCheck, Download, FileSearch, FileSignature, FileText, MousePointerClick, PenLine, ScanText, ShieldCheck, Timer } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import PurchaseSheet from '@/components/purchase-sheet';
 
 const pillars = [
+  { icon: Bot, title: 'Un agent qui agit', text: 'Demandez en langage courant : « ajoute les échéances de la promesse », « coche l’acte de vente », « prépare la contre-proposition ». L’agent répond et met à jour le dossier, crée les tâches, ouvre les sites et remplit les formulaires.' },
   { icon: ScanText, title: 'Saisie à la source', text: 'Capturez la page ouverte, un courriel du vendeur, un compte de taxes ou un PDF : i-Courtier extrait les 32 champs de la fiche d’inscription et signale ce qui manque ou se contredit.' },
   { icon: MousePointerClick, title: 'Remplissage automatique', text: 'Ouvrez votre formulaire en ligne (système d’inscription, CRM, portail) : un clic et les champs reconnus sont remplis et surlignés, prêts à être vérifiés.' },
   { icon: FileSignature, title: 'Ébauches de contrats', text: 'Contrat de courtage, promesse d’achat, contre-proposition, modifications, déclarations du vendeur : des ébauches structurées, délais calculés, données à reporter dans les formulaires de l’OACIQ.' },
   { icon: ClipboardCheck, title: 'Administration des inscriptions', text: 'Liste des documents par dossier avec statuts, descriptions FR et EN, points forts, alertes d’incohérence et courriel au vendeur pour obtenir les pièces manquantes.' },
+  { icon: PenLine, title: 'Rédaction', text: 'Courriels au vendeur, à l’acheteur, au notaire et aux collaborateurs, suivis de visite, baisse de prix, publications Facebook et Instagram, visites libres, infolettres et textos, signés à votre nom.' },
+  { icon: FileSearch, title: 'Analyse de documents', text: 'Inspection, déclarations du vendeur, certificat de localisation, procès-verbaux : résumé, points d’alerte et questions à poser, puis mise à jour de la fiche.' },
+  { icon: Calculator, title: 'Suivi et calculs', text: 'Statut de chaque dossier, tâches et échéances avec alertes de retard, mensualité hypothécaire, commission avec TPS et TVQ, répartition des taxes.' },
 ];
 
 const steps = [
@@ -23,6 +27,8 @@ const faq = [
   ['Où sont conservés mes dossiers ?', 'Les dossiers sont enregistrés localement dans votre navigateur. Les textes et PDF ne sont transmis au moteur IA qu’au moment où vous lancez une action, pour produire la réponse.'],
   ['Sur quels sites fonctionne la saisie ?', 'Sur toute page web lisible : fiches, courriels dans le navigateur, rôles d’évaluation, portails et formulaires en ligne. Les champs reconnus sont remplis; les autres sont listés.'],
   ['Y a-t-il des frais d’installation ?', 'Aucuns frais fixes. 250 CAD par mois + taxes, résiliable à tout moment depuis votre espace de facturation.'],
+  ['Que peut faire l’agent ?', 'Il connaît le dossier ouvert (fiche, documents, tâches, contrats) et peut lire la page affichée. Il répond à vos questions, rédige vos textes et agit : mise à jour de la fiche, documents cochés, tâches et échéances, statut du dossier, sites ouverts, formulaires remplis et ébauches de contrats.'],
+  ['Puis-je utiliser i-Courtier sur plusieurs ordinateurs ou en équipe ?', 'Oui. Exportez vos dossiers en un clic et importez-les sur un autre poste ou chez un collègue de votre agence.'],
   ['Une formation est-elle incluse ?', 'Non. i-Courtier est uniquement l’outil. Le volet immobilier Québec est offert sur demande aux participants de la formation Structurer et automatiser à 1 200 CAD.'],
 ];
 
@@ -69,7 +75,7 @@ export default function IcourtierPresentation({ go, user }: any) {
       <div className="sales-numbers">
         <div><strong>20 h</strong><span>de saisie ramenées à quelques minutes</span></div>
         <div><strong>32</strong><span>champs de fiche extraits</span></div>
-        <div><strong>6</strong><span>types d’ébauches de documents</span></div>
+        <div><strong>18</strong><span>modèles de contrats et de textes</span></div>
         <div><strong>0 $</strong><span>de frais fixes</span></div>
       </div>
 
@@ -77,7 +83,7 @@ export default function IcourtierPresentation({ go, user }: any) {
         <div className="sales-section-title">
           <span className="eyebrow">CE QUE FAIT i-COURTIER</span>
           <h2>Une adjointe administrative, dans votre navigateur.</h2>
-          <p>Quatre outils reliés par dossier : ce que vous saisissez une fois sert partout.</p>
+          <p>Huit outils reliés par dossier : ce que vous saisissez une fois sert partout.</p>
         </div>
         <div className="icourtier-grid">
           {pillars.map(({ icon: Icon, title, text }) => (

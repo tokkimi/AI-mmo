@@ -299,7 +299,7 @@ $('#name-instanet').onclick = () => busy('Nommage du dossier…', async () => {
 
 function renderAll() {
   if (!dossier()) { newDossier(); return; }
-  renderDossiers(); renderFiche(); renderDocs(); renderListing(); renderContracts();
+  renderDossiers(); renderFiche(); renderDocs(); renderListing(); renderContracts(); renderExtras();
   $('#source').value = dossier().source || '';
   $('#pdf-name').textContent = ''; state.pdf = '';
 }
@@ -310,7 +310,7 @@ async function start() {
   if (!state.token) return show('login');
   try {
     const me = await api('me');
-    state.fields = me.fields; state.contracts = me.contracts;
+    state.fields = me.fields; state.contracts = me.contracts; state.writings = me.writings || {}; state.docKinds = me.docKinds || {};
     if (!me.access) return show('noaccess');
     show('app'); renderAll();
     const { pending } = await chrome.storage.local.get('pending');
@@ -360,8 +360,7 @@ $('#listing').onclick = () => busy('Préparation de l’inscription…', async (
 });
 $('#contract').onclick = () => busy('Rédaction de l’ébauche…', async () => {
   const d = dossier(); const type = $('#contract-type').value;
-  const r = await api('contract', { type, details: $('#contract-details').value, fiche: d.fiche });
+  const r = await api('contract', { type, details: $('#contract-details').value, fiche: d.fiche, profil: profile });
   d.contracts = [{ type, texte: r.texte, at: Date.now() }, ...(d.contracts || [])].slice(0, 10); touch(); renderContracts();
 });
 
-start();
