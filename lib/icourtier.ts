@@ -5,10 +5,13 @@ import { ApiError } from '@/lib/server';
 export const ICOURTIER_OFFER = 'immo-pro';
 const MODEL = 'claude-opus-5-5';
 
-// Accès à l'extension : administrateurs, ou abonnement Stripe actif à l'offre immo-pro.
+// Accès à l'extension : administrateurs, comptes offerts, ou abonnement Stripe actif à l'offre immo-pro.
 export async function hasExtensionAccess(user: any) {
   if (!user) return false;
   if (user.role === 'admin') return true;
+  // Accès gratuit pour l'équipe i-ateliers : courriels séparés par des virgules dans ICOURTIER_FREE_EMAILS.
+  const free = (process.env.ICOURTIER_FREE_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+  if (user.email && free.includes(String(user.email).toLowerCase())) return true;
   if (!user.stripe_customer || !process.env.STRIPE_SECRET_KEY) return false;
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const subs = await stripe.subscriptions.list({ customer: user.stripe_customer, status: 'all', limit: 20 });

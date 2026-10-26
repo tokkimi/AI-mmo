@@ -1,7 +1,6 @@
 'use client';
 
 import { Bot, Calculator, Check, ClipboardCheck, Download, FileSearch, FileSignature, FileText, MousePointerClick, PenLine, ScanText, ShieldCheck, Timer } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import PurchaseSheet from '@/components/purchase-sheet';
 
 const pillars = [
@@ -31,18 +30,6 @@ const faq = [
   ['Puis-je utiliser i-Courtier sur plusieurs ordinateurs ou en équipe ?', 'Oui. Exportez vos dossiers en un clic et importez-les sur un autre poste ou chez un collègue de votre agence.'],
   ['Une formation est-elle incluse ?', 'Non. i-Courtier est uniquement l’outil. Le volet immobilier Québec est offert sur demande aux participants de la formation Structurer et automatiser à 1 200 CAD.'],
 ];
-
-// Le téléchargement est réservé aux comptes connectés avec un abonnement i-Courtier actif.
-function DownloadButton({ go }: any) {
-  const [state, setState] = useState<{ user: boolean; access: boolean } | null>(null);
-  useEffect(() => {
-    fetch('/api/icourtier/download?check=1', { cache: 'no-store' }).then(r => r.json()).then(setState).catch(() => setState({ user: false, access: false }));
-  }, []);
-  if (!state) return null;
-  if (state.access) return <a className="button outline" href="/api/icourtier/download"><Download size={16} /> Télécharger i-Courtier</a>;
-  if (state.user) return <p className="muted">Le téléchargement s’affiche ici dès que votre abonnement i-Courtier est actif.</p>;
-  return <><p className="muted">Connectez-vous avec votre compte abonné pour télécharger l’extension.</p><button className="button outline" onClick={() => go('login')}>Me connecter</button></>;
-}
 
 export default function IcourtierPresentation({ go, user }: any) {
   return (
@@ -166,13 +153,8 @@ export default function IcourtierPresentation({ go, user }: any) {
           <article className="panel">
             <span className="eyebrow">INSTALLATION</span>
             <h2>Déjà abonné ?</h2>
-            <ol className="icourtier-install">
-              <li>Téléchargez l’extension et décompressez le fichier.</li>
-              <li>Ouvrez <code>chrome://extensions</code> (ou <code>edge://extensions</code>) et activez le mode développeur.</li>
-              <li>Cliquez sur « Charger l’extension non empaquetée » et choisissez le dossier i-courtier.</li>
-              <li>Épinglez i-Courtier et connectez-vous avec votre compte i-ateliers.</li>
-            </ol>
-            <DownloadButton go={go} />
+            <p>Une page d’installation vous guide pas à pas et confirme quand i-Courtier est prêt.</p>
+            <a className="button outline" href="/i-courtier/installer"><Download size={16} /> Installer i-Courtier</a>
           </article>
         </div>
       </section>
