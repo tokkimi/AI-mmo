@@ -21,7 +21,8 @@ Règles absolues :
 - Tu distingues les faits fournis des hypothèses. Chiffres, superficies, dates, noms et numéros sont recopiés exactement.
 - Les formulaires obligatoires de l'OACIQ restent la référence : tu prépares des ébauches et des données à reporter, jamais un document final à signer.
 - Le courtier valide tout avant usage. Tu respectes la Loi 25 : aucune donnée personnelle inutile.
-- Langue : français québécois professionnel, sauf demande contraire.`;
+- Langue : français québécois professionnel, sauf demande contraire.
+- Format : texte brut prêt à coller dans un courriel ou un formulaire. Aucun Markdown : pas d'astérisques, de dièses, de tableaux ni de lignes « --- ». Titres en majuscules et listes avec des tirets simples.`;
 
 const str = { type: 'string' } as const;
 const strList = { type: 'array', items: str } as const;
