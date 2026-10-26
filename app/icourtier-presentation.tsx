@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import PurchaseSheet from '@/components/purchase-sheet';
 
 const pillars = [
-  { icon: ScanText, title: 'Saisie à la source', text: 'Capturez la page ouverte, un courriel du vendeur, un compte de taxes ou un PDF : i-Courtier extrait les 27 champs de la fiche d’inscription et signale ce qui manque ou se contredit.' },
+  { icon: ScanText, title: 'Saisie à la source', text: 'Capturez la page ouverte, un courriel du vendeur, un compte de taxes ou un PDF : i-Courtier extrait les 32 champs de la fiche d’inscription et signale ce qui manque ou se contredit.' },
   { icon: MousePointerClick, title: 'Remplissage automatique', text: 'Ouvrez votre formulaire en ligne (système d’inscription, CRM, portail) : un clic et les champs reconnus sont remplis et surlignés, prêts à être vérifiés.' },
   { icon: FileSignature, title: 'Ébauches de contrats', text: 'Contrat de courtage, promesse d’achat, contre-proposition, modifications, déclarations du vendeur : des ébauches structurées, délais calculés, données à reporter dans les formulaires de l’OACIQ.' },
   { icon: ClipboardCheck, title: 'Administration des inscriptions', text: 'Liste des documents par dossier avec statuts, descriptions FR et EN, points forts, alertes d’incohérence et courriel au vendeur pour obtenir les pièces manquantes.' },
@@ -68,7 +68,7 @@ export default function IcourtierPresentation({ go, user }: any) {
 
       <div className="sales-numbers">
         <div><strong>20 h</strong><span>de saisie ramenées à quelques minutes</span></div>
-        <div><strong>27</strong><span>champs de fiche extraits</span></div>
+        <div><strong>32</strong><span>champs de fiche extraits</span></div>
         <div><strong>6</strong><span>types d’ébauches de documents</span></div>
         <div><strong>0 $</strong><span>de frais fixes</span></div>
       </div>
@@ -83,6 +83,24 @@ export default function IcourtierPresentation({ go, user }: any) {
           {pillars.map(({ icon: Icon, title, text }) => (
             <article key={title}><Icon /><h3>{title}</h3><p>{text}</p></article>
           ))}
+        </div>
+      </section>
+
+      <section className="sales-section">
+        <div className="sales-section-title">
+          <span className="eyebrow">LES DOCUMENTS, GUIDÉS PAS À PAS</span>
+          <h2>Chaque pièce du dossier, au bon endroit.</h2>
+          <p>Pour chaque document, i-Courtier ouvre le bon site, copie le n° de lot ou l’adresse, rappelle les étapes, puis lit le PDF importé pour compléter la fiche.</p>
+        </div>
+        <div className="icourtier-docs">
+          {[
+            ['Registre foncier', 'Index des immeubles, acte de vente, acte de prêt (hypothèque) et, au besoin, déclaration de transmission.'],
+            ['Taxes municipales', 'Rôle d’évaluation et rôle de taxation de la ville, y compris Montréal.'],
+            ['Taxes scolaires', 'Compte de taxes le plus récent, recherché par n° de cadastre.'],
+            ['Hydro-Québec', 'Estimation du coût annuel, lue directement à l’écran.'],
+            ['Centris', 'Vos inscriptions incomplètes s’ouvrent et se remplissent à partir de la fiche.'],
+            ['Instanet Forms', 'Le dossier de transaction est nommé avec l’adresse de la propriété, en un clic.'],
+          ].map(([t, d]) => (<article key={t}><Check /><div><h3>{t}</h3><p>{d}</p></div></article>))}
         </div>
       </section>
 

@@ -39,6 +39,7 @@
     </div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="saisie" class="active">Saisie</button>
+      <button role="tab" data-tab="documents">Documents</button>
       <button role="tab" data-tab="fiche">Fiche</button>
       <button role="tab" data-tab="inscription">Inscription</button>
       <button role="tab" data-tab="contrats">Contrats</button>
@@ -56,6 +57,14 @@
       <button id="extract" class="btn">Extraire la fiche</button>
     </div>
 
+    <div class="tab" data-panel="documents" hidden>
+      <h2>Documents à récupérer</h2>
+      <p class="muted">Pour chaque document : ouvrez le site (l’information utile est copiée pour vous), suivez les étapes, puis importez le PDF. La fiche se remplit et le document est coché.</p>
+      <p id="docs-progress" class="small muted"></p>
+      <div id="docs"></div>
+      <input id="doc-file" type="file" accept="application/pdf" hidden>
+    </div>
+
     <div class="tab" data-panel="fiche" hidden>
       <h2>Fiche d’inscription</h2>
       <div id="verify" class="notice" hidden></div>
@@ -65,6 +74,19 @@
         <button id="copy-fiche" class="btn ghost">Copier</button>
       </div>
       <p id="fill-report" class="small muted"></p>
+      <div class="card">
+        <h3>Centris</h3>
+        <p class="small muted">Ouvrez votre inscription incomplète, puis cliquez sur « Remplir le formulaire de la page ».</p>
+        <button id="open-centris" class="btn ghost">Ouvrir mes inscriptions Centris</button>
+      </div>
+      <div class="card">
+        <h3>Instanet Forms</h3>
+        <p class="small muted">Créez une nouvelle transaction, puis nommez-la avec l’adresse de la propriété en un clic.</p>
+        <div class="row">
+          <button id="open-instanet" class="btn ghost">Ouvrir Instanet</button>
+          <button id="name-instanet" class="btn">Nommer avec l’adresse</button>
+        </div>
+      </div>
     </div>
 
     <div class="tab" data-panel="inscription" hidden>

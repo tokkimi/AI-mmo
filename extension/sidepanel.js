@@ -57,7 +57,7 @@ function card(title, text) {
 // ---------- Dossiers ----------
 function newDossier(nom = 'Nouveau dossier') {
   const id = Date.now().toString(36);
-  state.dossiers[id] = { id, nom, fiche: {}, verify: [], source: '', recus: '', listing: null, contracts: [], updated: Date.now() };
+  state.dossiers[id] = { id, nom, fiche: {}, verify: [], source: '', recus: '', docs: {}, listing: null, contracts: [], updated: Date.now() };
   state.current = id; save(); renderAll();
 }
 function renderDossiers() {
@@ -191,9 +191,115 @@ function renderContracts() {
   });
 }
 
+// ---------- Documents à récupérer (registre foncier, taxes, Hydro-Québec) ----------
+const google = (q) => 'https://www.google.com/search?q=' + encodeURIComponent(q);
+const isMontreal = (f) => /montr[ée]al/i.test(f.ville || f.adresse || '');
+const civic = (f) => (f.adresse || '').split(',')[0].trim();
+const DOCS = [
+  { key: 'index', title: 'Index des immeubles', source: 'Registre foncier', url: () => 'https://www.registrefoncier.gouv.qc.ca', copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Consulter → Index des immeubles', 'Collez le n° de lot (déjà copié) dans « N° de lot »', 'Soumettre → Confirmer → Sauvegarder le PDF'] },
+  { key: 'hypotheque', title: 'Acte de prêt (hypothèque)', source: 'Registre foncier', url: () => 'https://www.registrefoncier.gouv.qc.ca', copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Ouvrez le PDF de l’index des immeubles', 'Cliquez sur le lien de l’hypothèque', 'Confirmer → Sauvegarder le PDF'] },
+  { key: 'vente', title: 'Acte de vente', source: 'Registre foncier', url: () => 'https://www.registrefoncier.gouv.qc.ca', copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Retournez sur le PDF de l’index des immeubles', 'Cliquez sur la vente', 'Confirmer → Sauvegarder le PDF'] },
+  { key: 'transmission', title: 'Déclaration de transmission', source: 'Registre foncier', optional: 'Seulement en cas de succession ou de servitude.', url: () => 'https://www.registrefoncier.gouv.qc.ca', copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Depuis l’index des immeubles, cliquez sur la déclaration de transmission', 'Confirmer → Sauvegarder le PDF'] },
+  { key: 'municipal', title: 'Rôle d’évaluation et rôle de taxation', source: 'Taxes municipales', copy: 'civique', copyLabel: 'N° civique et rue',
+    url: (f) => google(isMontreal(f) ? 'eval web Montréal rôle d’évaluation foncière' : `rôle d'évaluation ${f.ville || ''}`),
+    steps: (f) => isMontreal(f)
+      ? ['Montréal : utilisez « eval web » (recherche déjà lancée)', 'Recherchez l’adresse (copiée)', 'Enregistrez le rôle d’évaluation et le compte de taxes en PDF']
+      : ['Ouvrez le 1er résultat → Accès citoyen', 'Remplissez n° civique + rue (copiés)', 'Rôle de taxation et rôle d’évaluation : petite loupe → Visualiser → Enregistrer le PDF'] },
+  { key: 'scolaire', title: 'Compte de taxes scolaires', source: 'Taxes scolaires', url: (f) => google(`TFP ${f.ville || ''} compte de taxes scolaires`), copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Ouvrez le site TFP de la région → Compte de taxes', 'Recherche par n° de cadastre (copié) → Rechercher', 'Téléchargez le fichier le plus récent'] },
+  { key: 'hydro', title: 'Estimation Hydro-Québec', source: 'Hydro-Québec', capture: true, copy: 'civique', copyLabel: 'Adresse',
+    url: () => 'https://www.hydroquebec.com/residentiel/espace-clients/demenagement/estimer-couts-residence.html',
+    steps: ['Entrez l’adresse (copiée) et lancez l’estimation', 'Quand le montant s’affiche, cliquez sur « Capturer le montant »'] },
+];
+function copyValue(doc, f) {
+  if (doc.copy === 'civique') return [civic(f), f.ville].filter(Boolean).join(', ');
+  return f[doc.copy] || '';
+}
+function renderDocs() {
+  const d = dossier(); d.docs = d.docs || {};
+  const box = $('#docs'); box.innerHTML = '';
+  const done = DOCS.filter((x) => d.docs[x.key]?.status === 'reçu').length;
+  $('#docs-progress').textContent = `${done}/${DOCS.length} documents reçus pour ce dossier.`;
+  for (const doc of DOCS) {
+    const st = d.docs[doc.key] || { status: 'à obtenir' };
+    const steps = typeof doc.steps === 'function' ? doc.steps(d.fiche) : doc.steps;
+    const pill = el('button', { className: 'pill ' + (st.status === 'reçu' ? 'reçu' : 'obtenir'), textContent: st.status, title: 'Changer le statut',
+      onclick: () => { d.docs[doc.key] = { ...st, status: st.status === 'reçu' ? 'à obtenir' : 'reçu' }; touch(); renderDocs(); } });
+    const open = el('button', { className: 'btn ghost', textContent: 'Ouvrir le site', onclick: () => openDoc(doc) });
+    const action = doc.capture
+      ? el('button', { className: 'btn', textContent: 'Capturer le montant', onclick: () => busy('Lecture du montant…', () => captureDoc(doc)) })
+      : el('button', { className: 'btn', textContent: 'Importer le PDF', onclick: () => { state.docKey = doc.key; $('#doc-file').value = ''; $('#doc-file').click(); } });
+    box.append(el('div', { className: 'doc' + (st.status === 'reçu' ? ' ok' : '') },
+      el('header', {}, el('div', {}, el('strong', { textContent: doc.title }), el('div', { className: 'small muted', textContent: doc.source })), pill),
+      doc.optional && el('div', { className: 'small muted', textContent: doc.optional }),
+      el('ol', {}, ...steps.map((s) => el('li', { textContent: s }))),
+      !copyValue(doc, d.fiche) && el('div', { className: 'warn', textContent: `${doc.copyLabel} manquant dans la fiche : complétez-le pour gagner du temps.` }),
+      el('div', { className: 'row' }, open, action),
+      st.file && el('div', { className: 'file', textContent: `✓ ${st.file} · ${new Date(st.at).toLocaleDateString('fr-CA')}` })));
+  }
+}
+async function openDoc(doc) {
+  const f = dossier().fiche; const value = copyValue(doc, f);
+  if (value) { await navigator.clipboard.writeText(value).catch(() => {}); toast(`${doc.copyLabel} copié : ${value}`); }
+  chrome.tabs.create({ url: doc.url(f) });
+}
+async function mergeExtraction(doc, r, file) {
+  const d = dossier();
+  for (const [k, v] of Object.entries(r.fiche)) if (v) d.fiche[k] = v;
+  d.verify = [...new Set([...(d.verify || []), ...r.a_verifier])].slice(0, 30);
+  d.docs[doc.key] = { status: 'reçu', file, at: Date.now() };
+  if (d.nom === 'Nouveau dossier' && d.fiche.adresse) d.nom = d.fiche.adresse;
+  touch(); renderDossiers(); renderFiche(); renderDocs();
+  toast(`${doc.title} : fiche mise à jour.`);
+}
+async function captureDoc(doc) {
+  const t = await activeTab();
+  const url = await chrome.tabs.captureVisibleTab(t.windowId, { format: 'jpeg', quality: 85 });
+  const r = await api('extract', { image: url.split(',')[1], imageType: 'image/jpeg', doc: `${doc.title} (capture d’écran du montant affiché; inscris le coût annuel estimé dans hydro_cout_annuel)`, url: t.url });
+  await mergeExtraction(doc, r, 'Capture d’écran');
+}
+$('#doc-file').onchange = (e) => {
+  const file = e.target.files[0]; const doc = DOCS.find((x) => x.key === state.docKey); if (!file || !doc) return;
+  if (file.size > 3_000_000) { toast('PDF trop volumineux (3 Mo maximum).', true); return; }
+  const reader = new FileReader();
+  reader.onload = () => busy(`Lecture : ${doc.title}…`, async () => {
+    const r = await api('extract', { pdf: String(reader.result).split(',')[1], doc: `${doc.title} (${doc.source})` });
+    await mergeExtraction(doc, r, file.name);
+  });
+  reader.readAsDataURL(file);
+};
+
+// ---------- Plateformes : Centris et Instanet ----------
+function nameTransaction(name) {
+  const visible = (n) => { const r = n.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const label = (n) => [n.id && document.querySelector(`label[for="${CSS.escape(n.id)}"]`)?.innerText, n.closest('label')?.innerText, n.getAttribute('aria-label'), n.placeholder, n.name, n.id].filter(Boolean).join(' ');
+  const fields = [...document.querySelectorAll('input:not([type]), input[type=text]')].filter((n) => visible(n) && !n.disabled && !n.readOnly);
+  const best = fields.map((n) => ({ n, score: (/nom|name|titre|title/i.test(label(n)) ? 2 : 0) + (/transaction|dossier|file|folder/i.test(label(n)) ? 2 : 0) + (!n.value ? 1 : 0) }))
+    .filter((x) => x.score >= 2).sort((a, b) => b.score - a.score)[0];
+  if (!best) return false;
+  Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(best.n, name);
+  best.n.dispatchEvent(new Event('input', { bubbles: true })); best.n.dispatchEvent(new Event('change', { bubbles: true }));
+  best.n.style.outline = '2px solid #b8914a'; best.n.focus();
+  return true;
+}
+$('#open-centris').onclick = () => chrome.tabs.create({ url: 'https://zone.centris.ca/Dashboard?ml-page=1&ml-status=Incomplete&ml-showAllListings=false&tab=list' });
+$('#open-instanet').onclick = () => chrome.tabs.create({ url: 'https://pr.transactiondesk.com/' });
+$('#name-instanet').onclick = () => busy('Nommage du dossier…', async () => {
+  const name = dossier().fiche.adresse;
+  if (!name) throw new Error('Ajoutez d’abord l’adresse dans la fiche.');
+  await navigator.clipboard.writeText(name).catch(() => {});
+  const t = await activeTab();
+  const results = await chrome.scripting.executeScript({ target: { tabId: t.id, allFrames: true }, func: nameTransaction, args: [name] });
+  toast(results.some((r) => r.result) ? `Dossier nommé : ${name}` : 'Champ du nom introuvable : l’adresse est copiée, collez-la (Ctrl+V).', !results.some((r) => r.result));
+});
+
 function renderAll() {
   if (!dossier()) { newDossier(); return; }
-  renderDossiers(); renderFiche(); renderListing(); renderContracts();
+  renderDossiers(); renderFiche(); renderDocs(); renderListing(); renderContracts();
   $('#source').value = dossier().source || '';
   $('#pdf-name').textContent = ''; state.pdf = '';
 }
@@ -248,7 +354,9 @@ $('#extract').onclick = () => busy('Extraction de la fiche…', async () => {
 $('#fill').onclick = () => busy('Remplissage du formulaire…', fill);
 $('#copy-fiche').onclick = () => copy(ficheText());
 $('#listing').onclick = () => busy('Préparation de l’inscription…', async () => {
-  const d = dossier(); d.listing = await api('listing', { fiche: d.fiche, recus: d.recus }); touch(); renderListing();
+  const d = dossier();
+  const recus = [d.recus, ...DOCS.filter((x) => d.docs?.[x.key]?.status === 'reçu').map((x) => x.title)].filter(Boolean).join(', ');
+  d.listing = await api('listing', { fiche: d.fiche, recus }); touch(); renderListing();
 });
 $('#contract').onclick = () => busy('Rédaction de l’ébauche…', async () => {
   const d = dossier(); const type = $('#contract-type').value;

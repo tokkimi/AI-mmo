@@ -34,7 +34,9 @@ export const FICHE_FIELDS: Record<string, string> = {
   fondation: 'Fondation', toiture: 'Toiture', evaluation_municipale: 'Évaluation municipale', taxes_municipales: 'Taxes municipales',
   taxes_scolaires: 'Taxes scolaires', frais_copropriete: 'Frais de copropriété', cadastre: 'Numéro de lot / cadastre', zonage: 'Zonage',
   inclusions: 'Inclusions', exclusions: 'Exclusions', servitudes: 'Servitudes connues', date_occupation: "Date d'occupation",
-  vendeurs: 'Vendeur(s)', notes_courtier: 'Notes du courtier',
+  vendeurs: 'Vendeur(s)', matricule: "Matricule (rôle d'évaluation)", acte_vente: 'Dernier acte de vente (date, prix, n° d’inscription)',
+  hypotheque: 'Hypothèque inscrite (créancier, montant, date)', transmission: 'Déclaration de transmission / succession',
+  hydro_cout_annuel: 'Coût annuel estimé Hydro-Québec', notes_courtier: 'Notes du courtier',
 };
 
 const ficheSchema = obj({
@@ -74,18 +76,24 @@ function field(v: unknown, max: number, name: string) {
   return v.trim();
 }
 
-function prompt(task: Task, b: any): { text: string; format: Record<string, unknown> | null; effort: 'low' | 'medium' | 'high'; pdf?: string } {
+type Prompt = { text: string; format: Record<string, unknown> | null; effort: 'low' | 'medium' | 'high'; pdf?: string; image?: { data: string; type: 'image/png' | 'image/jpeg' } };
+
+function prompt(task: Task, b: any): Prompt {
   const fiche = b.fiche ? JSON.stringify(b.fiche).slice(0, 20000) : '';
   if (task === 'extract') {
     const source = field(b.source, 60000, 'Source');
     const pdf = field(b.pdf, 4_000_000, 'PDF');
-    if (!source && !pdf) throw new ApiError('Ajoutez une source : page capturée, PDF, courriel ou notes.');
-    return { pdf, format: ficheSchema, effort: 'medium' as const, text: `Saisie à la source. Extrais la fiche d'inscription à partir de la source ci-dessous${b.url ? ` (page : ${field(b.url, 2000, 'URL')})` : ''}.
+    const imageData = field(b.image, 4_000_000, 'Capture');
+    const image = imageData ? { data: imageData, type: b.imageType === 'image/jpeg' ? 'image/jpeg' as const : 'image/png' as const } : undefined;
+    if (!source && !pdf && !image) throw new ApiError('Ajoutez une source : page capturée, PDF, capture d’écran, courriel ou notes.');
+    const doc = field(b.doc, 300, 'Document');
+    return { pdf, image, format: ficheSchema, effort: 'medium' as const, text: `Saisie à la source. Extrais la fiche d'inscription à partir de la source ci-dessous${b.url ? ` (page : ${field(b.url, 2000, 'URL')})` : ''}.
+${doc ? `Document fourni : ${doc}. Ne remplis que les champs que ce document établit; laisse les autres vides.` : ''}
 Champs prévus : ${JSON.stringify(FICHE_FIELDS)}.
 "a_verifier" liste les champs manquants, contradictoires ou à confirmer avec un document officiel. "resume" : 2 phrases.
 
 <source>
-${source || 'Voir le document PDF joint.'}
+${source || 'Voir le document ou la capture joints.'}
 </source>` };
   }
   if (task === 'listing') {
@@ -134,6 +142,7 @@ export async function runTask(task: string, body: any) {
     output_config: { effort: p.effort, ...(p.format ? { format: { type: 'json_schema', schema: p.format } } : {}) },
     messages: [{ role: 'user', content: [
       ...(p.pdf ? [{ type: 'document' as const, source: { type: 'base64' as const, media_type: 'application/pdf' as const, data: p.pdf } }] : []),
+      ...(p.image ? [{ type: 'image' as const, source: { type: 'base64' as const, media_type: p.image.type, data: p.image.data } }] : []),
       { type: 'text' as const, text: p.text },
     ] }],
   });

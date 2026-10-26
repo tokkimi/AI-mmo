@@ -43,4 +43,12 @@ input:focus,select:focus,textarea:focus{outline:2px solid #b8914a55;border-color
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;left:12px;right:12px;bottom:44px;background:var(--ink);color:#fff;padding:10px 12px;border-radius:10px;z-index:30}
 .toast.error{background:#8d2f2f}
+.doc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px}
+.doc.ok{border-color:#9fd1b8;background:#f7fcf9}
+.doc header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.doc header strong{font-size:13px}
+.doc ol{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:12px}
+.doc .warn{background:var(--warn);border-radius:8px;padding:6px 8px;margin-top:8px;font-size:12px}
+.doc .row .btn{margin-top:8px;padding:7px 10px;font-size:12px}
+.doc .file{font-size:11px;color:#26704f;margin-top:6px}
 .foot{position:fixed;bottom:0;left:0;right:0;background:#f2eee3;color:var(--muted);font-size:10px;padding:8px 12px;border-top:1px solid var(--line)}
