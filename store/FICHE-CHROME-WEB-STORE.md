@@ -13,7 +13,7 @@ https://chrome.google.com/webstore/devconsole
 | Petite tuile promotionnelle (440×280) | `tuile-promo-440x280.png` | Fiche → Tuile promotionnelle |
 | Bannière (1400×560), facultative | `banniere-1400x560.png` | Fiche → Bannière |
 
-## Onglet « Fiche Play Store »
+## Onglet « Fiche Chrome Web Store »
 
 **Nom** (repris du fichier) : i-Courtier — L’IA pour vos pratiques immo
 
@@ -43,7 +43,7 @@ ANALYSE ET OUTILS
 Analyse d’inspection, de déclarations ou de procès-verbaux (points d’alerte, questions à poser), tâches et échéances, mensualité hypothécaire, commission avec TPS et TVQ, répartition des taxes, sauvegarde des dossiers.
 
 VOUS GARDEZ LA MAIN
-Rien n’est signé, publié ou envoyé automatiquement. Les formulaires obligatoires de l’OACIQ prévalent toujours. Vos dossiers restent dans votre navigateur.
+Aucun document n’est signé, publié ou envoyé à vos clients automatiquement. Les formulaires obligatoires de l’OACIQ prévalent toujours. Vos dossiers sont enregistrés dans votre navigateur. Les données nécessaires aux fonctions IA sont transmises aux serveurs i-ateliers et à Anthropic lors de leur utilisation.
 
 Abonnement requis : 250 CAD par mois + taxes, sans frais fixes, sur https://i-ateliers.ca/i-courtier
 ```
@@ -78,9 +78,12 @@ Aider les courtiers immobiliers à préparer leurs dossiers : extraire les donn�
 
 - Informations permettant d'identifier personnellement l'utilisateur (courriel et nom du compte)
 - Informations d'authentification (mot de passe à la connexion, jeton de session)
-- Contenu du site Web (texte ou capture de la page, seulement quand le courtier lance une action)
+- Contenu du site Web (texte, champs ou capture de la page, seulement quand le courtier lance une action)
+- Communications personnelles (courriels fournis et conversations avec l’agent)
+- Informations financières et de paiement (renseignements financiers des dossiers, par exemple hypothèque, taxes et prix; l’extension ne saisit pas les cartes de paiement)
+- Historique Web (titre et URL des pages capturées ou incluses dans une demande; aucune collecte continue de l’historique)
 
-Puis cocher les trois certifications :
+Vérifier les libellés de la console et la concordance avec les pratiques du service, puis attester les trois certifications uniquement si elles sont exactes :
 
 - Je ne vends ni ne transfère les données des utilisateurs à des tiers, en dehors des cas d'utilisation approuvés.
 - Je n'utilise ni ne transfère les données des utilisateurs à des fins sans rapport avec l'objectif unique de mon article.
