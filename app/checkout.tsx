@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { track } from '@/lib/measurement';
 import { api } from './learning';
 const offers: Record<string, { name: string; price: string; detail: string }> =
   {
@@ -42,6 +43,7 @@ export function EnrollmentForm(props: any) {
         setAuthenticated(true);
       }
       const result = await api('billing/checkout', { offer: key });
+      track('begin_checkout', { value: key === 'signature' ? 1200 : key === 'autonomous' ? 499 : 250 });
       window.location.assign(result.url);
     } catch (reason: any) {
       setError(reason.message);
