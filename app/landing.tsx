@@ -182,6 +182,7 @@ export function PublicShell({ children, go, user }: any) {
         <small>
           Formation indépendante. Sans affiliation à OpenAI ou Anthropic.
         </small>
+        <small style={{ fontSize: '9px', opacity: 0.45 }}>Made by Alexia Naudy</small>
       </footer>
       <FormationBubble go={go} user={user}/>
     </div>
