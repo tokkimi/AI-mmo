@@ -60,7 +60,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       await db()`DELETE FROM sessions WHERE token_hash=${digest(token)}`;
       return json(req, { ok: true });
     }
-    if (!await hasExtensionAccess(user)) throw new ApiError('Abonnement i-Courtier requis. Abonnez-vous sur i-ateliers.ca/i-courtier.', 402);
+    if (!await hasExtensionAccess(user)) throw new ApiError('Abonnement i-Courtier requis. Abonnez-vous sur i-ateliers.store/i-courtier.', 402);
     await rateLimit('icourtier:' + user.id, 120);
     return json(req, await runTask(action, body));
   } catch (e) { return fail(req, e); }

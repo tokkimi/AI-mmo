@@ -63,6 +63,8 @@ export function PublicShell({ children, go, user }: any) {
           <a href="/?view=autonomous-info">Claude + ChatGPT</a>
           <a href="/i-courtier">i-Courtier</a>
           <a href="/?view=enterprise">Entreprise</a>
+          <a href="/a-propos">À propos</a>
+          <a href="/contact">Contact</a>
           <a href="/#tarif">Tarif</a>
         </nav>
         <div className="row">
@@ -107,6 +109,8 @@ export function PublicShell({ children, go, user }: any) {
               ['Claude + ChatGPT', 'autonomie'],
               ['i-Courtier', 'i-courtier'],
               ['Entreprise', 'enterprise'],
+              ['À propos', 'about'],
+              ['Contact', 'contact'],
               ['Tarif', 'tarif'],
             ].map(([label, anchor]) => (
               <a
@@ -118,6 +122,10 @@ export function PublicShell({ children, go, user }: any) {
                       ? '/i-courtier'
                     : anchor === 'enterprise'
                       ? '/?view=enterprise'
+                    : anchor === 'about'
+                      ? '/a-propos'
+                    : anchor === 'contact'
+                      ? '/contact'
                       : '/#' + anchor
                 }
                 onClick={() => setMenu(false)}
@@ -169,9 +177,9 @@ export function PublicShell({ children, go, user }: any) {
           </p>
         </div>
         <div>
-          <button onClick={() => go('privacy')}>
-            Conditions & confidentialité
-          </button>
+          <a href="/conditions">Conditions & confidentialité</a>
+          <a href="/a-propos">À propos d’Emilie</a>
+          <a href="/contact">Nous joindre</a>
           <button onClick={() => go('sources')}>
             Sources & repères Québec
           </button>
@@ -180,7 +188,7 @@ export function PublicShell({ children, go, user }: any) {
           </button>
         </div>
         <small>
-          Formation indépendante. Sans affiliation à OpenAI ou Anthropic.
+          Emilie Cauvier Inc. · Québec, Canada · Formation indépendante sans affiliation à OpenAI ou Anthropic.
         </small>
         <small style={{ fontSize: '9px', opacity: 0.45 }}>Made by Alexia Naudy</small>
       </footer>
@@ -240,8 +248,8 @@ export default function Landing({ go, user }: any) {
         <figure className="sales-visual photo-visual">
           <img
             className="hero-property-photo"
-            src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1400&q=85"
-            alt="Maison contemporaine ouverte sur un jardin, avec de grandes baies vitrées"
+            src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=85"
+            alt="Équipe réunie autour d’une table de travail dans un environnement lumineux"
             fetchPriority="high"
           />
           <div className="photo-shade" />
@@ -259,7 +267,7 @@ export default function Landing({ go, user }: any) {
               target="_blank"
               rel="noreferrer"
             >
-              Photographie d’architecture · Unsplash
+              Photographie d’équipe · Unsplash
             </a>
           </figcaption>
         </figure>
@@ -285,7 +293,7 @@ export default function Landing({ go, user }: any) {
       <section id="tarif" className="sales-section">
         <div className="sales-section-title">
           <span className="eyebrow">
-            TROIS FORMATIONS · TROIS FAÇONS D’AVANCER
+            TROIS FORMATIONS · UN OUTIL POUR COURTIERS
           </span>
           <h2>
             Le bon parcours pour
@@ -320,7 +328,8 @@ export default function Landing({ go, user }: any) {
               <li>Automatisations CRM, courriels et suivi</li>
               <li>Exercices, QCM et progression enregistrée</li>
               <li>1 h privée avec l’offre à {money(1200)} uniquement</li>
-              <li>Volet immobilier Québec sur demande</li>
+              <li>Volet immobilier Québec sur demande : communications, inscriptions, formulaires, conformité et automatisations adaptées au courtage</li>
+              <li>Cours de groupe annoncés dans le campus; fréquence et prochaines dates confirmées avant l’inscription</li>
             </ul>
             <div className="offer-actions"><button className="text-button" onClick={() => go('business-info')}>Voir le programme complet →</button><PurchaseSheet offer="signature" user={user} go={go}/></div>
           </article>
@@ -338,7 +347,7 @@ export default function Landing({ go, user }: any) {
                 <b>{money(4900)}</b>
               </li>
               <li>
-                <span>8 à 12 personnes</span>
+                <span>9 à 12 personnes</span>
                 <b>{money(8500)}</b>
               </li>
               <li>
@@ -347,8 +356,7 @@ export default function Landing({ go, user }: any) {
               </li>
             </ul>
             <p className="muted">
-              Taxes en sus. À 8 participants, le forfait est précisé dans votre
-              proposition.
+              Taxes en sus. Au-delà de 12 participants, une proposition adaptée est préparée.
             </p>
             <ul className="offer-inclusions">
               <li>20 h de sessions collectives sur environ 2 mois</li>
@@ -391,14 +399,14 @@ export default function Landing({ go, user }: any) {
             <span className="eyebrow">04 · i-COURTIER · POUR LES COURTIERS</span>
             <h3>L’IA pour vos pratiques immo.</h3>
             <p>
-              L’extension i-Courtier : saisie à la source, ébauches de contrats
+              L’extension mia — i-Courtier : saisie à la source, ébauches de contrats
               et administration des inscriptions pour les courtiers.
             </p>
             <div className="price">
               {money(250)} <small>/ mois + taxes</small>
             </div>
             <p>
-              Aucuns frais fixes · résiliable à tout moment. Jusqu’à 20 h de
+              Aucun frais fixe · résiliable à tout moment. Jusqu’à 20 h de
               travail administratif ramenées à quelques minutes.
             </p>
             <ul className="offer-inclusions">

@@ -41,7 +41,7 @@ export default function InstallerPage() {
       <div className="installer">
         <section className="sales-section installer-hero">
           <span className="eyebrow">INSTALLATION · CHROME ET EDGE</span>
-          <h1>Installez i-Courtier.</h1>
+          <h1>Installez mia — i-Courtier.</h1>
           {paid && <div className="installer-welcome"><Check size={18} /> Merci ! Votre abonnement i-Courtier est confirmé. Il ne reste qu’à installer l’outil.</div>}
           <p>{STORE_URL ? 'Deux étapes, moins d’une minute.' : 'Cinq étapes, environ trois minutes.'} Gardez cette page ouverte : elle vous confirmera quand l’installation est réussie.</p>
           <div className={'installer-status' + (installed ? ' ok' : '')} role="status">
@@ -121,7 +121,7 @@ export default function InstallerPage() {
         <section className="sales-section installer-help">
           <h2>Besoin d’aide ?</h2>
           <p>{STORE_URL ? 'i-Courtier se met à jour automatiquement. Vos dossiers restent dans votre navigateur ; exportez-les depuis l’onglet Outils pour les transférer sur un autre ordinateur.' : `« Mode développeur » est l’option standard de ${edge ? 'Edge' : 'Chrome'} pour les extensions professionnelles distribuées hors boutique. Si un message le rappelle au démarrage, vous pouvez le fermer. Pour une mise à jour, remplacez le contenu du dossier i-courtier par la nouvelle version, puis cliquez sur ↻ dans la page des extensions : vos dossiers sont conservés.`}</p>
-          <a className="text-button" href="/?view=messages">Écrire à l’équipe i-ateliers →</a>
+          <a className="text-button" href="/contact">Écrire à l’équipe i-ateliers →</a>
         </section>
       </div>
     </PublicShell>

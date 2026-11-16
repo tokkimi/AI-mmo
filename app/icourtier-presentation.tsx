@@ -25,7 +25,7 @@ const faq = [
   ['Est-ce que i-Courtier remplace les formulaires de l’OACIQ ?', 'Non. i-Courtier prépare des ébauches et les données à reporter. Les formulaires obligatoires de l’OACIQ prévalent toujours et le courtier valide chaque document avant usage.'],
   ['Où sont conservés mes dossiers ?', 'Les dossiers sont enregistrés localement dans votre navigateur. Les textes et PDF ne sont transmis au moteur IA qu’au moment où vous lancez une action, pour produire la réponse.'],
   ['Sur quels sites fonctionne la saisie ?', 'Sur toute page web lisible : fiches, courriels dans le navigateur, rôles d’évaluation, portails et formulaires en ligne. Les champs reconnus sont remplis; les autres sont listés.'],
-  ['Y a-t-il des frais d’installation ?', 'Aucuns frais fixes. 250 CAD par mois + taxes, résiliable à tout moment depuis votre espace de facturation.'],
+  ['Y a-t-il des frais d’installation ?', 'Aucun frais fixe. 250 CAD par mois + taxes, résiliable à tout moment depuis votre espace de facturation.'],
   ['Que peut faire l’agent ?', 'Il connaît le dossier ouvert (fiche, documents, tâches, contrats) et peut lire la page affichée. Il répond à vos questions, rédige vos textes et agit : mise à jour de la fiche, documents cochés, tâches et échéances, statut du dossier, sites ouverts, formulaires remplis et ébauches de contrats.'],
   ['Puis-je utiliser i-Courtier sur plusieurs ordinateurs ou en équipe ?', 'Oui. Exportez vos dossiers en un clic et importez-les sur un autre poste ou chez un collègue de votre agence.'],
   ['Une formation est-elle incluse ?', 'Non. i-Courtier est uniquement l’outil. Le volet immobilier Québec est offert sur demande aux participants de la formation Structurer et automatiser à 1 200 CAD.'],
@@ -36,7 +36,7 @@ export default function IcourtierPresentation({ go, user }: any) {
     <div className="immo-presentation icourtier">
       <section className="sales-section immo-hero">
         <div className="sales-section-title">
-          <span className="eyebrow">NOUVEAU · EXTENSION POUR COURTIERS · QUÉBEC</span>
+          <span className="eyebrow">mia — i-COURTIER · EXTENSION POUR COURTIERS · QUÉBEC</span>
           <h1>i-Courtier.<br />L’IA pour vos pratiques immo.</h1>
           <p>
             L’outil révolutionnaire des courtiers pour la saisie à la source, les ébauches de contrats et
@@ -146,7 +146,7 @@ export default function IcourtierPresentation({ go, user }: any) {
               <li>Saisie à la source, PDF et remplissage de formulaires</li>
               <li>Ébauches de contrats et administration des inscriptions</li>
               <li>Descriptions FR / EN, alertes et courriels au vendeur</li>
-              <li>Aucuns frais fixes · résiliable à tout moment</li>
+              <li>Aucun frais fixe · résiliable à tout moment</li>
             </ul>
             <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier" />
           </article>

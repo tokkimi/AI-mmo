@@ -20,7 +20,7 @@ const offers: Record<string, { name: string; price: string; detail: string }> =
       name: 'i-Courtier · Extension pour courtiers',
       price: '250 CAD / mois + taxes',
       detail:
-        'Aucuns frais fixes, résiliable à tout moment. Accès à l’extension i-Courtier (outil uniquement, sans formation).',
+        'Aucun frais fixe, résiliable à tout moment. Accès à l’extension mia — i-Courtier (outil uniquement, sans formation).',
     },
   };
 const legacy: Record<string, string> = { monthly: 'signature', 'immo-signature': 'immo-pro', 'immo-monthly': 'immo-pro' };

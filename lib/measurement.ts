@@ -31,7 +31,7 @@ export function track(event: 'page_view' | 'view_item' | 'add_to_cart' | 'begin_
   const w = window as MeasurementWindow;
   if (gaEnabled && !w.gtag) {
     const layer = w.dataLayer ??= [];
-    w.gtag = function () { layer.push(arguments); };
+    w.gtag = (...args: unknown[]) => { layer.push(args); };
     w.gtag('js', new Date());
     w.gtag('config', GA_ID, { send_page_view: false, allow_google_signals: false });
     const script = document.createElement('script');
