@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, BookOpen, Building2, Sparkles, Users, X } from 'lucide-react';
 import { useMoney } from './currency';
+import styles from './formation-bubble.module.css';
 
 export default function FormationBubble() {
   const [open, setOpen] = useState(false);
@@ -30,32 +30,30 @@ export default function FormationBubble() {
   }, [open]);
 
   const items = [
-    { name: 'Structurer & automatiser', detail: `${money(1200)} · paiement unique`, icon: BookOpen, href: '/?view=business-info' },
-    { name: 'Former votre équipe', detail: `20 h en groupe · dès ${money(4900)}`, icon: Users, href: '/?view=enterprise' },
-    { name: 'Claude + ChatGPT', detail: `100 % autonome · ${money(499)}`, icon: Sparkles, href: '/?view=autonomous-info' },
-    { name: 'i-Courtier · outil pour courtiers', detail: 'Bientôt disponible', icon: Building2, href: '/i-courtier' },
+    { number: '01', name: 'Structurer & automatiser', detail: `${money(1200)} · paiement unique`, href: '/?view=business-info' },
+    { number: '02', name: 'Former votre équipe', detail: `20 h · dès ${money(4900)}`, href: '/?view=enterprise' },
+    { number: '03', name: 'Claude + ChatGPT', detail: `Autonome · ${money(499)}`, href: '/?view=autonomous-info' },
+    { number: '04', name: 'i-Courtier', detail: 'Bientôt disponible', href: '/i-courtier', comingSoon: true },
   ];
 
-  return <div className="formation-bubble" ref={root}>
-    {open && <section className="formation-bubble-panel" id="formation-bubble-panel" aria-label="Choisir une formation">
-      <header>
-        <h2>Choisissez votre parcours.</h2>
-        <button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Fermer les formations"><X size={20} /></button>
+  return <div className={styles.root} ref={root}>
+    {open && <section className={styles.panel} id="formation-picker" aria-label="Choisir une formation">
+      <header className={styles.heading}>
+        <div><span>VOS PARCOURS</span><h2>Choisissez votre formation</h2></div>
+        <button type="button" className={styles.close} onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Fermer les formations">×</button>
       </header>
-      <p>Ouvrez directement la page de la formation qui vous intéresse.</p>
-      <div className="formation-bubble-list">
-        {items.map(({ name, detail, icon: Icon, href }) => <a className="formation-bubble-item" href={href} key={name} onClick={() => setOpen(false)}>
-          <Icon size={21} />
-          <span><strong>{name}</strong><small>{detail}{name.startsWith('i-Courtier') ? '' : ' · taxes en sus'}</small></span>
-          <ArrowUpRight size={15} />
+      <nav className={styles.list} aria-label="Pages des formations">
+        {items.map(item => <a className={styles.item} href={item.href} key={item.name} onClick={() => setOpen(false)}>
+          <span className={styles.number}>{item.number}</span>
+          <span className={styles.copy}><strong>{item.name}</strong><small className={item.comingSoon ? styles.comingSoon : undefined}>{item.detail}</small></span>
+          <span className={styles.arrow} aria-hidden="true">→</span>
         </a>)}
-      </div>
-      <small>Prix convertis à titre indicatif en EUR. Paiement en CAD.</small>
+      </nav>
+      <small className={styles.note}>Prix en CAD · taxes en sus, sauf indication contraire.</small>
     </section>}
-    <button type="button" className="formation-bubble-trigger" ref={trigger} aria-expanded={open} aria-controls="formation-bubble-panel" onClick={() => setOpen(!open)}>
-      <span><BookOpen size={20} /></span>
-      <span><b>Les formations</b><small>Voir les parcours</small></span>
-      {open ? <X size={17} /> : <ArrowUpRight size={17} />}
+    <button type="button" className={styles.trigger} ref={trigger} aria-expanded={open} aria-controls="formation-picker" onClick={() => setOpen(value => !value)}>
+      <span><strong>Les formations</strong><small>Choisir mon parcours</small></span>
+      <span className={styles.triggerMark} aria-hidden="true">{open ? '×' : '+'}</span>
     </button>
   </div>;
 }

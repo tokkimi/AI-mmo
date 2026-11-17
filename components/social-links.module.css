@@ -1,0 +1,12 @@
+.group{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.link{display:grid;place-items:center;width:27px;height:27px;border-radius:8px;box-shadow:0 4px 10px rgba(44,63,51,.12);transition:transform .18s ease,box-shadow .18s ease}
+.link:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(44,63,51,.18)}
+.link svg{width:16px;height:16px}
+.instagram{background:radial-gradient(circle at 68% 72%,#ffdc80 0 12%,#fcaf45 26%,#f77737 43%,#e1306c 62%,#c13584 76%,#833ab4 100%);color:#fff}
+.instagram svg{fill:none;stroke:currentColor;stroke-width:1.7}
+.instagram .dot{fill:currentColor;stroke:none}
+.facebook{background:#1877f2;color:#fff}
+.facebook svg{fill:currentColor}
+.mobile{display:none}
+@media(max-width:767px){.desktop{display:none}.mobile{display:flex;margin-top:19px;padding-top:17px;border-top:1px solid rgba(80,103,86,.13)}.mobile .link{width:36px;height:36px;border-radius:11px}.mobile .link svg{width:20px;height:20px}}
+@media(prefers-reduced-motion:reduce){.link{transition:none}}
