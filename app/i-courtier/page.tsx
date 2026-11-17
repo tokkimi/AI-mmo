@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import IcourtierPage from './client';
 
 export const metadata: Metadata = {
-  title: 'i-Courtier — L’IA pour vos pratiques immo | i-ateliers',
-  description: 'Extension pour courtiers immobiliers du Québec : saisie à la source, ébauches de contrats et administration des inscriptions. 250 CAD/mois, sans frais fixes.',
+  title: 'i-Courtier — Bientôt disponible | i-ateliers',
+  description: 'Découvrez en avant-première i-Courtier, la future extension pour les courtiers immobiliers du Québec.',
 };
 
 export default function Page() {

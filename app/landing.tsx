@@ -396,18 +396,16 @@ export default function Landing({ go, user }: any) {
             <div className="offer-actions"><button className="text-button" onClick={() => go('autonomous-info')}>Voir le programme complet →</button><PurchaseSheet offer="autonomous" user={user} go={go}/></div>
           </article>
           <article className="panel offer-card immo-offer-card">
-            <span className="eyebrow">04 · i-COURTIER · POUR LES COURTIERS</span>
+            <span className="eyebrow">04 · i-COURTIER · BIENTÔT DISPONIBLE</span>
             <h3>L’IA pour vos pratiques immo.</h3>
             <p>
               L’extension mia — i-Courtier : saisie à la source, ébauches de contrats
               et administration des inscriptions pour les courtiers.
             </p>
-            <div className="price">
-              {money(250)} <small>/ mois + taxes</small>
-            </div>
+            <div className="price">À venir</div>
             <p>
-              Aucun frais fixe · résiliable à tout moment. Jusqu’à 20 h de
-              travail administratif ramenées à quelques minutes.
+              Lancement prochain. Les tarifs et modalités seront annoncés
+              lorsque la version publique sera prête.
             </p>
             <ul className="offer-inclusions">
               <li>Extension i-Courtier pour votre navigateur</li>
@@ -416,7 +414,7 @@ export default function Landing({ go, user }: any) {
               <li>Remplissage automatique de vos formulaires en ligne</li>
               <li>Descriptions FR / EN et courriels au vendeur</li>
             </ul>
-            <div className="offer-actions"><a className="text-button" href="/i-courtier">Découvrir i-Courtier →</a><PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier"/></div>
+            <div className="offer-actions"><a className="text-button" href="/i-courtier">Découvrir i-Courtier →</a><span className="button" aria-disabled="true">Bientôt disponible</span></div>
           </article>
         </div>
       </section>

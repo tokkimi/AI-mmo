@@ -28,6 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
     const offerId = body.offer as OfferId;
     const offer = offers[offerId];
     if (!offer) return NextResponse.json({ error: 'Offre introuvable.' }, { status: 400 });
+    if (offerId === 'immo-pro') return NextResponse.json({ error: 'i-Courtier sera bientôt disponible. Aucun abonnement ne peut être souscrit pour le moment.' }, { status: 503 });
     let customer = user.stripe_customer;
     if (!customer) {
       const created = await stripe.customers.create({ email: user.email, name: user.name, metadata: { iateliers_user_id: user.id } });
@@ -35,9 +36,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       await db()`UPDATE users SET stripe_customer=${customer} WHERE id=${user.id}`;
     }
     const subscription = offer.mode === 'subscription';
-    const cancelUrl = offerId.startsWith('immo-')
-      ? `${base}/i-courtier?payment=cancelled`
-      : offerId === 'autonomous'
+    const cancelUrl = offerId === 'autonomous'
         ? `${base}/?view=autonomous-info&payment=cancelled`
         : `${base}/?view=business-info&payment=cancelled`;
     const session = await stripe.checkout.sessions.create({
@@ -46,7 +45,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       client_reference_id: user.id,
       metadata: { offer: offerId, user_id: user.id },
       line_items: [{ quantity: 1, price_data: { currency: 'cad', unit_amount: offer.amount, product_data: { name: offer.name }, ...(subscription ? { recurring: { interval: 'month' as const } } : {}) } }],
-      success_url: offerId === 'immo-pro' ? `${base}/i-courtier/installer?payment=success` : `${base}/?view=subscription&payment=success`,
+      success_url: `${base}/?view=subscription&payment=success`,
       cancel_url: cancelUrl,
       billing_address_collection: 'required',
       ...(process.env.STRIPE_AUTOMATIC_TAX === 'true' ? { automatic_tax: { enabled: true } } : {}),

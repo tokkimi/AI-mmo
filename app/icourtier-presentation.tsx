@@ -1,7 +1,6 @@
 'use client';
 
-import { Bot, Calculator, Check, ClipboardCheck, Download, FileSearch, FileSignature, FileText, MousePointerClick, PenLine, ScanText, ShieldCheck, Timer } from 'lucide-react';
-import PurchaseSheet from '@/components/purchase-sheet';
+import { Bot, Calculator, Check, ClipboardCheck, FileSearch, FileSignature, FileText, MousePointerClick, PenLine, ScanText, ShieldCheck, Timer } from 'lucide-react';
 
 const pillars = [
   { icon: Bot, title: 'Un agent qui agit', text: 'Demandez en langage courant : « ajoute les échéances de la promesse », « coche l’acte de vente », « prépare la contre-proposition ». L’agent répond et met à jour le dossier, crée les tâches, ouvre les sites et remplit les formulaires.' },
@@ -15,8 +14,8 @@ const pillars = [
 ];
 
 const steps = [
-  ['Installez', 'Téléchargez l’extension et ajoutez-la à Chrome ou Edge en quelques clics.'],
-  ['Connectez-vous', 'Utilisez votre compte i-ateliers. L’abonnement actif déverrouille l’extension.'],
+  ['Lancement', 'L’installation sera ouverte lorsque la version publique sera prête.'],
+  ['Connectez-vous', 'Vous utiliserez alors votre compte i-ateliers pour accéder à l’extension.'],
   ['Capturez', 'Une page, une sélection (clic droit), un PDF ou vos notes de visite.'],
   ['Validez', 'Relisez la fiche, remplissez vos formulaires et générez vos ébauches.'],
 ];
@@ -25,7 +24,7 @@ const faq = [
   ['Est-ce que i-Courtier remplace les formulaires de l’OACIQ ?', 'Non. i-Courtier prépare des ébauches et les données à reporter. Les formulaires obligatoires de l’OACIQ prévalent toujours et le courtier valide chaque document avant usage.'],
   ['Où sont conservés mes dossiers ?', 'Les dossiers sont enregistrés localement dans votre navigateur. Les textes et PDF ne sont transmis au moteur IA qu’au moment où vous lancez une action, pour produire la réponse.'],
   ['Sur quels sites fonctionne la saisie ?', 'Sur toute page web lisible : fiches, courriels dans le navigateur, rôles d’évaluation, portails et formulaires en ligne. Les champs reconnus sont remplis; les autres sont listés.'],
-  ['Y a-t-il des frais d’installation ?', 'Aucun frais fixe. 250 CAD par mois + taxes, résiliable à tout moment depuis votre espace de facturation.'],
+  ['Quand pourrai-je utiliser i-Courtier ?', 'L’extension est actuellement en préparation. La date de lancement et les modalités d’accès seront annoncées sur i-ateliers.com.'],
   ['Que peut faire l’agent ?', 'Il connaît le dossier ouvert (fiche, documents, tâches, contrats) et peut lire la page affichée. Il répond à vos questions, rédige vos textes et agit : mise à jour de la fiche, documents cochés, tâches et échéances, statut du dossier, sites ouverts, formulaires remplis et ébauches de contrats.'],
   ['Puis-je utiliser i-Courtier sur plusieurs ordinateurs ou en équipe ?', 'Oui. Exportez vos dossiers en un clic et importez-les sur un autre poste ou chez un collègue de votre agence.'],
   ['Une formation est-elle incluse ?', 'Non. i-Courtier est uniquement l’outil. Le volet immobilier Québec est offert sur demande aux participants de la formation Structurer et automatiser à 1 200 CAD.'],
@@ -36,7 +35,7 @@ export default function IcourtierPresentation({ go, user }: any) {
     <div className="immo-presentation icourtier">
       <section className="sales-section immo-hero">
         <div className="sales-section-title">
-          <span className="eyebrow">mia — i-COURTIER · EXTENSION POUR COURTIERS · QUÉBEC</span>
+          <span className="eyebrow">BIENTÔT DISPONIBLE · mia — i-COURTIER · QUÉBEC</span>
           <h1>i-Courtier.<br />L’IA pour vos pratiques immo.</h1>
           <p>
             L’outil révolutionnaire des courtiers pour la saisie à la source, les ébauches de contrats et
@@ -44,7 +43,7 @@ export default function IcourtierPresentation({ go, user }: any) {
             directement dans votre navigateur.
           </p>
           <div className="row sales-cta">
-            <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner — 250 CAD / mois" />
+            <span className="button" aria-disabled="true">Bientôt disponible</span>
             <a className="text-button" href="#fonctionnement">Voir comment ça marche →</a>
           </div>
         </div>
@@ -63,7 +62,7 @@ export default function IcourtierPresentation({ go, user }: any) {
         <div><strong>20 h</strong><span>de saisie ramenées à quelques minutes</span></div>
         <div><strong>32</strong><span>champs de fiche extraits</span></div>
         <div><strong>18</strong><span>modèles de contrats et de textes</span></div>
-        <div><strong>0 $</strong><span>de frais fixes</span></div>
+        <div><strong>Bientôt</strong><span>lancement de la version publique</span></div>
       </div>
 
       <section className="sales-section">
@@ -139,22 +138,22 @@ export default function IcourtierPresentation({ go, user }: any) {
       <section id="abonnement" className="sales-section">
         <div className="immo-pricing">
           <article className="panel">
-            <span className="eyebrow">ABONNEMENT i-COURTIER</span>
-            <h2>250 CAD / mois + taxes</h2>
+            <span className="eyebrow">LANCEMENT PROCHAIN</span>
+            <h2>i-Courtier arrive bientôt.</h2>
             <ul className="offer-inclusions">
               <li>Extension i-Courtier pour Chrome et Edge</li>
               <li>Saisie à la source, PDF et remplissage de formulaires</li>
               <li>Ébauches de contrats et administration des inscriptions</li>
               <li>Descriptions FR / EN, alertes et courriels au vendeur</li>
-              <li>Aucun frais fixe · résiliable à tout moment</li>
+              <li>Tarifs et modalités communiqués au lancement</li>
             </ul>
-            <PurchaseSheet offer="immo-pro" user={user} go={go} label="M’abonner à i-Courtier" />
+            <a className="button" href="/contact">Être informé du lancement</a>
           </article>
           <article className="panel">
             <span className="eyebrow">INSTALLATION</span>
-            <h2>Déjà abonné ?</h2>
-            <p>Une page d’installation vous guide pas à pas et confirme quand i-Courtier est prêt.</p>
-            <a className="button outline" href="/i-courtier/installer"><Download size={16} /> Installer i-Courtier</a>
+            <h2>Disponible au lancement</h2>
+            <p>Le téléchargement, l’installation et l’abonnement sont désactivés pendant la préparation de l’extension.</p>
+            <span className="button outline" aria-disabled="true">Installation à venir</span>
           </article>
         </div>
       </section>

@@ -10,6 +10,9 @@ export const dynamic = 'force-dynamic';
 // ?check=1 renvoie seulement l'état, pour afficher le bon bouton sur la page.
 export async function GET(req: NextRequest) {
   const headers = { 'Cache-Control': 'no-store' };
+  if (req.nextUrl.searchParams.has('check')) return NextResponse.json({ user: false, access: false, comingSoon: true }, { status: 503, headers });
+  return NextResponse.json({ error: 'i-Courtier sera bientôt disponible.' }, { status: 503, headers });
+  /* La distribution sera réactivée au lancement.
   try {
     const user = await currentUser();
     const access = user ? await hasExtensionAccess(user) : false;
@@ -21,4 +24,5 @@ export async function GET(req: NextRequest) {
     console.error('i-Courtier download error', e instanceof Error ? e.message : 'unknown');
     return NextResponse.json({ error: 'Téléchargement indisponible. Réessayez dans un instant.' }, { status: 500, headers });
   }
+  */
 }

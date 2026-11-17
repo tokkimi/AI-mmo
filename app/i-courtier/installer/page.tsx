@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import InstallerPage from './client';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Installer i-Courtier | i-ateliers',
-  description: 'Installez l’extension i-Courtier dans Chrome ou Edge en quelques minutes, étape par étape.',
+  title: 'i-Courtier — Bientôt disponible | i-ateliers',
+  description: 'L’extension i-Courtier est actuellement en préparation.',
 };
 
 export default function Page() {
-  return <InstallerPage />;
+  redirect('/i-courtier');
 }

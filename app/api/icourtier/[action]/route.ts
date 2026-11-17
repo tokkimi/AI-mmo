@@ -28,6 +28,9 @@ export function OPTIONS(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ action: string }> }) {
+  void params;
+  return json(req, { error: 'i-Courtier sera bientôt disponible.' }, 503);
+  /* Réactivation prévue au lancement.
   try {
     const { action } = await params;
     if (action !== 'me') throw new ApiError('Action inconnue.', 404);
@@ -35,9 +38,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ acti
     if (!user) throw new ApiError('Session expirée. Reconnectez-vous.', 401);
     return json(req, { user: { name: user.name, email: user.email }, access: await hasExtensionAccess(user), contracts: CONTRACTS, fields: FICHE_FIELDS, writings: WRITINGS, docKinds: DOC_KINDS });
   } catch (e) { return fail(req, e); }
+  */
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ action: string }> }) {
+  void params;
+  return json(req, { error: 'i-Courtier sera bientôt disponible.' }, 503);
+  /* Réactivation prévue au lancement.
   try {
     const { action } = await params;
     if (Number(req.headers.get('content-length') || 0) > 4_400_000) throw new ApiError('Requête trop volumineuse.', 413);
@@ -64,6 +71,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
     await rateLimit('icourtier:' + user.id, 120);
     return json(req, await runTask(action, body));
   } catch (e) { return fail(req, e); }
+  */
 }
 
 function fail(req: NextRequest, e: unknown) {
