@@ -12,6 +12,6 @@ export default function ContactPage() {
       <a className="panel" href="tel:+15147749818"><span className="eyebrow">TÉLÉPHONE</span><h2>514 774-9818</h2><p>Appelez pour une question préalable ou pour discuter d’une formation d’équipe.</p></a>
       <a className="panel" href="/?view=register"><span className="eyebrow">CAMPUS</span><h2>Créer un compte gratuit</h2><p>Accédez ensuite à la messagerie privée et conservez toutes vos réponses au même endroit.</p></a>
       <a className="panel" href="/?view=enterprise"><span className="eyebrow">ENTREPRISE</span><h2>Demander une proposition</h2><p>Pour 4 à 8, 9 à 12 ou plus de 12 participants.</p></a>
-    </div><p className="public-info-note">i-ateliers est exploité par Emilie Cauvier Inc., Québec, Canada.</p>
+    </div><p className="public-info-note">i-ateliers est exploité par Émilie Cauvier Inc. · NEQ 1173036386 · Québec, Canada.</p>
   </main></PublicInfoShell>;
 }

@@ -188,7 +188,7 @@ export function PublicShell({ children, go, user }: any) {
           </button>
         </div>
         <small>
-          Emilie Cauvier Inc. · Québec, Canada · Formation indépendante sans affiliation à OpenAI ou Anthropic.
+          Émilie Cauvier Inc. · NEQ 1173036386 · Québec, Canada · Formation indépendante sans affiliation à OpenAI ou Anthropic.
         </small>
         <small style={{ fontSize: '9px', opacity: 0.45 }}>Made by Alexia Naudy</small>
       </footer>
