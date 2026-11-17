@@ -20,6 +20,18 @@ import {
   autonomousChapters,
   autonomousCatalog,
 } from '@/content/autonomous-catalog';
+
+function SocialLinks({ mobile = false }: { mobile?: boolean }) {
+  return <div className={`header-socials ${mobile ? 'mobile-socials' : 'desktop-socials'}`} role="group" aria-label="Réseaux sociaux i-ateliers">
+    <a href="https://www.instagram.com/iateliers_formations/" target="_blank" rel="noreferrer" aria-label="Instagram i-ateliers" title="Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4.2" /><circle className="social-dot" cx="17.5" cy="6.6" r="1" /></svg>
+    </a>
+    <a href="https://www.facebook.com/iateliers/" target="_blank" rel="noreferrer" aria-label="Facebook i-ateliers" title="Facebook">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5H17V3.9c-.6-.1-1.5-.2-2.5-.2-2.5 0-4.2 1.5-4.2 4.3v2H7.5v3h2.8v8h3.9Z" /></svg>
+    </a>
+  </div>;
+}
+
 export function PublicShell({ children, go, user }: any) {
   const [menu, setMenu] = useState(false);
   const header = useRef<HTMLElement>(null);
@@ -67,6 +79,7 @@ export function PublicShell({ children, go, user }: any) {
           <a href="/contact">Contact</a>
           <a href="/#tarif">Tarif</a>
         </nav>
+        <SocialLinks />
         <div className="row">
           <button
             className="text-button public-login"
@@ -155,6 +168,7 @@ export function PublicShell({ children, go, user }: any) {
                 <ArrowUpRight size={15} />
               </button>
             </div>
+            <SocialLinks mobile />
           </nav>
         )}
       </header>
@@ -194,7 +208,7 @@ export function PublicShell({ children, go, user }: any) {
         </small>
         <small style={{ fontSize: '9px', opacity: 0.45 }}>Made by Alexia Naudy</small>
       </footer>
-      <FormationBubble go={go} user={user}/>
+      <FormationBubble />
     </div>
   );
 }
