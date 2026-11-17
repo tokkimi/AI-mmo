@@ -178,8 +178,10 @@ export function PublicShell({ children, go, user }: any) {
         </div>
         <div>
           <a href="/conditions">Conditions & confidentialité</a>
-          <a href="/a-propos">À propos d’Emilie</a>
+          <a href="/a-propos">À propos d’Émilie</a>
           <a href="/contact">Nous joindre</a>
+          <a href="https://www.instagram.com/iateliers_formations/" target="_blank" rel="noreferrer" aria-label="i-ateliers sur Instagram">Instagram</a>
+          <a href="https://www.facebook.com/iateliers/" target="_blank" rel="noreferrer" aria-label="i-ateliers sur Facebook">Facebook</a>
           <button onClick={() => go('sources')}>
             Sources & repères Québec
           </button>
