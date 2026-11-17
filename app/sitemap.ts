@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://i-ateliers.store';
+  const base = 'https://i-ateliers.com';
   return [
     { url: `${base}/`, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/a-propos`, changeFrequency: 'monthly', priority: 0.8 },
