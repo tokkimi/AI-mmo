@@ -5,6 +5,16 @@ import { ApiError } from '@/lib/server';
 export const ICOURTIER_OFFER = 'immo-pro';
 const MODEL = 'claude-opus-5-5';
 
+// Tant que ICOURTIER_LAUNCHED n'est pas « true », i-Courtier reste « Bientôt disponible » :
+// seuls les testeurs (administrateurs et courriels de ICOURTIER_FREE_EMAILS) y ont accès.
+export const isLaunched = () => process.env.ICOURTIER_LAUNCHED === 'true';
+export function isTester(user: any) {
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  const free = (process.env.ICOURTIER_FREE_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+  return !!user.email && free.includes(String(user.email).toLowerCase());
+}
+
 // Accès à l'extension : administrateurs, comptes offerts, ou abonnement Stripe actif à l'offre immo-pro.
 export async function hasExtensionAccess(user: any) {
   if (!user) return false;
@@ -31,31 +41,86 @@ const str = { type: 'string' } as const;
 const strList = { type: 'array', items: str } as const;
 const obj = (properties: Record<string, unknown>) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false });
 
-export const FICHE_FIELDS: Record<string, string> = {
-  adresse: 'Adresse complète', ville: 'Ville', code_postal: 'Code postal', type_propriete: 'Type de propriété', prix_demande: 'Prix demandé',
-  annee_construction: 'Année de construction', superficie_habitable: 'Superficie habitable', superficie_terrain: 'Superficie du terrain',
-  nb_chambres: 'Chambres', nb_salles_bain: 'Salles de bain', nb_pieces: 'Pièces', stationnement: 'Stationnement', chauffage: 'Chauffage',
-  fondation: 'Fondation', toiture: 'Toiture', evaluation_municipale: 'Évaluation municipale', taxes_municipales: 'Taxes municipales',
-  taxes_scolaires: 'Taxes scolaires', frais_copropriete: 'Frais de copropriété', cadastre: 'Numéro de lot / cadastre', zonage: 'Zonage',
-  inclusions: 'Inclusions', exclusions: 'Exclusions', servitudes: 'Servitudes connues', date_occupation: "Date d'occupation",
-  vendeurs: 'Vendeur(s)', matricule: "Matricule (rôle d'évaluation)", acte_vente: 'Dernier acte de vente (date, prix, n° d’inscription)',
-  hypotheque: 'Hypothèque inscrite (créancier, montant, date)', transmission: 'Déclaration de transmission / succession',
-  hydro_cout_annuel: 'Coût annuel estimé Hydro-Québec', notes_courtier: 'Notes du courtier',
-};
+// Fiche organisée comme la saisie à la source (pages 1 à 9). Les clés existantes sont conservées.
+export const FICHE_PAGES: { page: string; titre: string; champs: Record<string, string> }[] = [
+  { page: 'dossier', titre: 'Dossier', champs: {
+    adresse: 'Adresse complète', ville: 'Ville', categorie: 'Catégorie de propriété', type_mandat: 'Type de mandat',
+    vendeurs: 'Vendeur(s)', matricule: "Matricule (rôle d'évaluation)", acte_vente: 'Dernier acte de vente (date, prix, n° d’inscription)',
+    transmission: 'Déclaration de transmission / succession', servitudes: 'Servitudes connues' } },
+  { page: '1', titre: 'Page 1 · Renseignements préliminaires', champs: {
+    no_contrat: 'Numéro du contrat de courtage', genre_propriete: 'Genre de propriété', type_propriete: 'Type de bâtiment',
+    prix_demande: 'Prix demandé', date_signature_contrat: 'Date de signature du contrat', date_expiration_contrat: "Date d'expiration du contrat",
+    partage_retribution: 'Partage de la rétribution', declaration_courtier: 'Déclaration du courtier', vente_proprietaire: 'À vendre par le propriétaire' } },
+  { page: '2', titre: 'Page 2 · Localisation et visites', champs: {
+    secteur: 'Secteur', quartier: 'Quartier', code_postal: 'Code postal', rue_intersection: "Rue d'intersection", cadastre: 'Numéro de lot / cadastre',
+    certificat_annee: 'Certificat de localisation (année)', delai_acte_vente: "Délai pour l'acte de vente", date_occupation: "Occupation (délai ou date)",
+    rendez_vous: 'Prise de rendez-vous', preavis: 'Préavis de visite', boite_a_cles: 'Boîte à clés' } },
+  { page: '3', titre: 'Page 3 · Propriétaires et hypothèque', champs: {
+    simple_avis: 'Simple avis', hypotheque: 'Hypothèque (oui/non, créancier, montant, date)' } },
+  { page: '4', titre: 'Page 4 · Terrain, bâtiment et garantie', champs: {
+    annee_construction: 'Année de construction', dimensions_terrain: 'Dimensions du terrain (contrat)', superficie_terrain: 'Superficie du terrain (contrat)',
+    superficie_terrain_certificat: 'Superficie du terrain (certificat)', dimensions_batiment: 'Dimensions du bâtiment (certificat)', superficie_habitable: 'Superficie habitable',
+    zonage: 'Zonage', reprise_justice: 'Reprise de finance / contrôle de justice', garantie_legale: 'Garantie légale (avec / sans / limitée)',
+    clause_garantie_fr: 'Clause de garantie (FR)', clause_garantie_en: 'Clause de garantie (EN)', no_declaration_vendeur: 'Numéro de la déclaration du vendeur' } },
+  { page: '5', titre: 'Page 5 · Pièces', champs: {
+    nb_pieces: 'Nombre de pièces', nb_chambres: 'Chambres (total)', nb_chambres_hors_sol: 'Chambres hors-sol', nb_chambres_sous_sol: 'Chambres au sous-sol',
+    nb_salles_bain: 'Salles de bain', nb_salles_eau: "Salles d'eau" } },
+  { page: '6', titre: 'Page 6 · Évaluation, taxes et dépenses', champs: {
+    annee_evaluation: "Année de l'évaluation", evaluation_terrain: 'Évaluation du terrain', evaluation_batiment: 'Évaluation du bâtiment',
+    evaluation_municipale: 'Évaluation totale', taxes_municipales: 'Taxes municipales (total annuel)', annee_taxes_municipales: 'Année des taxes municipales',
+    taxes_scolaires: 'Taxes scolaires (total annuel)', annee_taxes_scolaires: 'Année des taxes scolaires', hydro_cout_annuel: 'Électricité : coût annuel estimé',
+    frais_copropriete: 'Frais de copropriété' } },
+  { page: '7', titre: 'Page 7 · Inclusions et exclusions', champs: {
+    inclusions: 'Inclusions', exclusions: 'Exclusions' } },
+  { page: '8', titre: 'Page 8 · Caractéristiques', champs: {
+    chauffage: 'Chauffage / énergie', fondation: 'Fondation', toiture: 'Toiture', revetement: 'Revêtement extérieur', fenestration: 'Fenestration',
+    sous_sol: 'Sous-sol', stationnement: 'Stationnement / garage', eau_egouts: 'Approvisionnement en eau / égouts', equipements: 'Équipements et services',
+    caracteristiques_autres: 'Autres caractéristiques' } },
+  { page: 'notes', titre: 'Notes', champs: { notes_courtier: 'Notes du courtier' } },
+];
+export const FICHE_FIELDS: Record<string, string> = Object.assign({}, ...FICHE_PAGES.map(p => p.champs));
+
+const ownerSchema = obj({ nom: str, genre: { type: 'string', enum: ['personne physique', 'compagnie', 'succession', ''] }, adresse: str, courriel: str, langue: str });
+const roomSchema = obj({ nom: str, niveau: { type: 'string', enum: ['Rez-de-chaussée', 'Étage', 'Sous-sol', 'Autre'] }, dimensions: str, revetement: str });
 
 const ficheSchema = obj({
   fiche: obj(Object.fromEntries(Object.keys(FICHE_FIELDS).map(k => [k, str]))),
+  proprietaires: { type: 'array', items: ownerSchema },
+  pieces: { type: 'array', items: roomSchema },
   a_verifier: strList,
   resume: str,
 });
 
+export const TEXT_LIMITS: Record<string, number> = { description_fr: 650, description_en: 650, addenda_fr: 3000, addenda_en: 3000 };
+
 const listingSchema = obj({
   description_fr: str,
   description_en: str,
+  addenda_fr: str,
+  addenda_en: str,
+  inclusions_fr: str,
+  inclusions_en: str,
+  exclusions_fr: str,
+  exclusions_en: str,
+  questions_courtier: strList,
   points_forts: strList,
   checklist: { type: 'array', items: obj({ document: str, statut: { type: 'string', enum: ['reçu', 'à obtenir', 'à vérifier'] }, raison: str }) },
   courriel_vendeur: str,
   alertes: strList,
+});
+
+const verifySchema = obj({
+  ecarts: { type: 'array', items: obj({ champ: str, attendu: str, trouve: str, gravite: { type: 'string', enum: ['à corriger', 'à vérifier'] } }) },
+  conformes: { type: 'integer' },
+  resume: str,
+});
+
+const controlSchema = obj({
+  pret_a_publier: { type: 'boolean' },
+  termine: strList,
+  manquant: strList,
+  a_valider: strList,
+  resume: str,
 });
 
 const mapSchema = obj({
@@ -85,21 +150,26 @@ export const WRITINGS: Record<string, string> = {
   'portes-ouvertes': 'Annonce de visite libre',
   infolettre: 'Texte d’infolettre',
   sms: 'Texto court',
+  'info-collaborateur': 'Info courtier collaborateur (FR et EN)',
+  'mention-photo-ia': 'Mention FR/EN pour une photo aménagée par IA',
+  'demande-marketing': 'Demande marketing après l’inscription',
 };
 
 export const DOC_KINDS: Record<string, string> = {
   inspection: 'Rapport d’inspection', declarations: 'Déclarations du vendeur', certificat: 'Certificat de localisation',
-  'proces-verbaux': 'Procès-verbaux / états financiers de copropriété', acte: 'Acte notarié (vente, prêt, servitude)', autre: 'Autre document',
+  'proces-verbaux': 'Procès-verbaux / états financiers de copropriété', acte: 'Acte notarié (vente, prêt, servitude)', contrat: 'Contrat de courtage et modifications',
+  matrix: 'Ancienne fiche Matrix', plan: 'Plan coté (pièces et dimensions)', autre: 'Autre document',
 };
 
 // Actions que l'agent peut demander à l'extension : chaque action est exécutée dans le navigateur du courtier.
-const AGENT_ACTIONS = ['maj_fiche', 'statut_document', 'ajouter_tache', 'statut_dossier', 'ouvrir_site', 'remplir_page', 'generer_contrat'];
+const AGENT_ACTIONS = ['maj_fiche', 'statut_document', 'ajouter_tache', 'statut_dossier', 'ouvrir_site', 'remplir_page', 'generer_contrat', 'cocher_etape', 'ajouter_proprietaire', 'ajouter_piece'];
 
 const agentSchema = obj({
   reponse: str,
   actions: { type: 'array', items: obj({
     type: { type: 'string', enum: AGENT_ACTIONS },
     champ: str, valeur: str, document: str, statut: str, tache: str, echeance: str, url: str, contrat: str, details: str,
+    etape: str, nom: str, genre: str, adresse: str, courriel: str, langue: str, niveau: str, dimensions: str, revetement: str,
   }) },
 });
 
@@ -111,7 +181,20 @@ const analyseSchema = obj({
   champs: { type: 'array', items: obj({ champ: str, valeur: str }) },
 });
 
-type Task = 'extract' | 'listing' | 'contract' | 'map' | 'agent' | 'redaction' | 'analyse';
+type Task = 'extract' | 'listing' | 'contract' | 'map' | 'agent' | 'redaction' | 'analyse' | 'verifier' | 'controle';
+const TASKS: Task[] = ['extract', 'listing', 'contract', 'map', 'agent', 'redaction', 'analyse', 'verifier', 'controle'];
+
+// Règles du métier tirées du processus de saisie à la source.
+const METIER = `Règles de la saisie à la source :
+- Taxes : distinguer le total annuel du solde à payer et noter l'année; relever séparément les valeurs du terrain et du bâtiment.
+- Certificat de localisation : relever l'année, le lot, les dimensions et la superficie; un certificat de plus de 10 ans appelle une vérification de renouvellement; signaler tout écart avec le contrat.
+- Hydro-Québec : il s'agit d'une estimation annuelle, pas de factures réelles.
+- Un ancien document ne prouve pas que la situation est inchangée; vérifier l'adresse, la date et la version de chaque pièce. Distinguer un formulaire préparé d'un formulaire signé.
+- Déclaration du vendeur : ne jamais confondre « non », « ne sais pas » et un champ vide.
+- Propriétaires : noms exacts tels qu'ils figurent à l'acte; personne physique, compagnie ou succession.
+- Pièces : d'après le plan coté, sans l'entrée ni les couloirs, classées rez-de-chaussée, étage puis sous-sol, dimensions en pieds et pouces si le plan les donne ainsi.
+- Ne jamais inventer de matériaux, de marques, de rénovations complètes ni d'accès extérieur fonctionnel.
+- « Info courtier collaborateur » : toujours demander au courtier quoi y écrire.`;
 
 function field(v: unknown, max: number, name: string) {
   if (typeof v !== 'string') return '';
@@ -143,6 +226,11 @@ Actions possibles (chaque action est exécutée par l'extension; laisse "" dans 
 - ouvrir_site : url (https seulement) — par ex. https://www.registrefoncier.gouv.qc.ca, https://zone.centris.ca, https://pr.transactiondesk.com, https://www.hydroquebec.com.
 - remplir_page : remplit le formulaire ouvert avec la fiche.
 - generer_contrat : contrat (une clé parmi ${Object.keys(CONTRACTS).join(', ')}) + details.
+- cocher_etape : etape (une clé du parcours fourni dans le dossier) + statut ("fait" ou "à faire").
+- ajouter_proprietaire : nom (exact, comme à l'acte) + genre (personne physique, compagnie ou succession) + adresse + courriel + langue.
+- ajouter_piece : nom + niveau (Rez-de-chaussée, Étage, Sous-sol ou Autre) + dimensions + revetement.
+Le dossier indique l'étape en cours du parcours de saisie : guide le courtier vers la suite et dis ce qui bloque.
+${METIER}
 N'invente aucune donnée : demande ce qui manque. Calcule les dates d'échéance à partir des dates fournies (date du jour : ${new Date().toISOString().slice(0, 10)}).
 Rédige "reponse" en texte clair, prêt à copier si c'est un courriel ou un texte. ${profile(b)}.
 
@@ -157,7 +245,7 @@ ${history}
     const type = WRITINGS[b.type];
     if (!type) throw new ApiError('Type de texte inconnu.');
     const langue = b.langue === 'en' ? 'anglais' : 'français québécois';
-    return { format: null, effort: 'medium', text: `Rédige : ${type}. Langue : ${langue}. Ton : ${field(b.ton, 60, 'Ton') || 'professionnel et chaleureux'}.
+    return { format: null, effort: 'medium', text: `Rédige : ${type}. Langue : ${langue}${['info-collaborateur', 'mention-photo-ia'].includes(b.type) ? ' (donne la version française puis la version anglaise)' : ''}. Ton : ${field(b.ton, 60, 'Ton') || 'professionnel et chaleureux'}.
 Appuie-toi seulement sur les faits de la fiche et des consignes; mets [À COMPLÉTER] pour une information absente. Pas de mention discriminatoire ni de promesse non fondée.
 Pour un courriel : un objet, puis le corps, puis la signature. Pour une publication : un texte prêt à publier. Pour un texto : 300 caractères maximum.
 Consignes du courtier : ${field(b.consignes, 4000, 'Consignes') || 'aucune'}
@@ -189,7 +277,9 @@ Ne donne pas d'avis juridique : signale ce qui mérite l'avis d'un notaire ou d'
     return { pdf, image, format: ficheSchema, effort: 'medium' as const, text: `Saisie à la source. Extrais la fiche d'inscription à partir de la source ci-dessous${b.url ? ` (page : ${field(b.url, 2000, 'URL')})` : ''}.
 ${doc ? `Document fourni : ${doc}. Ne remplis que les champs que ce document établit; laisse les autres vides.` : ''}
 Champs prévus : ${JSON.stringify(FICHE_FIELDS)}.
-"a_verifier" liste les champs manquants, contradictoires ou à confirmer avec un document officiel. "resume" : 2 phrases.
+"proprietaires" : les propriétaires que la source établit (acte, contrat), sinon une liste vide. "pieces" : les pièces que la source établit (plan coté, fiche, déclaration), sinon une liste vide.
+"a_verifier" liste les champs manquants, contradictoires ou à confirmer avec un document officiel, et les alertes du métier (certificat ancien, solde de taxes pris pour un total, etc.). "resume" : 2 phrases.
+${METIER}
 
 <source>
 ${source || 'Voir le document ou la capture joints.'}
@@ -197,15 +287,41 @@ ${source || 'Voir le document ou la capture joints.'}
   }
   if (task === 'listing') {
     if (!fiche) throw new ApiError("Complétez d'abord la fiche d'inscription.");
-    return { format: listingSchema, effort: 'medium' as const, text: `Administration de l'inscription. À partir de la fiche, prépare :
-- description_fr (180 à 250 mots, factuelle, sans superlatif non fondé ni mention discriminatoire) et description_en (traduction fidèle);
+    return { format: listingSchema, effort: 'medium' as const, text: `Textes de l'inscription (page 7 de la saisie). À partir du dossier, prépare :
+- description_fr et description_en : 650 caractères MAXIMUM chacune, espaces compris. Ton chaleureux et narratif; mets en valeur la lumière, l'espace et le quartier, seulement d'après les faits du dossier.
+- addenda_fr et addenda_en : 3 000 caractères MAXIMUM chacun : détails des pièces, des caractéristiques et des améliorations établies.
+- inclusions_fr, inclusions_en, exclusions_fr, exclusions_en : reprises du contrat, fidèles, traduites sans changer la portée.
+- questions_courtier : ce que le courtier doit confirmer avant d'entrer les textes. Inclus toujours la question « Que voulez-vous écrire dans Info courtier collaborateur ? » et les lieux de proximité à vérifier.
 - points_forts (5 maximum, tirés des faits);
-- checklist des documents d'une inscription résidentielle au Québec (déclarations du vendeur, certificat de localisation, comptes de taxes, acte de vente, procès-verbaux et états financiers si copropriété, etc.) avec statut selon la fiche et les documents déjà reçus;
+- checklist des documents de l'inscription (contrat de courtage et modifications, déclaration du vendeur, certificat de localisation avec rapport et plan, comptes de taxes, rôle d'évaluation, Hydro, index, acte de vente, acte hypothécaire, plan cadastral, inspection, plans cotés, photos) avec statut;
 - courriel_vendeur poli demandant les documents et renseignements manquants;
 - alertes (incohérences, risques, éléments à valider).
-Documents déjà reçus : ${field(b.recus, 2000, 'Documents') || 'aucun indiqué'}.
+${METIER}
+Documents reçus : ${field(b.recus, 3000, 'Documents') || 'aucun indiqué'}.
 
+<dossier>${JSON.stringify(b.dossier || {}).slice(0, 20000)}</dossier>
 <fiche>${fiche}</fiche>` };
+  }
+  if (task === 'verifier') {
+    const fields = Array.isArray(b.fields) ? b.fields.slice(0, 250) : [];
+    if (!fields.length) throw new ApiError('Aucun champ de formulaire détecté sur cette page.');
+    return { format: verifySchema, effort: 'low' as const, text: `Relecture d'une page de saisie après sauvegarde${b.page ? ` (${field(b.page, 100, 'Page')})` : ''}. Compare la valeur affichée de chaque champ ("v") avec le dossier.
+Signale dans "ecarts" : une valeur différente, un texte tronqué, un champ vide alors que le dossier a la donnée, un montant mal formaté. "conformes" : le nombre de champs correspondant au dossier. "resume" : une phrase.
+
+<champs>${JSON.stringify(fields).slice(0, 40000)}</champs>
+<dossier>${JSON.stringify(b.dossier || {}).slice(0, 20000)}</dossier>
+<fiche>${fiche || '{}'}</fiche>` };
+  }
+  if (task === 'controle') {
+    return { format: controlSchema, effort: 'high' as const, text: `Contrôle final avant publication de l'inscription. Relis tout le dossier comme pour les pages 1 à 9 : noms, adresse, formulaires, prix, dates, délais, mesures, pièces, taxes, textes FR/EN (longueurs), photos, mentions IA et documents joints.
+- termine : ce qui est complet et cohérent.
+- manquant : ce qui manque, précisément.
+- a_valider : ce que le courtier doit confirmer (contradictions, documents anciens ou non signés, réponses « ne sais pas »).
+- pret_a_publier : vrai seulement s'il ne manque rien d'essentiel. Rappelle qu'une page sauvegardée ne signifie pas que la fiche est publiée.
+${METIER}
+
+<dossier>${JSON.stringify(b.dossier || {}).slice(0, 40000)}</dossier>
+<fiche>${fiche || '{}'}</fiche>` };
   }
   if (task === 'contract') {
     const type = CONTRACTS[b.type];
@@ -222,16 +338,27 @@ Paramètres du courtier : ${field(b.details, 6000, 'Paramètres') || 'aucun'}
   const fields = Array.isArray(b.fields) ? b.fields.slice(0, 250) : [];
   if (!fields.length) throw new ApiError('Aucun champ de formulaire détecté sur cette page.');
   if (!fiche) throw new ApiError("Complétez d'abord la fiche d'inscription.");
-  return { format: mapSchema, effort: 'low' as const, text: `Remplissage de formulaire. Associe les données de la fiche aux champs du formulaire web. "champ" = la clé "k" exacte du champ. Pour un champ à choix, "valeur" doit être une des options proposées. Ne remplis que ce qui correspond clairement; liste les autres libellés dans "non_remplis".
+  const page = field(b.page, 100, 'Page');
+  return { format: mapSchema, effort: 'low' as const, text: `Remplissage de formulaire${page ? ` : ${page} de la saisie à la source` : ''}. Associe les données du dossier aux champs du formulaire web. "champ" = la clé "k" exacte du champ. Pour un champ à choix, "valeur" doit être une des options proposées. Ne remplis que ce qui correspond clairement et ne remplace pas une valeur déjà saisie ("v") par une valeur douteuse; liste les autres libellés dans "non_remplis".
+Les propriétaires, pièces et textes du dossier vont dans les champs correspondants (nom du propriétaire 1, pièce 1, description, addenda…). Respecte les longueurs maximales indiquées par les champs ("max").
 
 <champs>${JSON.stringify(fields).slice(0, 40000)}</champs>
+<dossier>${JSON.stringify(b.dossier || {}).slice(0, 20000)}</dossier>
 <fiche>${fiche}</fiche>` };
 }
 
-export async function runTask(task: string, body: any) {
-  if (!['extract', 'listing', 'contract', 'map', 'agent', 'redaction', 'analyse'].includes(task)) throw new ApiError('Action inconnue.', 404);
-  if (!process.env.ANTHROPIC_API_KEY) throw new ApiError("Le moteur IA d'i-Courtier n'est pas encore activé. Contactez i-ateliers.", 503);
-  const p = prompt(task as Task, body);
+// Erreurs du moteur IA traduites en messages clairs pour le courtier.
+function engineError(e: unknown): never {
+  if (e instanceof Anthropic.APIError) {
+    if (e.status === 400 && /credit balance/i.test(e.message)) { console.error('i-Courtier : crédits Anthropic épuisés'); throw new ApiError('Le moteur IA d’i-Courtier est momentanément indisponible. L’équipe i-ateliers a été avisée; réessayez plus tard.', 503); }
+    if (e.status === 429) throw new ApiError('Beaucoup de demandes en même temps : réessayez dans une minute.', 429);
+    if (e.status === 401 || e.status === 403) { console.error('i-Courtier : clé Anthropic refusée'); throw new ApiError('Le moteur IA d’i-Courtier est momentanément indisponible. Contactez i-ateliers.', 503); }
+    if ((e.status ?? 0) >= 500) throw new ApiError('Le moteur IA est surchargé. Réessayez dans quelques instants.', 503);
+  }
+  throw e;
+}
+
+async function callModel(p: Prompt) {
   const client = new Anthropic();
   const response = await client.beta.messages.create({
     model: MODEL,
@@ -245,9 +372,27 @@ export async function runTask(task: string, body: any) {
       ...(p.image ? [{ type: 'image' as const, source: { type: 'base64' as const, media_type: p.image.type, data: p.image.data } }] : []),
       { type: 'text' as const, text: p.text },
     ] }],
-  });
+  }).catch(engineError);
   if (response.stop_reason === 'refusal') throw new ApiError('Demande refusée par le moteur IA. Reformulez la source.', 422);
   if (response.stop_reason === 'max_tokens') throw new ApiError('Réponse trop longue. Réduisez la source.', 413);
   const text = response.content.flatMap(c => (c.type === 'text' ? [c.text] : [])).join('');
   return p.format ? JSON.parse(text) : { texte: text };
+}
+
+// Les champs de la saisie tronquent les textes trop longs : on les fait raccourcir avant de les rendre.
+async function enforceLimits(r: Record<string, any>) {
+  await Promise.all(Object.entries(TEXT_LIMITS).map(async ([key, max]) => {
+    for (let i = 0; i < 2 && typeof r[key] === 'string' && r[key].length > max; i++) {
+      const s = await callModel({ format: null, effort: 'low', text: `Raccourcis ce texte à ${Math.round(max * 0.92)} caractères au maximum, espaces compris, dans la même langue, sans perdre les faits essentiels ni en ajouter. Renvoie seulement le texte.\n\n${r[key]}` });
+      r[key] = String(s.texte).trim();
+    }
+  }));
+  return r;
+}
+
+export async function runTask(task: string, body: any) {
+  if (!TASKS.includes(task as Task)) throw new ApiError('Action inconnue.', 404);
+  if (!process.env.ANTHROPIC_API_KEY) throw new ApiError("Le moteur IA d'i-Courtier n'est pas encore activé. Contactez i-ateliers.", 503);
+  const result = await callModel(prompt(task as Task, body));
+  return task === 'listing' ? enforceLimits(result) : result;
 }

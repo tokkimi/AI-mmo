@@ -21,14 +21,14 @@
       <label>Mot de passe<input name="password" type="password" autocomplete="current-password" required></label>
       <button class="btn" type="submit">Se connecter</button>
     </form>
-    <p class="muted small">Pas encore abonné ? <a href="https://i-ateliers.ca/i-courtier" target="_blank" rel="noreferrer">Découvrir i-Courtier</a></p>
-    <p class="muted small"><a href="https://i-ateliers.ca/i-courtier/confidentialite" target="_blank" rel="noreferrer">Politique de confidentialité</a></p>
+    <p class="muted small">Pas encore abonné ? <a href="https://i-ateliers.com/i-courtier" target="_blank" rel="noreferrer">Découvrir i-Courtier</a></p>
+    <p class="muted small"><a href="https://i-ateliers.com/i-courtier/confidentialite" target="_blank" rel="noreferrer">Politique de confidentialité</a></p>
   </section>
 
   <section id="noaccess" class="view" hidden>
     <h1>Abonnement requis</h1>
     <p class="muted">Votre compte est connecté, mais aucun abonnement i-Courtier actif n’est associé.</p>
-    <a class="btn" href="https://i-ateliers.ca/i-courtier" target="_blank" rel="noreferrer">M’abonner — 250 CAD / mois</a>
+    <a class="btn" href="https://i-ateliers.com/i-courtier" target="_blank" rel="noreferrer">M’abonner — 250 CAD / mois</a>
     <button id="recheck" class="btn ghost">J’ai souscrit, vérifier à nouveau</button>
   </section>
 
@@ -44,6 +44,7 @@
     </div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="agent" class="active">Agent</button>
+      <button role="tab" data-tab="parcours">Parcours</button>
       <button role="tab" data-tab="saisie">Saisie</button>
       <button role="tab" data-tab="documents">Documents</button>
       <button role="tab" data-tab="fiche">Fiche</button>
@@ -63,6 +64,13 @@
         <textarea id="agent-input" rows="3" placeholder="Ex. : la promesse a été acceptée le 3 novembre avec financement 10 jours et inspection 7 jours : ajoute les échéances."></textarea>
         <div class="row"><button class="btn" type="submit">Envoyer</button><button id="agent-clear" class="btn ghost" type="button">Effacer</button></div>
       </form>
+    </div>
+
+    <div class="tab" data-panel="parcours" hidden>
+      <h2>Saisie à la source</h2>
+      <p id="parcours-progress" class="small muted"></p>
+      <div id="parcours"></div>
+      <div id="controle-out"></div>
     </div>
 
     <div class="tab" data-panel="saisie" hidden>
@@ -87,13 +95,24 @@
 
     <div class="tab" data-panel="fiche" hidden>
       <h2>Fiche d’inscription</h2>
+      <div id="checks" class="notice checks" hidden></div>
       <div id="verify" class="notice" hidden></div>
       <form id="fiche"></form>
-      <div class="row sticky">
-        <button id="fill" class="btn">Remplir le formulaire de la page</button>
-        <button id="copy-fiche" class="btn ghost">Copier</button>
+      <div class="sticky fill-bar">
+        <select id="fill-page" aria-label="Page à remplir">
+          <option value="">Toute la page ouverte</option>
+          <option>Page 1</option><option>Page 2</option><option>Page 3</option><option>Page 4</option><option>Page 5</option>
+          <option>Page 6</option><option>Page 7</option><option>Page 8</option><option>Page 9</option>
+        </select>
+        <div class="row">
+          <button id="fill" class="btn">Remplir</button>
+          <button id="verify-page" class="btn ghost">Relire la page</button>
+          <button id="copy-fiche" class="btn ghost">Copier</button>
+        </div>
       </div>
       <p id="fill-report" class="small muted"></p>
+      <div id="verify-report" class="notice" hidden></div>
+      <button id="final-control" class="btn ghost">Contrôle final du dossier</button>
       <div class="card">
         <h3>Centris</h3>
         <p class="small muted">Ouvrez votre inscription incomplète, puis cliquez sur « Remplir le formulaire de la page ».</p>
@@ -110,9 +129,10 @@
     </div>
 
     <div class="tab" data-panel="inscription" hidden>
-      <h2>Administration de l’inscription</h2>
+      <h2>Inscription et textes</h2>
+      <p class="small muted">Description FR/EN : 650 caractères max. Addenda FR/EN : 3 000 caractères max. Les textes déjà écrits ne sont jamais remplacés.</p>
       <label>Documents déjà reçus<textarea id="recus" rows="3" placeholder="Ex. : certificat de localisation 2019, compte de taxes 2026"></textarea></label>
-      <button id="listing" class="btn">Préparer l’inscription</button>
+      <button id="listing" class="btn">Préparer les textes et la liste des documents</button>
       <div id="listing-out"></div>
     </div>
 
@@ -185,6 +205,7 @@
   <div id="toast" class="toast" role="status" hidden></div>
   <footer class="foot">Ébauches à valider par le courtier. Les formulaires obligatoires de l’OACIQ prévalent.</footer>
   <script src="sidepanel.js"></script>
+  <script src="saisie.js"></script>
   <script src="tools.js"></script>
 </body>
 </html>

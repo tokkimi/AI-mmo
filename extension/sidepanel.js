@@ -1,8 +1,8 @@
 'use strict';
 
-const DEFAULT_API = 'https://i-ateliers.ca/api/icourtier/';
+const DEFAULT_API = 'https://i-ateliers.com/api/icourtier/';
 const $ = (s) => document.querySelector(s);
-const state = { token: '', api: DEFAULT_API, fields: {}, contracts: {}, dossiers: {}, current: '', pdf: '' };
+const state = { token: '', api: DEFAULT_API, fields: {}, pages: [], limits: {}, contracts: {}, dossiers: {}, current: '', pdf: '' };
 
 // ---------- Stockage local (les dossiers restent dans le navigateur du courtier) ----------
 async function load() {
@@ -57,7 +57,7 @@ function card(title, text) {
 // ---------- Dossiers ----------
 function newDossier(nom = 'Nouveau dossier') {
   const id = Date.now().toString(36);
-  state.dossiers[id] = { id, nom, fiche: {}, verify: [], source: '', recus: '', docs: {}, listing: null, contracts: [], updated: Date.now() };
+  state.dossiers[id] = { id, nom, fiche: {}, verify: [], source: '', recus: '', docs: {}, proprietaires: [], pieces: [], textes: {}, parcours: {}, listing: null, contracts: [], updated: Date.now() };
   state.current = id; save(); renderAll();
 }
 function renderDossiers() {
@@ -69,12 +69,22 @@ function touch() { const d = dossier(); d.updated = Date.now(); save(); }
 // ---------- Fiche ----------
 function renderFiche() {
   const d = dossier(); const form = $('#fiche'); form.innerHTML = '';
-  for (const [key, label] of Object.entries(state.fields)) {
-    const input = el('input', { name: key, value: d.fiche[key] || '' });
-    input.classList.toggle('empty', !input.value);
-    input.oninput = () => { d.fiche[key] = input.value; input.classList.toggle('empty', !input.value); touch(); };
-    form.append(el('label', { textContent: label }, input));
+  const pages = state.pages.length ? state.pages : [{ page: 'fiche', titre: 'Fiche', champs: state.fields }];
+  for (const pg of pages) {
+    const keys = Object.keys(pg.champs); const filled = keys.filter((k) => d.fiche[k]).length;
+    const box = el('details', { className: 'fiche-page', open: pg.page === 'dossier' || pg.page === '1' }, el('summary', {}, pg.titre, el('span', { className: 'count', textContent: `${filled}/${keys.length}` })));
+    for (const [key, label] of Object.entries(pg.champs)) {
+      const input = el('input', { name: key, value: d.fiche[key] || '' });
+      input.classList.toggle('empty', !input.value);
+      input.oninput = () => { d.fiche[key] = input.value; input.classList.toggle('empty', !input.value); touch(); renderChecks(); };
+      box.append(el('label', { textContent: label }, input));
+    }
+    // Les propriétaires (page 3) et les pièces (page 5) ont leurs propres listes.
+    if (pg.page === '3') box.append(ownersEditor());
+    if (pg.page === '5') box.append(roomsEditor());
+    form.append(box);
   }
+  renderChecks();
   const v = $('#verify');
   v.hidden = !d.verify.length; v.innerHTML = '';
   if (d.verify.length) v.append(el('strong', { textContent: 'À vérifier' }), el('ul', {}, ...d.verify.map((x) => el('li', { textContent: x }))));
@@ -117,6 +127,9 @@ function collectFields() {
     if (!label) { const prev = n.closest('td, div, li')?.previousElementSibling; if (prev) label = prev.innerText; }
     const field = { k: key, label: label.trim().slice(0, 120), name: n.name || n.id || '', type: n.tagName === 'SELECT' ? 'select' : n.type || 'text' };
     if (n.tagName === 'SELECT') field.options = [...n.options].map((o) => o.text.trim()).filter(Boolean).slice(0, 60);
+    const v = n.tagName === 'SELECT' ? (n.selectedOptions[0]?.text || '').trim() : (n.type === 'checkbox' || n.type === 'radio') ? (n.checked ? 'oui' : '') : n.value;
+    if (v) field.v = String(v).slice(0, 3200);
+    if (n.maxLength > 0) field.max = n.maxLength;
     out.push(field);
   });
   return out;
@@ -142,12 +155,16 @@ function fillFields(values) {
   }
   return count;
 }
-async function fill() {
+async function pageFields() {
   const t = await activeTab();
   const frames = await chrome.scripting.executeScript({ target: { tabId: t.id, allFrames: true }, func: collectFields });
   const fields = frames.flatMap((f) => (f.result || []).map((x) => ({ ...x, k: f.frameId + ':' + x.k })));
   if (!fields.length) throw new Error('Aucun champ de formulaire trouvé sur cette page.');
-  const res = await api('map', { fields, fiche: dossier().fiche });
+  return { t, frames, fields };
+}
+async function fill(page = '') {
+  const { t, frames, fields } = await pageFields();
+  const res = await api('map', { fields, fiche: dossier().fiche, dossier: dossierPayload(), page });
   let total = 0;
   for (const f of frames) {
     const values = res.remplissage.filter((v) => v.champ.startsWith(f.frameId + ':')).map((v) => ({ champ: v.champ.split(':')[1], valeur: v.valeur }));
@@ -155,17 +172,37 @@ async function fill() {
     const [r] = await chrome.scripting.executeScript({ target: { tabId: t.id, frameIds: [f.frameId] }, func: fillFields, args: [values] });
     total += r.result || 0;
   }
-  $('#fill-report').textContent = `${total} champ(s) remplis et surlignés. Vérifiez chaque valeur avant d’enregistrer.` + (res.non_remplis.length ? ` Non remplis : ${res.non_remplis.join(', ')}.` : '');
+  $('#fill-report').textContent = `${total} champ(s) remplis et surlignés${page ? ` (${page})` : ''}. Vérifiez chaque valeur, sauvegardez, puis cliquez sur « Relire la page ».` + (res.non_remplis.length ? ` Non remplis : ${res.non_remplis.join(', ')}.` : '');
   toast(`${total} champ(s) remplis.`);
+  return total;
 }
 
 // ---------- Inscription ----------
 const STATUS = { 'reçu': 'reçu', 'à obtenir': 'obtenir', 'à vérifier': 'verifier' };
+const TEXTS = [
+  ['description_fr', 'Description (FR)'], ['description_en', 'Description (EN)'], ['addenda_fr', 'Addenda (FR)'], ['addenda_en', 'Addenda (EN)'],
+  ['inclusions_fr', 'Inclusions (FR)'], ['inclusions_en', 'Inclusions (EN)'], ['exclusions_fr', 'Exclusions (FR)'], ['exclusions_en', 'Exclusions (EN)'],
+  ['info_collaborateur', 'Info courtier collaborateur'],
+];
 function renderListing() {
   const d = dossier(); const out = $('#listing-out'); out.innerHTML = '';
   $('#recus').value = d.recus || '';
-  const l = d.listing; if (!l) return;
-  if (l.alertes.length) out.append(el('div', { className: 'notice' }, el('strong', { textContent: 'Alertes' }), el('ul', {}, ...l.alertes.map((a) => el('li', { textContent: a })))));
+  const l = d.listing;
+  if (l?.questions_courtier?.length) out.append(el('div', { className: 'notice' }, el('strong', { textContent: 'À confirmer avant d’entrer les textes' }), el('ul', {}, ...l.questions_courtier.map((q) => el('li', { textContent: q })))));
+  if (l?.alertes?.length) out.append(el('div', { className: 'notice' }, el('strong', { textContent: 'Alertes' }), el('ul', {}, ...l.alertes.map((a) => el('li', { textContent: a })))));
+  // Textes modifiables, avec le décompte de caractères exigé par la saisie.
+  const texts = el('div', { className: 'card' }, el('h3', { textContent: 'Textes de l’inscription (page 7)' }));
+  for (const [key, label] of TEXTS) {
+    const max = state.limits[key];
+    const counter = el('small', { className: 'counter' });
+    const area = el('textarea', { rows: key.startsWith('addenda') ? 6 : 3, value: d.textes[key] || '', placeholder: key === 'info_collaborateur' ? 'À écrire selon vos instructions (onglet Rédaction : « Info courtier collaborateur »)' : '' });
+    const update = () => { const n = area.value.length; counter.textContent = max ? `${n} / ${max} caractères` : `${n} caractères`; counter.classList.toggle('over', !!max && n > max); };
+    area.oninput = () => { d.textes[key] = area.value; touch(); update(); renderChecks(); };
+    update();
+    texts.append(el('div', { className: 'text-field' }, el('div', { className: 'text-head' }, el('strong', { textContent: label }), counter, el('button', { className: 'link copy', textContent: 'Copier', onclick: () => copy(area.value) })), area));
+  }
+  out.append(texts);
+  if (!l) return;
   const list = el('div', { className: 'card' }, el('h3', { textContent: 'Documents de l’inscription' }));
   l.checklist.forEach((c) => {
     const pill = el('button', { className: 'pill ' + STATUS[c.statut], textContent: c.statut, title: 'Changer le statut' });
@@ -173,8 +210,6 @@ function renderListing() {
     list.append(el('div', { className: 'check' }, pill, el('div', {}, el('strong', { textContent: c.document }), el('div', { className: 'small muted', textContent: c.raison }))));
   });
   out.append(list,
-    card('Description (FR)', l.description_fr),
-    card('Description (EN)', l.description_en),
     card('Points forts', l.points_forts.map((p) => '• ' + p).join('\n')),
     card('Courriel au vendeur', l.courriel_vendeur));
 }
@@ -216,8 +251,25 @@ const DOCS = [
   { key: 'hydro', title: 'Estimation Hydro-Québec', source: 'Hydro-Québec', capture: true, copy: 'civique', copyLabel: 'Adresse',
     url: () => 'https://www.hydroquebec.com/residentiel/espace-clients/demenagement/estimer-couts-residence.html',
     steps: ['Entrez l’adresse (copiée) et lancez l’estimation', 'Quand le montant s’affiche, cliquez sur « Capturer le montant »'] },
+  { key: 'contrat', title: 'Contrat de courtage et modifications', source: 'Dossier du courtier', signed: true,
+    steps: ['Importez la version signée et chaque modification', 'Vérifiez l’adresse, les dates et le numéro du contrat'] },
+  { key: 'declaration', title: 'Déclaration du vendeur et modifications', source: 'Vendeur', signed: true,
+    steps: ['Importez la version signée', '« Non », « ne sais pas » et champ vide ne veulent pas dire la même chose'] },
+  { key: 'certificat', title: 'Certificat de localisation (rapport et plan)', source: 'Arpenteur-géomètre', copy: 'adresse', copyLabel: 'Adresse',
+    steps: ['Relevez l’année, le lot, les dimensions et la superficie', 'Plus de 10 ans : vérifiez s’il faut le renouveler'] },
+  { key: 'cadastral', title: 'Plan cadastral', source: 'Infolot', url: () => 'https://appli.mern.gouv.qc.ca/infolot/', copy: 'cadastre', copyLabel: 'N° de lot',
+    steps: ['Recherchez le lot (copié)', 'Enregistrez le plan en PDF'] },
+  { key: 'matrix', title: 'Ancienne fiche Matrix', source: 'Matrix', optional: 'Si la propriété a déjà été inscrite.',
+    steps: ['Retrouvez l’ancienne fiche et enregistrez-la en PDF', 'Elle sert de point de départ pour les caractéristiques (page 8)'] },
+  { key: 'plans', title: 'Plans cotés', source: 'Vendeur ou photographe', rooms: true,
+    steps: ['Importez le plan avec les dimensions', 'Les pièces sont créées automatiquement (page 5)'] },
+  { key: 'inspection', title: 'Rapport d’inspection', source: 'Inspecteur', optional: 'S’il existe.',
+    steps: ['Importez le rapport', 'Les points d’alerte vont dans « À vérifier »'] },
+  { key: 'photos', title: 'Photos et vidéos', source: 'Photographe', link: true,
+    steps: ['Collez le lien du photographe', 'Vérifiez que les fichiers sont bien ceux de cette propriété'] },
 ];
 function copyValue(doc, f) {
+  if (!doc.copy) return '';
   if (doc.copy === 'civique') return [civic(f), f.ville].filter(Boolean).join(', ');
   return f[doc.copy] || '';
 }
@@ -231,16 +283,22 @@ function renderDocs() {
     const steps = typeof doc.steps === 'function' ? doc.steps(d.fiche) : doc.steps;
     const pill = el('button', { className: 'pill ' + (st.status === 'reçu' ? 'reçu' : 'obtenir'), textContent: st.status, title: 'Changer le statut',
       onclick: () => { d.docs[doc.key] = { ...st, status: st.status === 'reçu' ? 'à obtenir' : 'reçu' }; touch(); renderDocs(); } });
-    const open = el('button', { className: 'btn ghost', textContent: 'Ouvrir le site', onclick: () => openDoc(doc) });
-    const action = doc.capture
+    const open = doc.url && el('button', { className: 'btn ghost', textContent: 'Ouvrir le site', onclick: () => openDoc(doc) });
+    // Version signée et date du document : un ancien document ne prouve pas que la situation est inchangée.
+    const meta = el('div', { className: 'doc-meta' },
+      doc.signed && el('label', { className: 'check-line' }, el('input', { type: 'checkbox', checked: !!st.signe, onchange: (e) => { d.docs[doc.key] = { ...st, signe: e.target.checked }; touch(); } }), 'Version signée'),
+      doc.link ? el('input', { placeholder: 'Lien du photographe', value: st.lien || '', onchange: (e) => { d.docs[doc.key] = { ...st, lien: e.target.value, status: e.target.value ? 'reçu' : st.status }; touch(); renderDocs(); } })
+        : el('input', { placeholder: 'Date du document (ex. 2024-03)', value: st.date || '', onchange: (e) => { d.docs[doc.key] = { ...st, date: e.target.value }; touch(); renderChecks(); } }));
+    const action = doc.link ? null : doc.capture
       ? el('button', { className: 'btn', textContent: 'Capturer le montant', onclick: () => busy('Lecture du montant…', () => captureDoc(doc)) })
       : el('button', { className: 'btn', textContent: 'Importer le PDF', onclick: () => { state.docKey = doc.key; $('#doc-file').value = ''; $('#doc-file').click(); } });
     box.append(el('div', { className: 'doc' + (st.status === 'reçu' ? ' ok' : '') },
       el('header', {}, el('div', {}, el('strong', { textContent: doc.title }), el('div', { className: 'small muted', textContent: doc.source })), pill),
       doc.optional && el('div', { className: 'small muted', textContent: doc.optional }),
       el('ol', {}, ...steps.map((s) => el('li', { textContent: s }))),
-      !copyValue(doc, d.fiche) && el('div', { className: 'warn', textContent: `${doc.copyLabel} manquant dans la fiche : complétez-le pour gagner du temps.` }),
-      el('div', { className: 'row' }, open, action),
+      doc.copy && !copyValue(doc, d.fiche) && el('div', { className: 'warn', textContent: `${doc.copyLabel} manquant dans la fiche : complétez-le pour gagner du temps.` }),
+      meta,
+      (open || action) && el('div', { className: 'row' }, open, action),
       st.file && el('div', { className: 'file', textContent: `✓ ${st.file} · ${new Date(st.at).toLocaleDateString('fr-CA')}` })));
   }
 }
@@ -249,13 +307,21 @@ async function openDoc(doc) {
   if (value) { await navigator.clipboard.writeText(value).catch(() => {}); toast(`${doc.copyLabel} copié : ${value}`); }
   chrome.tabs.create({ url: doc.url(f) });
 }
+// Ajoute à la fiche ce qu'une extraction établit : champs, propriétaires et pièces.
+function applyExtraction(r, replaceRooms = false) {
+  const d = dossier();
+  for (const [k, v] of Object.entries(r.fiche || {})) if (v) d.fiche[k] = v;
+  d.verify = [...new Set([...(d.verify || []), ...(r.a_verifier || [])])].slice(0, 40);
+  d.proprietaires = d.proprietaires || [];
+  for (const o of r.proprietaires || []) if (o.nom && !d.proprietaires.some((x) => x.nom.toLowerCase() === o.nom.toLowerCase())) d.proprietaires.push(o);
+  if ((r.pieces || []).length && (replaceRooms || !(d.pieces || []).length)) d.pieces = r.pieces;
+  if (d.nom === 'Nouveau dossier' && d.fiche.adresse) d.nom = d.fiche.adresse;
+}
 async function mergeExtraction(doc, r, file) {
   const d = dossier();
-  for (const [k, v] of Object.entries(r.fiche)) if (v) d.fiche[k] = v;
-  d.verify = [...new Set([...(d.verify || []), ...r.a_verifier])].slice(0, 30);
-  d.docs[doc.key] = { status: 'reçu', file, at: Date.now() };
-  if (d.nom === 'Nouveau dossier' && d.fiche.adresse) d.nom = d.fiche.adresse;
-  touch(); renderDossiers(); renderFiche(); renderDocs();
+  applyExtraction(r, !!doc.rooms);
+  d.docs[doc.key] = { ...(d.docs[doc.key] || {}), status: 'reçu', file, at: Date.now() };
+  touch(); renderDossiers(); renderFiche(); renderDocs(); renderExtras();
   toast(`${doc.title} : fiche mise à jour.`);
 }
 async function captureDoc(doc) {
@@ -269,7 +335,7 @@ $('#doc-file').onchange = (e) => {
   if (file.size > 3_000_000) { toast('PDF trop volumineux (3 Mo maximum).', true); return; }
   const reader = new FileReader();
   reader.onload = () => busy(`Lecture : ${doc.title}…`, async () => {
-    const r = await api('extract', { pdf: String(reader.result).split(',')[1], doc: `${doc.title} (${doc.source})` });
+    const r = await api('extract', { pdf: String(reader.result).split(',')[1], doc: `${doc.title} (${doc.source})${doc.rooms ? ' : crée la liste des pièces d’après le plan' : ''}` });
     await mergeExtraction(doc, r, file.name);
   });
   reader.readAsDataURL(file);
@@ -301,6 +367,7 @@ $('#name-instanet').onclick = () => busy('Nommage du dossier…', async () => {
 
 function renderAll() {
   if (!dossier()) { newDossier(); return; }
+  const d = dossier(); d.proprietaires = d.proprietaires || []; d.pieces = d.pieces || []; d.textes = d.textes || {}; d.parcours = d.parcours || {}; d.docs = d.docs || {};
   renderDossiers(); renderFiche(); renderDocs(); renderListing(); renderContracts(); renderExtras();
   $('#source').value = dossier().source || '';
   $('#pdf-name').textContent = ''; state.pdf = '';
@@ -312,7 +379,7 @@ async function start() {
   if (!state.token) return show('login');
   try {
     const me = await api('me');
-    state.fields = me.fields; state.contracts = me.contracts; state.writings = me.writings || {}; state.docKinds = me.docKinds || {};
+    state.fields = me.fields; state.pages = me.pages || []; state.limits = me.limits || {}; state.contracts = me.contracts; state.writings = me.writings || {}; state.docKinds = me.docKinds || {};
     if (!me.access) return show('noaccess');
     show('app'); renderAll();
     const { pending } = await chrome.storage.local.get('pending');
@@ -347,18 +414,20 @@ $('#pdf').onchange = (e) => {
 $('#extract').onclick = () => busy('Extraction de la fiche…', async () => {
   const d = dossier();
   const r = await api('extract', { source: $('#source').value, url: d.url || '', pdf: state.pdf || undefined });
-  for (const [k, v] of Object.entries(r.fiche)) if (v) d.fiche[k] = v;
-  d.verify = r.a_verifier;
-  if (d.nom === 'Nouveau dossier' && d.fiche.adresse) d.nom = d.fiche.adresse;
-  touch(); renderDossiers(); renderFiche(); tab('fiche');
+  applyExtraction(r);
+  touch(); renderDossiers(); renderFiche(); renderExtras(); tab('fiche');
   toast(r.resume || 'Fiche remplie.');
 });
-$('#fill').onclick = () => busy('Remplissage du formulaire…', fill);
+$('#fill').onclick = () => busy('Remplissage du formulaire…', () => fill($('#fill-page').value));
 $('#copy-fiche').onclick = () => copy(ficheText());
 $('#listing').onclick = () => busy('Préparation de l’inscription…', async () => {
   const d = dossier();
   const recus = [d.recus, ...DOCS.filter((x) => d.docs?.[x.key]?.status === 'reçu').map((x) => x.title)].filter(Boolean).join(', ');
-  d.listing = await api('listing', { fiche: d.fiche, recus }); touch(); renderListing();
+  const r = await api('listing', { fiche: d.fiche, recus, dossier: dossierPayload() });
+  d.listing = r;
+  // Les textes déjà validés par le courtier ne sont pas écrasés.
+  for (const k of ['description_fr', 'description_en', 'addenda_fr', 'addenda_en', 'inclusions_fr', 'inclusions_en', 'exclusions_fr', 'exclusions_en']) if (!d.textes[k]?.trim()) d.textes[k] = r[k];
+  touch(); renderListing(); renderChecks();
 });
 $('#contract').onclick = () => busy('Rédaction de l’ébauche…', async () => {
   const d = dossier(); const type = $('#contract-type').value;

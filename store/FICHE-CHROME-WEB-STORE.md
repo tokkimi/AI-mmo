@@ -45,13 +45,13 @@ Analyse d’inspection, de déclarations ou de procès-verbaux (points d’alert
 VOUS GARDEZ LA MAIN
 Aucun document n’est signé, publié ou envoyé à vos clients automatiquement. Les formulaires obligatoires de l’OACIQ prévalent toujours. Vos dossiers sont enregistrés dans votre navigateur. Les données nécessaires aux fonctions IA sont transmises aux serveurs i-ateliers et à Anthropic lors de leur utilisation.
 
-Abonnement requis : 250 CAD par mois + taxes, sans frais fixes, sur https://i-ateliers.ca/i-courtier
+Abonnement requis : 250 CAD par mois + taxes, sans frais fixes, sur https://i-ateliers.com/i-courtier
 ```
 
 **Catégorie** : Productivité → Outils (ou « Flux de travail et planification »)
 **Langue** : Français (Canada)
-**Site Web officiel** : https://i-ateliers.ca/i-courtier
-**URL d'assistance** : https://i-ateliers.ca/i-courtier/installer
+**Site Web officiel** : https://i-ateliers.com/i-courtier
+**URL d'assistance** : https://i-ateliers.com/i-courtier/installer
 
 ## Onglet « Pratiques de confidentialité »
 
@@ -70,7 +70,7 @@ Aider les courtiers immobiliers à préparer leurs dossiers : extraire les donn�
 | scripting | À la demande du courtier, lire le texte de l’onglet actif et remplir les champs du formulaire affiché. |
 | activeTab | Agir uniquement sur l’onglet que le courtier utilise au moment où il clique sur une action. |
 | contextMenus | Menu « Envoyer la sélection à i-Courtier » pour ajouter un texte sélectionné au dossier. |
-| Autorisations d'hôte (toutes les URL) | Les courtiers travaillent sur de nombreux sites (systèmes d’inscription, CRM, registre foncier, municipalités, Hydro-Québec). L’extension lit ou remplit une page seulement quand le courtier clique sur une action. Sur i-ateliers.ca, elle indique sa version à la page d’installation. |
+| Autorisations d'hôte (toutes les URL) | Les courtiers travaillent sur de nombreux sites (systèmes d’inscription, CRM, registre foncier, municipalités, Hydro-Québec). L’extension lit ou remplit une page seulement quand le courtier clique sur une action. Sur i-ateliers.com, elle indique sa version à la page d’installation. |
 
 **Code distant** : Non, je n'utilise pas de code distant.
 
@@ -89,11 +89,11 @@ Vérifier les libellés de la console et la concordance avec les pratiques du se
 - Je n'utilise ni ne transfère les données des utilisateurs à des fins sans rapport avec l'objectif unique de mon article.
 - Je n'utilise ni ne transfère les données des utilisateurs pour déterminer leur solvabilité ou à des fins de prêt.
 
-**Règles de confidentialité (URL)** : https://i-ateliers.ca/i-courtier/confidentialite
+**Règles de confidentialité (URL)** : https://i-ateliers.com/i-courtier/confidentialite
 
 ## Onglet « Distribution »
 
-- **Paiement** : Gratuit. L'abonnement se paie sur i-ateliers.ca.
+- **Paiement** : Gratuit. L'abonnement se paie sur i-ateliers.com.
 - **Visibilité** : Public (recommandé pour être trouvé) ou Non répertorié (installable uniquement avec le lien).
 - **Régions** : Canada, ou toutes les régions.
 
@@ -101,7 +101,7 @@ Vérifier les libellés de la console et la concordance avec les pratiques du se
 
 L'extension demande une connexion : Google exige un compte de test.
 
-1. Créez un compte sur https://i-ateliers.ca/?view=register avec une adresse dédiée (par exemple une adresse secondaire d'i-ateliers).
+1. Créez un compte sur https://i-ateliers.com/?view=register avec une adresse dédiée (par exemple une adresse secondaire d'i-ateliers).
 2. Donnez-nous cette adresse pour l'ajouter à l'accès gratuit.
 3. Dans l'onglet « Accès de test » (ou « Instructions de test »), collez :
 

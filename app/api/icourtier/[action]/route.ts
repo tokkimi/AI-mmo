@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import { db, digest, rateLimit, ApiError, textField } from '@/lib/server';
-import { hasExtensionAccess, runTask, CONTRACTS, FICHE_FIELDS, WRITINGS, DOC_KINDS } from '@/lib/icourtier';
+import { hasExtensionAccess, isLaunched, isTester, runTask, CONTRACTS, FICHE_FIELDS, FICHE_PAGES, WRITINGS, DOC_KINDS, TEXT_LIMITS } from '@/lib/icourtier';
+
+const SOON = 'i-Courtier sera bientôt disponible. L’accès est réservé aux testeurs pour le moment.';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -28,23 +30,17 @@ export function OPTIONS(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ action: string }> }) {
-  void params;
-  return json(req, { error: 'i-Courtier sera bientôt disponible.' }, 503);
-  /* Réactivation prévue au lancement.
   try {
     const { action } = await params;
     if (action !== 'me') throw new ApiError('Action inconnue.', 404);
     const user = await tokenUser(req);
     if (!user) throw new ApiError('Session expirée. Reconnectez-vous.', 401);
-    return json(req, { user: { name: user.name, email: user.email }, access: await hasExtensionAccess(user), contracts: CONTRACTS, fields: FICHE_FIELDS, writings: WRITINGS, docKinds: DOC_KINDS });
+    if (!isLaunched() && !isTester(user)) throw new ApiError(SOON, 503);
+    return json(req, { user: { name: user.name, email: user.email }, access: await hasExtensionAccess(user), contracts: CONTRACTS, fields: FICHE_FIELDS, pages: FICHE_PAGES, writings: WRITINGS, docKinds: DOC_KINDS, limits: TEXT_LIMITS });
   } catch (e) { return fail(req, e); }
-  */
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ action: string }> }) {
-  void params;
-  return json(req, { error: 'i-Courtier sera bientôt disponible.' }, 503);
-  /* Réactivation prévue au lancement.
   try {
     const { action } = await params;
     if (Number(req.headers.get('content-length') || 0) > 4_400_000) throw new ApiError('Requête trop volumineuse.', 413);
@@ -54,8 +50,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       const password = textField(body.password, 72);
       await rateLimit('auth:' + email, 12);
       await rateLimit('ip:' + req.headers.get('x-forwarded-for'), 60);
-      const rows = await db()`SELECT id,password_hash FROM users WHERE email=${email}`;
+      const rows = await db()`SELECT id,email,role,password_hash FROM users WHERE email=${email}`;
       if (!rows.length || !await bcrypt.compare(password, rows[0].password_hash)) throw new ApiError('Courriel ou mot de passe incorrect.', 401);
+      if (!isLaunched() && !isTester(rows[0])) throw new ApiError(SOON, 503);
       const token = randomBytes(32).toString('hex');
       await db()`INSERT INTO sessions(token_hash,user_id,expires_at) VALUES(${digest(token)},${rows[0].id},now()+interval '30 days')`;
       return json(req, { token });
@@ -67,11 +64,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ act
       await db()`DELETE FROM sessions WHERE token_hash=${digest(token)}`;
       return json(req, { ok: true });
     }
+    if (!isLaunched() && !isTester(user)) throw new ApiError(SOON, 503);
     if (!await hasExtensionAccess(user)) throw new ApiError('Abonnement i-Courtier requis. Abonnez-vous sur i-ateliers.com/i-courtier.', 402);
     await rateLimit('icourtier:' + user.id, 120);
     return json(req, await runTask(action, body));
   } catch (e) { return fail(req, e); }
-  */
 }
 
 function fail(req: NextRequest, e: unknown) {

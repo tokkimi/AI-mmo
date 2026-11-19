@@ -3,6 +3,7 @@
 
 const STATUTS = ['Prospection', 'Inscription en préparation', 'Inscription en vigueur', 'Promesse acceptée', 'Conditions remplies', 'Vendu', 'Annulé'];
 const IDEAS = [
+  'Où en est la saisie de ce dossier et quelle est la prochaine étape ?',
   'Qu’est-ce qui manque pour compléter ce dossier ?',
   'Ajoute les échéances : promesse acceptée aujourd’hui, financement 10 jours, inspection 7 jours.',
   'Rédige un courriel au notaire pour lui transmettre le dossier.',
@@ -84,6 +85,22 @@ async function runAction(a) {
     case 'remplir_page':
       await fill();
       return 'Formulaire de la page rempli (champs surlignés)';
+    case 'cocher_etape': {
+      const step = PARCOURS.find((x) => x.key === a.etape); if (!step) return null;
+      d.parcours = d.parcours || {}; d.parcours[step.key] = a.statut !== 'à faire'; touch(); renderParcours();
+      return `Parcours · ${step.titre} : ${d.parcours[step.key] ? 'fait' : 'à faire'}`;
+    }
+    case 'ajouter_proprietaire':
+      if (!a.nom) return null;
+      d.proprietaires = d.proprietaires || [];
+      if (!d.proprietaires.some((o) => o.nom.toLowerCase() === a.nom.toLowerCase())) d.proprietaires.push({ nom: a.nom, genre: a.genre || 'personne physique', adresse: a.adresse, courriel: a.courriel, langue: a.langue });
+      touch(); renderFiche();
+      return `Propriétaire · ${a.nom}`;
+    case 'ajouter_piece':
+      if (!a.nom) return null;
+      d.pieces = d.pieces || []; d.pieces.push({ nom: a.nom, niveau: LEVELS.includes(a.niveau) ? a.niveau : 'Autre', dimensions: a.dimensions, revetement: a.revetement });
+      touch(); renderFiche();
+      return `Pièce · ${a.nom}${a.dimensions ? ' (' + a.dimensions + ')' : ''}`;
     case 'generer_contrat':
       if (!state.contracts[a.contrat]) return null;
       await generateContract(a.contrat, a.details);
@@ -109,7 +126,7 @@ async function askAgent(text) {
   const r = await api('agent', {
     messages: d.chat.map(({ role, content }) => ({ role, content })),
     fiche: d.fiche,
-    dossier: { nom: d.nom, statut: d.statut || 'Prospection', documents: Object.fromEntries(DOCS.map((x) => [x.key, d.docs?.[x.key]?.status || 'à obtenir'])), taches: (d.tasks || []).filter((t) => !t.done).map((t) => ({ tache: t.text, echeance: t.due })), a_verifier: d.verify, contrats: (d.contracts || []).map((c) => c.type) },
+    dossier: { ...dossierPayload(), contrats: (d.contracts || []).map((c) => c.type) },
     page: $('#agent-page').checked ? await pageText() : '',
     profil: profile,
   });
@@ -118,7 +135,7 @@ async function askAgent(text) {
     try { const line = await runAction(a); if (line) done.push(line); } catch (e) { done.push(`Action non réalisée : ${e.message}`); }
   }
   d.chat.push({ role: 'assistant', content: r.reponse, done }); touch();
-  renderChat(); renderStatus(); renderTasks();
+  renderChat(); renderStatus(); renderTasks(); renderParcours(); renderChecks();
 }
 $('#agent-form').onsubmit = (e) => {
   e.preventDefault();
@@ -139,6 +156,7 @@ function renderWriting() {
 $('#writing').onclick = () => busy('Rédaction…', async () => {
   const d = dossier(); const type = $('#writing-type').value;
   const r = await api('redaction', { type, ton: $('#writing-tone').value, langue: $('#writing-lang').value, consignes: $('#writing-notes').value, fiche: d.fiche, profil: profile });
+  if (type === 'info-collaborateur' && !d.textes?.info_collaborateur) { d.textes = d.textes || {}; d.textes.info_collaborateur = r.texte; renderListing(); }
   d.writings = [{ type, texte: r.texte, at: Date.now() }, ...(d.writings || [])].slice(0, 15); touch(); renderWriting();
 });
 
@@ -230,6 +248,6 @@ $('#task-form').onsubmit = (e) => {
   e.preventDefault(); addTask($('#task-text').value.trim(), $('#task-date').value);
   $('#task-text').value = ''; $('#task-date').value = ''; renderTasks(); renderStatus();
 };
-function renderExtras() { renderStatus(); renderTasks(); renderChat(); renderWriting(); renderAnalyse(); prefillCalculators(); }
+function renderExtras() { renderStatus(); renderTasks(); renderChat(); renderWriting(); renderAnalyse(); prefillCalculators(); renderParcours(); renderChecks(); }
 
 loadProfile().then(start);
